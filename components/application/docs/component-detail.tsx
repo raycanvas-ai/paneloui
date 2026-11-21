@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { RiArrowRightSFill, RiCheckLine, RiFileCopyLine, RiFullscreenLine } from "@remixicon/react";
 
 import { installCommand, sectionOf, type Entry } from "@/components/application/docs/components-index";
-import { PaneloChart, PaneloDemo, slugOf } from "@/components/application/docs/panelo-catalog";
+import { LookPlayer } from "@/components/application/docs/look-player";
+import { useLook, useLookFrame } from "@/components/application/docs/looks";
+import { PaneloChart, slugOf } from "@/components/application/docs/panelo-catalog";
 import { ScreenFrame } from "@/components/application/docs/preview-frames";
 import { pill, ProTag } from "@/components/application/site/site-ui";
 import { cx } from "@/utils/cx";
@@ -41,6 +43,10 @@ export function ComponentDetail({ entry }: { entry: Entry }) {
   const slug = slugOf(entry.href);
   const screen = section.kind === "screen";
   const preview = `/preview/${slug}${slug === "dashboard-pages-11" ? "?assistant" : ""}`;
+  const look = useLook();
+  const frame = useRef<HTMLIFrameElement>(null);
+  useLookFrame(frame);
+  const fullScreen = look ? `${preview}${preview.includes("?") ? "&" : "?"}look=${look}` : preview;
 
   return (
     <div className="mx-auto flex w-full max-w-[894px] flex-col pt-6 pb-10 sm:pt-9">
@@ -51,7 +57,7 @@ export function ComponentDetail({ entry }: { entry: Entry }) {
               Components
             </Link>
           </li>
-          {section.id !== "components" && (
+          {(
             <li className="flex items-center gap-1.5">
               <RiArrowRightSFill className="size-3.5 text-site-faint" aria-hidden />
               <Link href={`/components#${section.id}`} className="hover:text-site-ink">
@@ -77,31 +83,31 @@ export function ComponentDetail({ entry }: { entry: Entry }) {
         </div>
       )}
 
-      {screen && (
-        <div className="mt-8 flex justify-end">
-          <a href={preview} target="_blank" rel="noreferrer" className={pill("secondary")}>
+      <div className="mt-8 flex flex-wrap items-center justify-between gap-2">
+        <LookPlayer />
+        {(screen || section.kind === "chart") && (
+          <a href={fullScreen} target="_blank" rel="noreferrer" className={pill("secondary")}>
             <RiFullscreenLine aria-hidden />
             Open full screen
           </a>
-        </div>
-      )}
+        )}
+      </div>
       <div
         className={cx(
-          screen ? "mt-3" : "mt-8",
+          "mt-3",
           "w-full overflow-hidden rounded-2xl border border-site-hairline bg-site-surface",
           // Screens render on a desktop canvas and scale down, so the page shows its full-screen layout, not its tablet one.
-          screen ? "relative aspect-[1440/900]" : "flex min-h-[420px] items-center justify-center p-8",
+          // Charts sit at the top, so a chart that changes height (a morph, a hidden panel) never shifts its own controls.
+          screen ? "relative aspect-[1440/900]" : "flex min-h-[420px] justify-center p-8",
         )}
       >
-        {section.kind === "component" ? (
-          <PaneloDemo slug={slug.replace(/^ui-/, "")} />
-        ) : section.kind === "chart" ? (
+        {section.kind === "chart" ? (
           <div className="w-full max-w-4xl">
             <PaneloChart slug={slug} />
           </div>
         ) : (
           <ScreenFrame width={1440} height={900}>
-            <iframe src={preview} title={`${entry.name} preview`} className="size-full border-0" />
+            <iframe ref={frame} src={preview} title={`${entry.name} preview`} className="size-full border-0" />
           </ScreenFrame>
         )}
       </div>

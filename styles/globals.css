@@ -1,6 +1,8 @@
 /* ui-sdk's base CSS (hidden popups, popover resets) sits in this layer; declaring it first lets Tailwind win. */
 @layer ui-sdk;
 @import "tailwindcss";
+/* Tailwind skips gitignored folders, and pro/ is gitignored. Name it so pro classes are generated; a clone without it is unaffected. */
+@source "../components/panelo/pro";
 @import "./theme.css";
 @import "./typography.css";
 
@@ -1096,6 +1098,273 @@ input[type="search"]::-webkit-search-cancel-button {
   --hairline: oklch(1 0 0 / 6%);
   --ai-from: oklch(0.74 0.13 3.5);
   --ai-to: oklch(0.72 0.15 259.4);
+}
+
+/* ---------------------------------------------------------------------------
+ * Looks: whole-theme customisations for Panelo components, cycled by "Play
+ * customisation" (components/application/docs/looks.ts). Set on <html> inside a
+ * /preview iframe or on an inline preview's wrapper; repeated on [data-panelo] so
+ * radius and font beat its base-layer defaults. Dark looks also get `.dark`.
+ * --------------------------------------------------------------------------- */
+/* Restated so an inline preview inside a page of the other mode still wears it. */
+[data-look="light"],
+[data-look="light"] [data-panelo] {
+  --background: oklch(0.985 0.002 268);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --primary: oklch(0.545 0.196 268);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --ring: oklch(0.545 0.196 268);
+  --chart-1: oklch(0.52 0.19 268);
+  --chart-2: oklch(0.64 0.13 196);
+  --chart-3: oklch(0.48 0.19 310);
+  --chart-4: oklch(0.67 0.15 75);
+  --chart-5: oklch(0.58 0.2 18);
+  --scrollbar-thumb: oklch(0.84 0 0);
+  --hairline: oklch(0.952 0.003 264.5);
+  --radius: 0.625rem;
+}
+/* Restated so an inline preview inside a page of the other mode still wears it. */
+[data-look="dark"],
+[data-look="dark"] [data-panelo] {
+  --background: oklch(0.176 0.004 268);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.203 0.003 268);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.203 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+  --primary: oklch(0.7 0.16 268);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.7 0.16 268);
+  --chart-1: oklch(0.68 0.17 268);
+  --chart-2: oklch(0.78 0.11 196);
+  --chart-3: oklch(0.66 0.17 310);
+  --chart-4: oklch(0.82 0.14 75);
+  --chart-5: oklch(0.7 0.18 18);
+  --scrollbar-thumb: oklch(0.38 0 0);
+  --hairline: oklch(1 0 0 / 6%);
+  --radius: 0.625rem;
+}
+[data-look="sand"],
+[data-look="sand"] [data-panelo] {
+  --background: oklch(0.972 0.009 75);
+  --card: oklch(0.992 0.005 80);
+  --popover: oklch(0.992 0.005 80);
+  --muted: oklch(0.948 0.013 75);
+  --secondary: oklch(0.948 0.013 75);
+  --accent: oklch(0.948 0.013 75);
+  --muted-foreground: oklch(0.53 0.025 60);
+  --border: oklch(0.9 0.016 75);
+  --input: oklch(0.9 0.016 75);
+  --hairline: oklch(0.94 0.011 75);
+  --foreground: oklch(0.24 0.03 45);
+  --card-foreground: oklch(0.24 0.03 45);
+  --popover-foreground: oklch(0.24 0.03 45);
+  --secondary-foreground: oklch(0.24 0.03 45);
+  --accent-foreground: oklch(0.24 0.03 45);
+  --primary: oklch(0.6 0.15 42);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.6 0.15 42);
+  --chart-1: oklch(0.6 0.15 42);
+  --chart-2: oklch(0.72 0.12 85);
+  --chart-3: oklch(0.5 0.08 160);
+  --chart-4: oklch(0.42 0.09 25);
+  --chart-5: oklch(0.78 0.07 60);
+  --radius: 0.75rem;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+[data-look="ocean"],
+[data-look="ocean"] [data-panelo] {
+  --background: oklch(0.975 0.008 235);
+  --card: oklch(0.995 0.003 235);
+  --popover: oklch(0.995 0.003 235);
+  --muted: oklch(0.953 0.014 235);
+  --secondary: oklch(0.953 0.014 235);
+  --accent: oklch(0.953 0.014 235);
+  --muted-foreground: oklch(0.52 0.04 245);
+  --border: oklch(0.9 0.022 240);
+  --input: oklch(0.9 0.022 240);
+  --hairline: oklch(0.94 0.014 240);
+  --foreground: oklch(0.26 0.07 258);
+  --card-foreground: oklch(0.26 0.07 258);
+  --popover-foreground: oklch(0.26 0.07 258);
+  --secondary-foreground: oklch(0.26 0.07 258);
+  --accent-foreground: oklch(0.26 0.07 258);
+  --primary: oklch(0.58 0.17 250);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.58 0.17 250);
+  --chart-1: oklch(0.58 0.17 250);
+  --chart-2: oklch(0.74 0.11 205);
+  --chart-3: oklch(0.44 0.12 265);
+  --chart-4: oklch(0.82 0.09 185);
+  --chart-5: oklch(0.65 0.14 290);
+  --radius: 1rem;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+}
+[data-look="forest"],
+[data-look="forest"] [data-panelo] {
+  --background: oklch(0.19 0.018 165);
+  --card: oklch(0.22 0.02 165);
+  --popover: oklch(0.22 0.02 165);
+  --muted: oklch(0.28 0.022 165);
+  --secondary: oklch(0.28 0.022 165);
+  --accent: oklch(0.28 0.022 165);
+  --muted-foreground: oklch(0.72 0.03 160);
+  --border: oklch(0.85 0.05 160 / 10%);
+  --input: oklch(0.85 0.05 160 / 14%);
+  --hairline: oklch(0.85 0.05 160 / 7%);
+  --foreground: oklch(0.96 0.015 150);
+  --card-foreground: oklch(0.96 0.015 150);
+  --popover-foreground: oklch(0.96 0.015 150);
+  --secondary-foreground: oklch(0.96 0.015 150);
+  --accent-foreground: oklch(0.96 0.015 150);
+  --primary: oklch(0.78 0.15 155);
+  --primary-foreground: oklch(0.2 0.03 160);
+  --ring: oklch(0.78 0.15 155);
+  --chart-1: oklch(0.78 0.15 155);
+  --chart-2: oklch(0.86 0.13 110);
+  --chart-3: oklch(0.7 0.1 195);
+  --chart-4: oklch(0.6 0.12 140);
+  --chart-5: oklch(0.88 0.08 80);
+  --radius: 0.75rem;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --scrollbar-thumb: oklch(0.38 0.02 165);
+}
+[data-look="grape"],
+[data-look="grape"] [data-panelo] {
+  --background: oklch(0.975 0.01 305);
+  --card: oklch(0.995 0.004 305);
+  --popover: oklch(0.995 0.004 305);
+  --muted: oklch(0.952 0.016 305);
+  --secondary: oklch(0.952 0.016 305);
+  --accent: oklch(0.952 0.016 305);
+  --muted-foreground: oklch(0.52 0.045 300);
+  --border: oklch(0.905 0.025 305);
+  --input: oklch(0.905 0.025 305);
+  --hairline: oklch(0.94 0.016 305);
+  --foreground: oklch(0.25 0.09 295);
+  --card-foreground: oklch(0.25 0.09 295);
+  --popover-foreground: oklch(0.25 0.09 295);
+  --secondary-foreground: oklch(0.25 0.09 295);
+  --accent-foreground: oklch(0.25 0.09 295);
+  --primary: oklch(0.56 0.22 295);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.56 0.22 295);
+  --chart-1: oklch(0.56 0.22 295);
+  --chart-2: oklch(0.68 0.19 340);
+  --chart-3: oklch(0.75 0.12 260);
+  --chart-4: oklch(0.45 0.16 300);
+  --chart-5: oklch(0.83 0.1 320);
+  --radius: 1.1rem;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+[data-look="terminal"],
+[data-look="terminal"] [data-panelo] {
+  --background: oklch(0.13 0 0);
+  --card: oklch(0.16 0 0);
+  --popover: oklch(0.16 0 0);
+  --muted: oklch(0.22 0 0);
+  --secondary: oklch(0.22 0 0);
+  --accent: oklch(0.22 0 0);
+  --muted-foreground: oklch(0.68 0.01 130);
+  --border: oklch(1 0 0 / 11%);
+  --input: oklch(1 0 0 / 14%);
+  --hairline: oklch(1 0 0 / 7%);
+  --foreground: oklch(0.93 0.02 130);
+  --card-foreground: oklch(0.93 0.02 130);
+  --popover-foreground: oklch(0.93 0.02 130);
+  --secondary-foreground: oklch(0.93 0.02 130);
+  --accent-foreground: oklch(0.93 0.02 130);
+  --primary: oklch(0.86 0.2 128);
+  --primary-foreground: oklch(0.15 0 0);
+  --ring: oklch(0.86 0.2 128);
+  --chart-1: oklch(0.86 0.2 128);
+  --chart-2: oklch(0.8 0.13 200);
+  --chart-3: oklch(0.86 0.15 90);
+  --chart-4: oklch(0.7 0.18 330);
+  --chart-5: oklch(0.62 0 0);
+  --radius: 0.25rem;
+  --font-sans: var(--font-mono-source), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --scrollbar-thumb: oklch(0.34 0 0);
+}
+[data-look="editorial"],
+[data-look="editorial"] [data-panelo] {
+  --background: oklch(0.965 0.012 88);
+  --card: oklch(0.985 0.008 90);
+  --popover: oklch(0.985 0.008 90);
+  --muted: oklch(0.94 0.014 88);
+  --secondary: oklch(0.94 0.014 88);
+  --accent: oklch(0.94 0.014 88);
+  --muted-foreground: oklch(0.48 0.02 70);
+  --border: oklch(0.86 0.02 85);
+  --input: oklch(0.86 0.02 85);
+  --hairline: oklch(0.92 0.014 88);
+  --foreground: oklch(0.2 0.01 60);
+  --card-foreground: oklch(0.2 0.01 60);
+  --popover-foreground: oklch(0.2 0.01 60);
+  --secondary-foreground: oklch(0.2 0.01 60);
+  --accent-foreground: oklch(0.2 0.01 60);
+  --primary: oklch(0.5 0.18 27);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.5 0.18 27);
+  --chart-1: oklch(0.5 0.18 27);
+  --chart-2: oklch(0.32 0.02 60);
+  --chart-3: oklch(0.66 0.1 70);
+  --chart-4: oklch(0.45 0.08 240);
+  --chart-5: oklch(0.76 0.06 40);
+  --radius: 0.125rem;
+  --font-sans: ui-serif, "New York", "Iowan Old Style", Georgia, serif;
+}
+
+/* A look change lands in one frame: element transitions wait while it swaps. */
+[data-look-switching] *,
+[data-look-switching] *::before,
+[data-look-switching] *::after {
+  transition: none !important;
+}
+
+/* …and the page cross-fades once. The theme toggle above turns the native fade off, so the
+ * preview brings its own; plus-lighter keeps the midpoint from dipping. */
+html[data-look-vt]::view-transition-image-pair(root) {
+  isolation: isolate;
+}
+html[data-look-vt]::view-transition-old(root) {
+  animation: look-fade-out 520ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  mix-blend-mode: plus-lighter;
+}
+html[data-look-vt]::view-transition-new(root) {
+  animation: look-fade-in 520ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  mix-blend-mode: plus-lighter;
+}
+@keyframes look-fade-out {
+  to { opacity: 0; }
+}
+@keyframes look-fade-in {
+  from { opacity: 0; }
+}
+
+@keyframes look-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 
 /* In the base layer, as in temp-01, so utilities like border-amber-500 and font-mono still win. */
