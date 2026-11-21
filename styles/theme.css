@@ -418,6 +418,40 @@
   --gradient-button-danger-hover:     linear-gradient(180deg, var(--color-red-400) 0%, var(--color-red-500) 100%);
   --gradient-button-danger-active:    linear-gradient(180deg, var(--color-red-600) 0%, var(--color-red-700) 100%);
   --gradient-button-danger-disabled:  linear-gradient(180deg, var(--color-red-100) 0%, var(--color-red-200) 100%);
+
+  /* Site chrome (landing, docs, catalogue), drawn after panelo.com: neutral ink,
+     a #f5f5f5 ground under a #fcfcfc inset panel, hairline edges and pill controls. */
+  --color-site-page:         var(--color-white);
+  --color-site-ground:       var(--color-neutral-100);
+  --color-site-panel:        #fcfcfc;
+  --color-site-panel-border: #ececec;
+  --color-site-surface:      var(--color-white);
+  --color-site-preview:      var(--color-neutral-50);
+  --color-site-hairline:     rgb(10 10 10 / 0.055);
+  --color-site-ring:         rgb(10 10 10 / 0.1);
+  --color-site-pill:         rgb(0 0 0 / 0.04);
+  --color-site-pill-hover:   rgb(0 0 0 / 0.07);
+  --color-site-active:       rgb(0 0 0 / 0.05);
+  --color-site-ink:          var(--color-neutral-950);
+  --color-site-muted:        var(--color-neutral-500);
+  --color-site-faint:        rgb(0 0 0 / 0.4);
+  --color-site-cta-from:     #323137;
+  --color-site-cta-to:       #201e25;
+  --color-site-cta-text:     var(--color-neutral-50);
+  /* Pro accent and the promo bar: snapcn's brand blue (#1d6bff), lit top to bottom. */
+  --color-site-pro:          rgb(29 107 255 / 0.08);
+  --color-site-pro-ring:     rgb(29 107 255 / 0.18);
+  --color-site-pro-text:     #155dfc;
+  --color-site-pro-icon:     #1d6bff;
+  --color-site-banner-from:  #2b7fff;
+  --color-site-banner-via:   #1d6bff;
+  --color-site-banner-to:    #155dfc;
+  --color-site-on-banner:    var(--color-white);
+  --shadow-site-panel:  0 1px 0 0 rgb(0 0 0 / 0.04), 0 2px 1px -1px rgb(0 0 0 / 0.05);
+  --shadow-site-cta:    0 0 0 1px #0d0d0d, 0 2px 4px 0 rgb(0 0 0 / 0.1);
+  --shadow-site-field:  0 0 0 1px rgb(10 10 10 / 0.055), 0 1px 1.5px 0 rgb(0 0 0 / 0.04);
+  --shadow-site-raised: 0 1px 2px 0 rgb(0 0 0 / 0.08), 0 0 0 0.5px rgb(0 0 0 / 0.06);
+  --shadow-site-pro:    inset 0 0 0 1px rgb(29 107 255 / 0.18), 0 1px 0 0 rgb(29 107 255 / 0.14);
 }
 
 .dark {
@@ -629,6 +663,34 @@
   --color-chart-neutral: var(--color-neutral-800);
   --color-chart-agents-bar:        var(--color-purple-500);
   --color-chart-agents-bar-active: var(--color-purple-600);
+
+  /* Site chrome, dark: a #0c0c0d ground under a #121213 panel. The primary pill inverts to white. */
+  --color-site-page:         #0c0c0d;
+  --color-site-ground:       #0c0c0d;
+  --color-site-panel:        #121213;
+  --color-site-panel-border: #222224;
+  --color-site-surface:      #19191b;
+  --color-site-preview:      #1e1e20;
+  --color-site-hairline:     rgb(255 255 255 / 0.05);
+  --color-site-ring:         rgb(255 255 255 / 0.1);
+  --color-site-pill:         rgb(255 255 255 / 0.06);
+  --color-site-pill-hover:   rgb(255 255 255 / 0.1);
+  --color-site-active:       rgb(255 255 255 / 0.07);
+  --color-site-ink:          #ededed;
+  --color-site-muted:        #8f8f8f;
+  --color-site-faint:        rgb(255 255 255 / 0.4);
+  --color-site-cta-from:     var(--color-neutral-50);
+  --color-site-cta-to:       var(--color-neutral-200);
+  --color-site-cta-text:     var(--color-neutral-950);
+  --color-site-pro:          rgb(43 127 255 / 0.16);
+  --color-site-pro-ring:     rgb(43 127 255 / 0.35);
+  --color-site-pro-text:     #8fb8ff;
+  --color-site-pro-icon:     #5b9bff;
+  --shadow-site-panel:  0 1px 0 0 rgb(0 0 0 / 0.45), 0 2px 1px -1px rgb(0 0 0 / 0.5);
+  --shadow-site-cta:    0 0 0 1px var(--color-white), 0 2px 4px 0 rgb(0 0 0 / 0.3);
+  --shadow-site-field:  0 0 0 1px rgb(255 255 255 / 0.06), 0 1px 1.5px 0 rgb(0 0 0 / 0.3);
+  --shadow-site-raised: 0 1px 2px 0 rgb(0 0 0 / 0.4), 0 0 0 0.5px rgb(255 255 255 / 0.08);
+  --shadow-site-pro:    inset 0 0 0 1px rgb(43 127 255 / 0.35), 0 1px 0 0 rgb(43 127 255 / 0.2);
 }
 
 /* Non-default accents (data-accent set by the accent engine) can land on a
@@ -829,6 +891,39 @@
   --color-chart-9-active: var(--color-chart-9-active);
   --color-chart-agents-bar:        var(--color-chart-agents-bar);
   --color-chart-agents-bar-active: var(--color-chart-agents-bar-active);
+
+
+  /* Site chrome */
+  --color-site-page: var(--color-site-page);
+  --color-site-ground: var(--color-site-ground);
+  --color-site-panel: var(--color-site-panel);
+  --color-site-panel-border: var(--color-site-panel-border);
+  --color-site-surface: var(--color-site-surface);
+  --color-site-preview: var(--color-site-preview);
+  --color-site-hairline: var(--color-site-hairline);
+  --color-site-ring: var(--color-site-ring);
+  --color-site-pill: var(--color-site-pill);
+  --color-site-pill-hover: var(--color-site-pill-hover);
+  --color-site-active: var(--color-site-active);
+  --color-site-ink: var(--color-site-ink);
+  --color-site-muted: var(--color-site-muted);
+  --color-site-faint: var(--color-site-faint);
+  --color-site-cta-from: var(--color-site-cta-from);
+  --color-site-cta-to: var(--color-site-cta-to);
+  --color-site-cta-text: var(--color-site-cta-text);
+  --color-site-pro: var(--color-site-pro);
+  --color-site-pro-ring: var(--color-site-pro-ring);
+  --color-site-pro-text: var(--color-site-pro-text);
+  --color-site-pro-icon: var(--color-site-pro-icon);
+  --color-site-banner-from: var(--color-site-banner-from);
+  --color-site-banner-via: var(--color-site-banner-via);
+  --color-site-banner-to: var(--color-site-banner-to);
+  --color-site-on-banner: var(--color-site-on-banner);
+  --shadow-site-panel: var(--shadow-site-panel);
+  --shadow-site-cta: var(--shadow-site-cta);
+  --shadow-site-field: var(--shadow-site-field);
+  --shadow-site-raised: var(--shadow-site-raised);
+  --shadow-site-pro: var(--shadow-site-pro);
 }
 
 /* ---------------------------------------------------------------------------

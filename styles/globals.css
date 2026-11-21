@@ -885,32 +885,251 @@ input[type="search"]::-webkit-search-cancel-button {
     }
 }
 
-/* Showcase card (docs index, landing, the starter's catalogue). */
-.landing-showcase-card {
-  transition: box-shadow 280ms ease;
+/* The promo bar's light: one soft glow crossing the bar, then a pause (after snapcn's sale banner). */
+@keyframes site-banner-sweep {
+  0% { transform: translateX(-20vw) translateY(-50%); }
+  70%, 100% { transform: translateX(120vw) translateY(-50%); }
 }
 
-.landing-showcase-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 60;
-  pointer-events: none;
-  border: 1px solid var(--color-border-button-default);
-  border-radius: inherit;
-  transition:
-    border-color 280ms ease,
-    box-shadow 280ms ease;
+/* ---------------------------------------------------------------------------
+ * Panelo component theme
+ *
+ * Components and blocks under components/panelo wear the temp-01 theme
+ * (panelo_templates/temp-01/src/app/globals.css): its colour tokens, Geist,
+ * and its 0.625rem radius scale. Only those components use the shadcn token
+ * names below, and the font, radius and chart overrides are scoped to
+ * [data-panelo], so the site's own chrome keeps theme.css.
+ * --------------------------------------------------------------------------- */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-ring: var(--ring);
+
+  /* `text-success` reads on a surface, `bg-success/10` is its tint, `-solid` fills chips and dots. */
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--primary-foreground);
+  --color-success: var(--success);
+  --color-success-solid: var(--success-solid);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-solid: var(--warning-solid);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-solid: var(--info-solid);
+  --color-info-foreground: var(--info-foreground);
+
+  /* Tonal pills: `bg-tone-violet-bg border-tone-violet-border text-tone-violet-fg`, `-solid` for dots and marks. */
+  --color-tone-violet-bg: var(--tone-violet-bg);
+  --color-tone-violet-border: var(--tone-violet-border);
+  --color-tone-violet-fg: var(--tone-violet-fg);
+  --color-tone-violet-solid: var(--tone-violet-solid);
+  --color-tone-green-bg: var(--tone-green-bg);
+  --color-tone-green-border: var(--tone-green-border);
+  --color-tone-green-fg: var(--tone-green-fg);
+  --color-tone-green-solid: var(--tone-green-solid);
+  --color-tone-blue-bg: var(--tone-blue-bg);
+  --color-tone-blue-border: var(--tone-blue-border);
+  --color-tone-blue-fg: var(--tone-blue-fg);
+  --color-tone-blue-solid: var(--tone-blue-solid);
+  --color-tone-cyan-bg: var(--tone-cyan-bg);
+  --color-tone-cyan-border: var(--tone-cyan-border);
+  --color-tone-cyan-fg: var(--tone-cyan-fg);
+  --color-tone-cyan-solid: var(--tone-cyan-solid);
+  --color-tone-orange-bg: var(--tone-orange-bg);
+  --color-tone-orange-border: var(--tone-orange-border);
+  --color-tone-orange-fg: var(--tone-orange-fg);
+  --color-tone-orange-solid: var(--tone-orange-solid);
+  --color-tone-yellow-bg: var(--tone-yellow-bg);
+  --color-tone-yellow-border: var(--tone-yellow-border);
+  --color-tone-yellow-fg: var(--tone-yellow-fg);
+  --color-tone-yellow-solid: var(--tone-yellow-solid);
+  /* Data-grid hairlines, a step lighter than --border; the AI gradient on enrichment columns. */
+  --color-hairline: var(--hairline);
+  --color-ai-from: var(--ai-from);
+  --color-ai-to: var(--ai-to);
+  /* A control lifted off the surface by a hairline halo and a soft drop, no stroke. */
+  --shadow-raised: 0 0 1px 0 var(--border), 0 1px 2px -1px oklch(0.27 0.06 265 / 0.02), 0 2px 2px -1px oklch(0.27 0.06 265 / 0.06);
 }
 
-.dark .landing-showcase-card::after {
-  border-color: rgb(255 255 255 / 0.08);
+:root {
+  --background: oklch(0.985 0.002 268);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+
+  --primary: oklch(0.545 0.196 268);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --ring: oklch(0.545 0.196 268);
+
+  --destructive: oklch(0.577 0.245 27.325);
+  --success: oklch(0.52 0.13 150);
+  --success-solid: oklch(0.53 0.15 150);
+  --success-foreground: oklch(0.985 0 0);
+  --warning: oklch(0.55 0.12 75);
+  --warning-solid: oklch(0.76 0.15 75);
+  --warning-foreground: oklch(0.25 0.04 75);
+  --info: oklch(0.52 0.15 245);
+  --info-solid: oklch(0.52 0.16 245);
+  --info-foreground: oklch(0.985 0 0);
+
+  /* Categorical: series differ in hue and lightness, so they survive greyscale and red-green colour blindness. */
+  --chart-1: oklch(0.52 0.19 268);
+  --chart-2: oklch(0.64 0.13 196);
+  --chart-3: oklch(0.48 0.19 310);
+  --chart-4: oklch(0.67 0.15 75);
+  --chart-5: oklch(0.58 0.2 18);
+
+  --scrollbar-thumb: oklch(0.84 0 0);
+  /* Tones, measured from the CRM reference: tint, border, ink and solid per hue. */
+  --tone-violet-bg: oklch(0.959 0.024 304.5);
+  --tone-violet-border: oklch(0.916 0.046 300.7);
+  --tone-violet-fg: oklch(0.405 0.227 284.0);
+  --tone-violet-solid: oklch(0.678 0.183 295.7);
+  --tone-green-bg: oklch(0.956 0.040 153.1);
+  --tone-green-border: oklch(0.927 0.064 153.2);
+  --tone-green-fg: oklch(0.414 0.092 159.4);
+  --tone-green-solid: oklch(0.718 0.165 158.1);
+  --tone-blue-bg: oklch(0.947 0.025 263.3);
+  --tone-blue-border: oklch(0.919 0.039 261.5);
+  --tone-blue-fg: oklch(0.373 0.124 261.7);
+  --tone-blue-solid: oklch(0.616 0.185 261.2);
+  --tone-cyan-bg: oklch(0.951 0.029 218.2);
+  --tone-cyan-border: oklch(0.920 0.046 217.0);
+  --tone-cyan-fg: oklch(0.435 0.078 222.9);
+  --tone-cyan-solid: oklch(0.655 0.121 222.8);
+  --tone-orange-bg: oklch(0.958 0.025 61.7);
+  --tone-orange-border: oklch(0.925 0.046 60.9);
+  --tone-orange-fg: oklch(0.408 0.106 50.9);
+  --tone-orange-solid: oklch(0.757 0.163 55.1);
+  --tone-yellow-bg: oklch(0.964 0.052 92.9);
+  --tone-yellow-border: oklch(0.942 0.082 92.3);
+  --tone-yellow-fg: oklch(0.465 0.095 87.2);
+  --tone-yellow-solid: oklch(0.763 0.157 84.4);
+  --hairline: oklch(0.952 0.003 264.5);
+  --ai-from: oklch(0.646 0.136 3.5);
+  --ai-to: oklch(0.62 0.171 259.4);
 }
 
-@media (min-width: 640px) and (hover: hover) {
-  .landing-showcase-card:hover::after,
-  .landing-showcase-card:focus-within::after {
-    border-color: var(--color-border-button-hover);
-    box-shadow: inset 0 0 0 2px var(--color-border-button-hover);
+/* Tuned to a #161616 ground, #1b1b1b surfaces and #222 hairlines. */
+.dark {
+  --background: oklch(0.176 0.004 268);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.203 0.003 268);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.203 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+
+  --primary: oklch(0.7 0.16 268);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.7 0.16 268);
+
+  --destructive: oklch(0.704 0.191 22.216);
+  --success: oklch(0.78 0.15 152);
+  --success-solid: oklch(0.53 0.14 152);
+  --success-foreground: oklch(0.985 0 0);
+  --warning: oklch(0.82 0.14 80);
+  --warning-solid: oklch(0.75 0.15 78);
+  --warning-foreground: oklch(0.22 0.04 75);
+  --info: oklch(0.78 0.11 240);
+  --info-solid: oklch(0.52 0.16 245);
+  --info-foreground: oklch(0.985 0 0);
+
+  --chart-1: oklch(0.68 0.17 268);
+  --chart-2: oklch(0.78 0.11 196);
+  --chart-3: oklch(0.66 0.17 310);
+  --chart-4: oklch(0.82 0.14 75);
+  --chart-5: oklch(0.7 0.18 18);
+
+  --scrollbar-thumb: oklch(0.38 0 0);
+  /* Dark tones: the solid hue as a translucent tint and border, with a light ink. */
+  --tone-violet-bg: color-mix(in oklab, var(--tone-violet-solid) 14%, transparent);
+  --tone-violet-border: color-mix(in oklab, var(--tone-violet-solid) 28%, transparent);
+  --tone-violet-fg: oklch(0.86 0.09 295);
+  --tone-green-bg: color-mix(in oklab, var(--tone-green-solid) 14%, transparent);
+  --tone-green-border: color-mix(in oklab, var(--tone-green-solid) 28%, transparent);
+  --tone-green-fg: oklch(0.86 0.11 158);
+  --tone-blue-bg: color-mix(in oklab, var(--tone-blue-solid) 14%, transparent);
+  --tone-blue-border: color-mix(in oklab, var(--tone-blue-solid) 28%, transparent);
+  --tone-blue-fg: oklch(0.84 0.09 262);
+  --tone-cyan-bg: color-mix(in oklab, var(--tone-cyan-solid) 14%, transparent);
+  --tone-cyan-border: color-mix(in oklab, var(--tone-cyan-solid) 28%, transparent);
+  --tone-cyan-fg: oklch(0.86 0.08 222);
+  --tone-orange-bg: color-mix(in oklab, var(--tone-orange-solid) 14%, transparent);
+  --tone-orange-border: color-mix(in oklab, var(--tone-orange-solid) 28%, transparent);
+  --tone-orange-fg: oklch(0.86 0.09 58);
+  --tone-yellow-bg: color-mix(in oklab, var(--tone-yellow-solid) 14%, transparent);
+  --tone-yellow-border: color-mix(in oklab, var(--tone-yellow-solid) 28%, transparent);
+  --tone-yellow-fg: oklch(0.88 0.1 90);
+  --hairline: oklch(1 0 0 / 6%);
+  --ai-from: oklch(0.74 0.13 3.5);
+  --ai-to: oklch(0.72 0.15 259.4);
+}
+
+/* In the base layer, as in temp-01, so utilities like border-amber-500 and font-mono still win. */
+@layer base {
+  [data-panelo] {
+    --radius: 0.625rem;
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+    --radius-2xl: calc(var(--radius) + 8px);
+    --radius-3xl: calc(var(--radius) + 12px);
+    --radius-4xl: calc(var(--radius) + 16px);
+
+    /* theme.css owns chart-1…5 for the site; inside a Panelo component they are temp-01's series. */
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+    --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+    font-family: var(--font-sans);
+  }
+
+  /* shadcn components assume borders default to the border token; scoped to Panelo's own components. */
+  [data-panelo],
+  [data-panelo] *,
+  [data-panelo] ::before,
+  [data-panelo] ::after {
+    border-color: var(--color-border);
+    outline-color: color-mix(in oklab, var(--color-ring) 50%, transparent);
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
   }
 }

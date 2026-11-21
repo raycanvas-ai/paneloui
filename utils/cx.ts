@@ -33,10 +33,16 @@ const TEXT_STYLE_SUFFIXES = TEXT_FAMILIES.flatMap((family) =>
   TEXT_WEIGHTS.map((weight) => `${family}-${weight}`),
 );
 
+// The site chrome's ramp (`text-site-*` in typography.css).
+const SITE_TEXT_STYLES = [
+  "display", "display-sm", "title", "heading", "page-title", "section", "plan", "price", "lead",
+  "question", "button", "body", "body-medium", "text", "count", "chip",
+].map((role) => `site-${role}`);
+
 const twMerge = extendTailwindMerge({
   extend: {
     classGroups: {
-      "font-size": [{ text: TEXT_STYLE_SUFFIXES }],
+      "font-size": [{ text: [...TEXT_STYLE_SUFFIXES, ...SITE_TEXT_STYLES] }],
     },
   },
 });
