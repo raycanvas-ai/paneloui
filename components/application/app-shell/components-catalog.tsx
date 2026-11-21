@@ -6,6 +6,7 @@ import { RiCheckLine, RiFileCopyLine } from "@remixicon/react";
 import { SegmentedControl, SegmentedControlItem } from "@ui-sdk/react/segmented-control";
 
 import { ALL_ENTRIES, COMPONENT_SECTIONS, installCommand, sectionOf, type Entry } from "@/components/application/docs/components-index";
+import { LookPlayer } from "@/components/application/docs/look-player";
 import { PANELO_PREVIEWS } from "@/components/application/docs/panelo-catalog";
 import { Chip, ProTag, SiteTabPanel, SiteTabs } from "@/components/application/site/site-ui";
 import { cx } from "@/utils/cx";
@@ -76,6 +77,7 @@ export function ComponentsCatalog() {
         <h1 className="max-w-[520px] text-site-page-title text-balance">Dashboard components AI agents can operate – built on Vercel&apos;s UI SDK.</h1>
         <TierFilter tier={tier} onChange={setTier} />
       </div>
+      <LookPlayer className="mt-5" />
       <SiteTabs
         label="Library categories"
         items={items}
