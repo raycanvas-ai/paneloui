@@ -1,26 +1,11 @@
-"use client";
+import { ComponentsCatalog } from "@/components/application/app-shell/components-catalog";
+import { DocsShell } from "@/components/application/docs/docs-shell";
 
-import { useState } from "react";
-import { RiLayoutGridLine } from "@remixicon/react";
-
-import {
-  AppShell,
-  CatalogTierFilter,
-  ComponentsCatalog,
-  type CatalogTier,
-} from "@/components/application/app-shell/app-shell";
-
-/** The starter's catalogue page: panelo.com/components, linking out. */
+/** The component library: every category of the catalogue in the library frame. */
 export default function ComponentsPage() {
-  const [tier, setTier] = useState<CatalogTier>("all");
   return (
-    <AppShell
-      title="Components and Blocks"
-      icon={RiLayoutGridLine}
-      actions={<CatalogTierFilter tier={tier} onChange={setTier} />}
-      columnClassName="max-w-[964px]"
-    >
-      <ComponentsCatalog tier={tier} />
-    </AppShell>
+    <DocsShell>
+      <ComponentsCatalog />
+    </DocsShell>
   );
 }

@@ -1,85 +1,23 @@
-import Image from "next/image";
 import { cx } from "@/utils/cx";
 
-/** Panelo mark. Renders the brand icon at a fixed pixel size (24 / 32 / 40).
- *  `mono` swaps between the light and dark black-and-white assets through the
- *  shared theme class on the document root. */
-export function Logo({
-  size = 32,
-  mono = false,
-  className,
-}: {
-  size?: number;
-  mono?: boolean;
-  className?: string;
-}) {
-  if (mono) {
-    return (
-      <>
-        <Image
-          src="/brand/panelo-logo.png"
-          alt="Panelo"
-          width={size}
-          height={size}
-          className={cx("theme-logo-light shrink-0", className)}
-          priority
-        />
-        <Image
-          src="/brand/panelo-logo.png"
-          alt="Panelo"
-          width={size}
-          height={size}
-          className={cx("theme-logo-dark shrink-0", className)}
-          priority
-        />
-      </>
-    );
-  }
-
+/**
+ * Panelo UI mark: the four-point star, drawn as a mask in the current text colour,
+ * so it is ink on the light theme and near-white on the dark one.
+ */
+export function Logo({ size = 32, className }: { size?: number; className?: string }) {
   return (
-    <Image
-      src="/brand/panelo-logo.png"
-      alt="Panelo"
-      width={size}
-      height={size}
-      className={cx("shrink-0", className)}
-      priority
+    <span
+      role="img"
+      aria-label="Panelo UI"
+      className={cx("inline-block shrink-0 bg-current text-site-ink", className)}
+      style={{
+        width: size,
+        height: size,
+        maskImage: "url(/brand/panelo-mark.png)",
+        maskSize: "contain",
+        maskRepeat: "no-repeat",
+        maskPosition: "center",
+      }}
     />
-  );
-}
-
-/** Theme-aware metallic Panelo Pro mark. */
-export function ProLogo({
-  size = 36,
-  className,
-  decorative = false,
-  priority = false,
-}: {
-  size?: number;
-  className?: string;
-  decorative?: boolean;
-  priority?: boolean;
-}) {
-  const alt = decorative ? "" : "Panelo Pro";
-
-  return (
-    <>
-      <Image
-        src="/brand/panelo-logo.png"
-        alt={alt}
-        width={size}
-        height={size}
-        className={cx("theme-logo-light shrink-0 object-contain", className)}
-        priority={priority}
-      />
-      <Image
-        src="/brand/panelo-logo.png"
-        alt={alt}
-        width={size}
-        height={size}
-        className={cx("theme-logo-dark shrink-0 object-contain", className)}
-        priority={priority}
-      />
-    </>
   );
 }

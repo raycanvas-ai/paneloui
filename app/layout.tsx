@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Inter, JetBrains_Mono } from "next/font/google";
+import { PromoBar } from "@/components/application/site/promo-bar";
 import { DirectionProvider } from "@/components/foundations/direction/direction";
 
 import "@/styles/globals.css";
@@ -19,9 +20,13 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
+// Panelo's components and blocks are set in Geist, as in temp-01 (see [data-panelo] in globals.css).
+const geist = Geist({ variable: "--font-geist", subsets: ["latin"] });
+const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+
 export const metadata: Metadata = {
-  title: "Chat",
-  description: "A streaming AI chat on your own model key, built with Panelo.",
+  title: { default: "Panelo UI - dashboard components AI agents can operate", template: "%s - Panelo UI" },
+  description: "React and Tailwind dashboard components, charts and templates built on Vercel's UI SDK, so AI agents can read and operate them.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -29,7 +34,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html
       lang="en-US"
       dir="ltr"
-      className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${jetbrainsMono.variable} ${geist.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col font-sans">
@@ -38,7 +43,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Script id="panelo-theme" strategy="beforeInteractive">
           {`(function(){try{var dark=localStorage.getItem("panelo:theme")==="dark";document.documentElement.classList.toggle("dark",dark)}catch(e){document.documentElement.classList.remove("dark")}})();`}
         </Script>
-        <DirectionProvider locale="en-US">{children}</DirectionProvider>
+        <DirectionProvider locale="en-US">
+          <PromoBar />
+          {children}
+        </DirectionProvider>
       </body>
     </html>
   );

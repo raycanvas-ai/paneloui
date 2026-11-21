@@ -1,9 +1,7 @@
-import { RiFontSize, RiPaletteLine } from "@remixicon/react";
-
 /**
- * The catalogue behind panelo.com/components: every component, block, chart
- * and template with its docs page. Plain data, so the starter can show the same
- * list (linking out to the site) without carrying any component source.
+ * The catalogue: the Panelo components (components/panelo), grouped by the
+ * block categories of the Panelo registry. Plain data, shared by the
+ * landing, the docs sidebar, the /components index and each item's page.
  */
 export type Entry = {
   name: string;
@@ -11,126 +9,166 @@ export type Entry = {
   description: string;
   tier: "free" | "pro";
   status: "shipped" | "planned";
-  isNew?: boolean;
-  /** Optional leading icon - used by the Foundations entries. */
-  icon?: typeof RiPaletteLine;
 };
 
-const foundations: Entry[] = [
+/** How a section previews its entries: a live demo, a scaled chart, or a whole screen from /preview/[slug]. */
+export type SectionKind = "component" | "chart" | "screen";
+
+export type Section = {
+  /** The registry's category slug, also the section's anchor on /components. */
+  id: string;
+  title: string;
+  blurb: string;
+  kind: SectionKind;
+  entries: Entry[];
+  /** Halves the column count: a whole app screen is unreadable at a third of the width. */
+  wide?: boolean;
+};
+
+const free = (name: string, slug: string, description: string): Entry => ({ name, href: `/components/${slug}`, description, tier: "free", status: "shipped" });
+const pro = (name: string, slug: string, description: string): Entry => ({ name, href: `/components/${slug}`, description, tier: "pro", status: "shipped" });
+
+export const COMPONENT_SECTIONS: Section[] = [
   {
-    name: "Color",
-    href: "/components/color",
-    description: "The full palette and semantic tokens.",
-    tier: "free",
-    status: "shipped",
-    icon: RiPaletteLine,
+    id: "components",
+    title: "Components",
+    blurb: "shadcn-compatible parts built on Vercel's UI SDK.",
+    kind: "component",
+    entries: [
+      free("Accordion", "ui-accordion", "Stacked sections that expand one or many at a time."),
+      free("Animated Group", "ui-animated-group", "Staggered entrance animation for a set of items."),
+      free("Aspect Ratio", "ui-aspect-ratio", "Box that keeps a fixed width-to-height ratio."),
+      free("Avatar", "ui-avatar", "Image with an initials fallback."),
+      free("Badge", "ui-badge", "Small status label in four variants."),
+      free("Border Beam", "ui-border-beam", "Light beam that travels around a card border."),
+      free("Brand Logos", "ui-logos", "Vector marks for Vercel, Claude, npm, pnpm, Yarn, Bun and more."),
+      free("Breadcrumb", "ui-breadcrumb", "Path trail with separators."),
+      free("Button", "ui-button", "Default, outline, secondary, ghost, destructive and link actions."),
+      free("Card", "ui-card", "Surface with header, content and footer slots."),
+      free("Chart", "ui-chart", "Recharts wrapper with themed colors, tooltip and legend."),
+      free("Collapsible", "ui-collapsible", "Show and hide a single panel."),
+      free("Dialog", "ui-dialog", "Modal with title, description and close actions."),
+      free("Dropdown Menu", "ui-dropdown-menu", "Menus with items, checkboxes, radios, labels and submenus."),
+      free("Infinite Slider", "ui-infinite-slider", "Endless marquee for logos and testimonials."),
+      free("Input", "ui-input", "Text field with focus and invalid states."),
+      free("Label", "ui-label", "Accessible label for a form control."),
+      free("Popover", "ui-popover", "Floating panel anchored to a trigger."),
+      free("Progress", "ui-progress", "Horizontal bar for upload and task progress."),
+      free("Progressive Blur", "ui-progressive-blur", "Layered blur that fades content into an edge."),
+      free("Radio Group", "ui-radio-group", "Single choice from a short list."),
+      free("Scroll Area", "ui-scroll-area", "Scroll container with a styled, auto-hiding scrollbar."),
+      free("Select", "ui-select", "Single-choice list with keyboard typeahead."),
+      free("Separator", "ui-separator", "Horizontal or vertical divider."),
+      free("Sheet", "ui-sheet", "Drawer from any edge with swipe to close."),
+      free("Skeleton", "ui-skeleton", "Loading placeholder."),
+      free("Switch", "ui-switch", "On/off toggle for settings."),
+      free("Tabs", "ui-tabs", "Tab list with panels and arrow-key navigation."),
+      free("Text Effect", "ui-text-effect", "Animated text reveal by word, character or line."),
+      free("Textarea", "ui-textarea", "Multiline field that grows with its content."),
+      free("Toggle", "ui-toggle", "Two-state button."),
+      free("Toggle Group", "ui-toggle-group", "Set of toggles with single or multiple selection."),
+      free("Tooltip", "ui-tooltip", "Hint on hover and focus."),
+    ],
   },
   {
-    name: "Typography",
-    href: "/components/typography",
-    description: "Type scale, weights, and text styles.",
-    tier: "free",
-    status: "shipped",
-    icon: RiFontSize,
+    id: "dashboard-pages",
+    title: "Dashboard Pages",
+    blurb: "Full dashboard pages with sidebar context.",
+    kind: "screen",
+    wide: true,
+    entries: [
+      pro("Companies CRM Table", "dashboard-pages-1", "CRM companies table with a resizable sidebar, saved views, sort and filter menus, column visibility, row selection, footer calculations, and CSV export."),
+      pro("AI Workflow Builder", "dashboard-pages-2", "AI workflow builder with chat-driven automation thread, workflow preview tabs, node-graph editor, and sample output table."),
+      pro("Overview Analytics Dashboard", "dashboard-pages-3", "Overview dashboard with revenue, orders and new-customer stat cards, bar sparklines, and an interactive pixel-mosaic sales-trend chart."),
+      pro("Business Partner CRM", "dashboard-pages-4", "CRM dashboard with a navigation sidebar and a dense data table plus selection, filter and sort toolbar."),
+      pro("Project Overview Dashboard", "dashboard-pages-5", "Project dashboard with a collapsible sidebar, breadcrumb bar, project hero, section tabs and a two-column overview."),
+      pro("Fintech Project Page", "dashboard-pages-6", "Project page with a workspace sidebar, project document, properties panel and a filterable timeline."),
+      pro("Team Inbox", "dashboard-pages-7", "Team inbox with an icon rail, searchable conversation list, threaded conversation with reply box and a details panel."),
+      pro("Custom Finance Dashboard", "dashboard-pages-8", "Finance dashboard with a stacked monthly balance chart, payment card and Quick Send, client news, suggestions, plans, weekly limits, budget split and recent transactions."),
+      pro("Task Board Dashboard", "dashboard-pages-9", "Task overview with a greeting, AI announcement, four stat cards, board view tabs and a drag-and-drop kanban with keyboard moves."),
+      pro("Workflow Builder", "dashboard-pages-10", "Node-based workflow builder: icon rail, searchable node library, a pan-and-zoom canvas with draggable nodes and live edges, and a settings panel that follows the selection."),
+      pro("AI Automation Dashboard", "dashboard-pages-11", "AI workflow-automation dashboard with stat cards, an active-workflows table, a templates carousel, and an Ask AI assistant panel."),
+      pro("Marketing Analytics Dashboard", "dashboard-pages-12", "Marketing analytics dashboard with a KPI strip, a three-series trend chart, a tabbed lead inbox with AI score, and channel panels."),
+    ],
+  },
+  {
+    id: "login-pages",
+    title: "Login Pages",
+    blurb: "Sign-in, sign-up and authentication pages.",
+    kind: "screen",
+    entries: [
+      free("Split Login Page", "login-pages-1", "Split-screen login with an email/password form, social sign-in buttons, and an animated orbit of app logos."),
+    ],
+  },
+  {
+    id: "sidebars",
+    title: "Sidebars",
+    blurb: "App sidebars with navigation and workspace switchers.",
+    kind: "screen",
+    entries: [
+      free("Workspace Sidebar", "sidebars-1", "App sidebar with workspace switcher, collapsible dashboard and folder groups, and a pinned footer."),
+      free("Workspace Sidebar with Drawer", "sidebars-2", "Workspace sidebar with a workspace switcher, collapsible folders and a mobile drawer."),
+    ],
+  },
+  {
+    id: "dashboard-headers",
+    title: "Dashboard Headers",
+    blurb: "Dashboard topbars with breadcrumbs and actions.",
+    kind: "screen",
+    entries: [
+      free("Dashboard Header", "dashboard-headers-1", "Dashboard header with breadcrumb navigation, share dropdown, and page actions toolbar."),
+    ],
+  },
+  {
+    id: "elements",
+    title: "Elements",
+    blurb: "Dashboard sections, cards and empty states.",
+    kind: "screen",
+    entries: [
+      free("AI Workforce Section", "elements-1", "AI workforce showcase with an agent card strip, centered headline, and add-agent call to action."),
+      free("AI Workforce Command", "elements-2", "AI workforce section with a command palette of agents and actions."),
+    ],
+  },
+  {
+    id: "charts",
+    title: "Charts",
+    blurb: "Area, bar and line chart cards.",
+    kind: "chart",
+    entries: [
+      free("Sales Trend", "sales-trend", "User-growth pixel chart with a weekly, monthly or yearly toggle and a hover readout."),
+      free("Revenue Lines", "revenue-chart", "Dual-line revenue chart with keyboard-navigable points and a hover readout."),
+      free("Trends Chart", "trends-chart", "Three-series marketing trends chart with keyboard navigation."),
+      free("Balance Chart", "balance-chart", "Stacked monthly balance bars with a breakdown on hover and a table view."),
+      free("Budget Card", "budget-card", "Budget lines as a legend and one proportional split bar."),
+    ],
+  },
+  {
+    id: "calendars",
+    title: "Calendars",
+    blurb: "Calendars, schedules and agenda views.",
+    kind: "screen",
+    wide: true,
+    entries: [
+      pro("Calendar Workspace", "calendars-1", "Calendar workspace with month and week views, a mini month, a schedule panel and a collapsible icon sidebar."),
+      pro("Project Calendar", "calendars-2", "Project calendar with multi-day tasks you can drag or move with the keyboard (and AI agents can move), a task editor and a mobile drawer."),
+    ],
   },
 ];
 
-const components: Entry[] = [
-  { name: "Announcement", href: "/components/announcement", description: "Dismissible banner for product news.", tier: "free", status: "shipped" },
-  { name: "Avatar", href: "/components/avatar", description: "User photo with initials fallback.", tier: "free", status: "shipped" },
-  { name: "Breadcrumb", href: "/components/breadcrumb", description: "Path trail with collapsing levels.", tier: "free", status: "shipped" },
-  { name: "Button", href: "/components/button", description: "Primary, secondary, and danger actions.", tier: "free", status: "shipped" },
-  { name: "Button Group", href: "/components/button-group", description: "Fused row of selectable buttons.", tier: "free", status: "shipped" },
-  { name: "Carousel", href: "/components/carousel", description: "Slide through cards with snap, arrows and dots.", tier: "free", status: "shipped", isNew: true },
-  { name: "Checkbox", href: "/components/checkbox", description: "Animated tick, card variant, two sizes.", tier: "free", status: "shipped" },
-  { name: "Chip", href: "/components/chip", description: "Compact removable filter tokens.", tier: "free", status: "shipped" },
-  { name: "Close Button", href: "/components/close-button", description: "The little ×, done properly.", tier: "free", status: "shipped" },
-  { name: "Date Picker", href: "/components/date-picker", description: "Popover calendar for single dates.", tier: "free", status: "shipped" },
-  { name: "Divider", href: "/components/divider", description: "Single, double, and filled content separators.", tier: "free", status: "shipped", isNew: true },
-  { name: "Dropdown", href: "/components/dropdown", description: "Composable menus - teams, models, actions.", tier: "free", status: "shipped" },
-  { name: "File Upload", href: "/components/file-upload", description: "Drag, validate, and track upload progress.", tier: "free", status: "shipped" },
-  { name: "Icon Button", href: "/components/icon-button", description: "Square action button, icon only.", tier: "free", status: "shipped" },
-  { name: "Input", href: "/components/input", description: "Text field with addons and validation.", tier: "free", status: "shipped" },
-  { name: "Input OTP", href: "/components/input-otp", description: "One-time-code boxes with paste and autofill.", tier: "free", status: "shipped" },
-  { name: "Link Button", href: "/components/link-button", description: "Inline text action styled like a link.", tier: "free", status: "shipped" },
-  { name: "Notification", href: "/components/notification", description: "Status messages with icons, avatars, and actions.", tier: "free", status: "shipped" },
-  { name: "Pagination", href: "/components/pagination", description: "Page numbers with truncation.", tier: "free", status: "shipped" },
-  { name: "Radio", href: "/components/radio", description: "Gradient dot, card variant, two sizes.", tier: "free", status: "shipped" },
-  { name: "Segmented Control", href: "/components/segmented-control", description: "Sliding pill option switcher.", tier: "free", status: "shipped" },
-  { name: "Select", href: "/components/select", description: "Single-choice listbox with search.", tier: "free", status: "shipped" },
-  { name: "Slider", href: "/components/slider", description: "Single-value and min/max range selection.", tier: "free", status: "shipped", isNew: true },
-  { name: "Social Button", href: "/components/social-button", description: "Sign-in buttons for 24 providers, logos included.", tier: "free", status: "shipped" },
-  { name: "Switch", href: "/components/switch", description: "On/off toggle with spring motion.", tier: "free", status: "shipped" },
-  { name: "Table", href: "/components/table", description: "Sortable columns, sticky header.", tier: "free", status: "shipped" },
-  { name: "Tabs", href: "/components/tabs", description: "Underline and pill tab lists.", tier: "free", status: "shipped" },
-  { name: "Textarea", href: "/components/textarea", description: "Multiline field with auto-grow and character count.", tier: "free", status: "shipped", isNew: true },
-  { name: "Tree View", href: "/components/tree-view", description: "Nested folders with selection and keyboard navigation.", tier: "free", status: "shipped", isNew: true },
-  { name: "Tooltip", href: "/components/tooltip", description: "Positioned hints on hover and focus.", tier: "free", status: "shipped" },
-];
+export const ALL_ENTRIES = COMPONENT_SECTIONS.flatMap((section) => section.entries);
 
-const blocks: Entry[] = [
-  { name: "Agent Thinking", href: "/components/agent-thinking", description: "Agent thinking indicators for chat composers.", tier: "free", status: "shipped", isNew: true },
-  { name: "Composer Loader", href: "/components/composer-loader", description: "Orbiting light band for a working composer.", tier: "free", status: "shipped", isNew: true },
-  { name: "Composer Panel", href: "/components/composer-panel", description: "Two-row chat input with permission modes.", tier: "pro", status: "shipped", isNew: true },
-  { name: "Composer Attachments", href: "/components/composer-attachments", description: "File tiles landing one by one above the prompt.", tier: "pro", status: "shipped", isNew: true },
-  { name: "Auth Card", href: "/components/auth-card", description: "Sign-in and sign-up blocks with social login.", tier: "free", status: "shipped", isNew: true },
-  { name: "Web Search", href: "/components/web-search", description: "Research trail with the sources an agent opened.", tier: "pro", status: "shipped", isNew: true },
-  { name: "Task List", href: "/components/task-list", description: "Streaming agent log that reveals step by step.", tier: "pro", status: "shipped", isNew: true },
-  { name: "Agent Limits", href: "/components/agent-limits-card", description: "Context window and plan usage limits.", tier: "pro", status: "shipped", isNew: true },
-  { name: "Questionnaire", href: "/components/questionnaire", description: "Plan-mode questions, one step at a time.", tier: "pro", status: "shipped", isNew: true },
-  { name: "Agent Creator", href: "/components/agent-creator", description: "Create an agent’s identity, animated avatar, and voice preferences.", tier: "pro", status: "shipped", isNew: true },
-  { name: "Agent Progress", href: "/components/agent-progress", description: "Collapsible progress for multi-step AI tasks.", tier: "pro", status: "shipped" },
-  { name: "Calendar", href: "/components/calendar", description: "Full month view with event pills.", tier: "pro", status: "shipped" },
-  { name: "Data Grid", href: "/components/data-grid", description: "Editable spreadsheet with selection, filters, and live summaries.", tier: "free", status: "shipped", isNew: true },
-  { name: "Data Table", href: "/components/data-table", description: "Filters, selection, and pagination wired up.", tier: "free", status: "shipped" },
-  { name: "Notification Center", href: "/components/notification-center", description: "Grouped activity inbox with tabs and actions.", tier: "free", status: "shipped" },
-  { name: "Settings Modal", href: "/components/settings-modal", description: "Multi-page settings in a controlled dialog.", tier: "free", status: "shipped" },
-  { name: "Sidebar", href: "/components/sidebar", description: "Floating app navigation with teams menu.", tier: "free", status: "shipped" },
-  { name: "Stat Cards", href: "/components/stat-cards", description: "KPI cards with delta chips or a footer band.", tier: "free", status: "shipped", isNew: true },
-];
+export const sectionOf = (href: string) => COMPONENT_SECTIONS.find((section) => section.entries.some((e) => e.href === href));
 
-const charts: Entry[] = [
-  { name: "Revenue Chart", href: "/components/revenue-chart-card", description: "This year against last, area over a dashed line.", tier: "free", status: "shipped", isNew: true },
-  { name: "Activity Rings", href: "/components/activity-rings-card", description: "Concentric progress rings, Apple style.", tier: "pro", status: "shipped" },
-  { name: "Area Chart", href: "/components/area-chart-card", description: "Stacked, overlapping or 100% area series.", tier: "pro", status: "shipped", isNew: true },
-  { name: "Bar List", href: "/components/bar-list-card", description: "Ranked breakdown rows with share bars and tabs.", tier: "pro", status: "shipped", isNew: true },
-  { name: "Combo Chart", href: "/components/combo-chart-card", description: "Bars and a line on independent axes.", tier: "pro", status: "shipped", isNew: true },
-  { name: "Contributions", href: "/components/contributions-card", description: "GitHub-style activity heatmap.", tier: "pro", status: "shipped" },
-  { name: "Earnings Chart", href: "/components/earnings-chart-card", description: "Bar chart with period comparison.", tier: "pro", status: "shipped" },
-  { name: "Funnel Chart", href: "/components/funnel-chart-card", description: "Flow funnel with tapered stages and conversion pills.", tier: "pro", status: "shipped", isNew: true },
-  { name: "Heatmap Chart", href: "/components/heatmap-chart-card", description: "Matrix heatmap with a theme-following ramp.", tier: "pro", status: "shipped", isNew: true },
-  { name: "Most Active Days", href: "/components/most-active-days-card", description: "Weekday bars linked to the rings.", tier: "pro", status: "shipped" },
-  { name: "Radar Chart", href: "/components/radar-chart-card", description: "Filled, dotted, lines, and score radars.", tier: "pro", status: "shipped", isNew: true },
-  { name: "Radial Chart", href: "/components/radial-chart-card", description: "Rings, gauges, and a stacked half gauge.", tier: "pro", status: "shipped", isNew: true },
-  { name: "Line Chart", href: "/components/line-chart-card", description: "Curved or sharp line over a soft area.", tier: "pro", status: "shipped" },
-  { name: "Sankey Chart", href: "/components/sankey-chart-card", description: "Flow diagram with tinted links and shares.", tier: "pro", status: "shipped", isNew: true },
-  { name: "Scatter Chart", href: "/components/scatter-chart-card", description: "Correlation dots, bubbles when sized.", tier: "pro", status: "shipped", isNew: true },
-  { name: "Sleep Score", href: "/components/sleep-score-card", description: "Radial gauge with score breakdown.", tier: "pro", status: "shipped" },
-  { name: "Stage Bars", href: "/components/stage-bars-card", description: "Funnel stages as rounded horizontal pills.", tier: "pro", status: "shipped", isNew: true },
-  { name: "Steps Chart", href: "/components/steps-card", description: "Daily steps with goal marker.", tier: "pro", status: "shipped" },
-];
+const slugOf = (href: string) => href.replace("/components/", "");
 
-const templates: Entry[] = [
-  { name: "Chat Starter", href: "/components/chat-starter", description: "Free, deployable chat on your own model key.", tier: "free", status: "shipped", isNew: true },
-  { name: "Multi-agent Chat", href: "/components/multi-agent-chat", description: "Animated agents, individual and group chat, and a live avatar editor.", tier: "pro", status: "shipped", isNew: true },
-  { name: "AI Chat", href: "/components/ai-chat", description: "Full chat app with code panel and composer.", tier: "pro", status: "shipped" },
-  { name: "AI Image Generation", href: "/components/ai-image-generation", description: "Prompt thread with generation frame and gallery panel.", tier: "pro", status: "shipped" },
-  { name: "AI Profile", href: "/components/ai-profile", description: "Contributions profile with heatmap and charts.", tier: "pro", status: "shipped" },
-  { name: "Finance Dashboard", href: "/components/finance-dashboard", description: "Cash-flow sankey, spending rings, and transactions table.", tier: "pro", status: "shipped", isNew: true },
-  { name: "Home Dashboard", href: "/components/home-dashboard", description: "KPIs, revenue trend, and customers table.", tier: "pro", status: "shipped" },
-  { name: "Marketing Dashboard", href: "/components/marketing-dashboard", description: "Acquisition funnel, spend charts, and campaigns table.", tier: "pro", status: "shipped", isNew: true },
-  { name: "Medical Profile", href: "/components/medical-profile", description: "Patient overview with health charts.", tier: "pro", status: "shipped" },
-  { name: "Project Board", href: "/components/project-board", description: "Kanban workspace with ticket panels, comments, and token charts.", tier: "pro", status: "shipped", isNew: true },
-];
+/** The registry item each catalogue entry installs: components come with agent-ui, everything else is its own item. */
+// ponytail: motion, logo and border-beam demos aren't in a registry item yet, so they show no install line.
+const NOT_IN_REGISTRY = new Set(["ui-animated-group", "ui-border-beam", "ui-logos", "ui-infinite-slider", "ui-progressive-blur", "ui-text-effect"]);
 
-/**
- * `wide` halves the column count: a template card shows a whole app screen,
- * which is unreadable at a third of the width.
- */
-export const COMPONENT_SECTIONS: { title: string; blurb: string; entries: Entry[]; wide?: boolean }[] = [
-  { title: "Foundations", blurb: "The tokens everything else is built on.", entries: foundations },
-  { title: "Base", blurb: "The everyday building blocks.", entries: components },
-  { title: "Blocks", blurb: "Larger assemblies, ready to drop in.", entries: blocks },
-  { title: "Charts", blurb: "Data cards for dashboards.", entries: charts },
-  { title: "Templates", blurb: "Complete screens, wired together.", entries: templates, wide: true },
-];
+export function installCommand(href: string): string | undefined {
+  const slug = slugOf(href);
+  const kind = sectionOf(href)?.kind;
+  if (NOT_IN_REGISTRY.has(slug)) return undefined;
+  const item = kind === "component" ? "agent-ui" : slug;
+  return `npx shadcn@latest add @panelo/${item}`;
+}
