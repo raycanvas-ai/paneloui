@@ -1,30 +1,33 @@
 # Panelo
 
-Panelo is a React design system for dashboards and AI products: source-owned components in one visual language, plus a working AI chat app you can deploy on your own model key.
-
-- **Source, not a dependency.** Components live in `components/`. Change anything.
-- **Built on React Aria and Tailwind CSS v4**, with semantic tokens in `styles/theme.css` and a full type scale in `styles/typography.css`.
-- **Right-to-left ready** through `DirectionProvider`.
+React components, charts and full dashboard pages built on Vercel's UI SDK, so AI agents can operate the dashboards they render. Source-owned: copy them in and change anything.
 
 ## Run it
 
 ```bash
 npm install
-cp .env.example .env.local   # add AI_API_KEY (OpenAI, Anthropic, Google, OpenRouter or Vercel AI Gateway)
+cp .env.example .env.local   # optional: ANTHROPIC_API_KEY powers the live agent demo
 npm run dev
 ```
 
-Without a key, the chat runs in demo mode with canned answers.
+Without a key everything works except the agent demo's free-text replies.
 
 ## What's inside
 
 | Path | What |
 | --- | --- |
-| `components/base` | Buttons, inputs, select, dropdown, tabs, switch, date pickers, table, tooltip and more |
-| `components/application` | Agent chat, app shell, dashboard, settings, notification center, data table and grid, charts, auth |
-| `app/` | The chat starter: `/` chat, `/dashboard`, `/components`, `/login`, `/signup`, `/api/chat` |
+| `components/panelo/ui` | shadcn-compatible parts built on the UI SDK: button, dialog, select, sheet, chart and more |
+| `components/panelo/blocks` | Free blocks: sidebars, a login page, a dashboard header, elements and charts |
+| `components/application` | The site itself: landing page, component catalogue and docs |
+| `app/` | `/` landing, `/components` catalogue, `/preview/[slug]` live previews, `/api/agent` agent demo |
 | `AGENTS.md`, `.cursor/rules/panelo.mdc` | Design rules for coding agents |
+
+## Free and Pro
+
+Everything in this repository is free and MIT licensed.
+
+Panelo Pro adds full dashboard pages and calendars. They appear in the catalogue with a Pro tag but their source is not in this repository. In a checkout that has them, they live in `components/panelo/pro/` (gitignored), and the site reaches them only through the `@pro` alias. Without that folder `@pro` resolves to `components/panelo/pro-fallback.ts`, so a fresh clone builds and shows the free catalogue.
 
 ## License
 
-[MIT](LICENSE).
+The code in this repository is [MIT](LICENSE). Pro components are sold separately under their own license and are not part of this repository.
