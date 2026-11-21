@@ -16,8 +16,8 @@ Without a key everything works except the agent demo's free-text replies.
 
 | Path | What |
 | --- | --- |
-| `components/panelo/ui` | shadcn-compatible parts built on the UI SDK: button, dialog, select, sheet, chart and more |
-| `components/panelo/blocks` | Free blocks: sidebars, a login page, a dashboard header, elements and charts |
+| `components/panelo/ui` | The UI SDK parts every block is built from; they install with a block and aren’t sold on their own |
+| `components/panelo/blocks` | Free blocks: login and profile pages, elements and charts |
 | `components/application` | The site itself: landing page, component catalogue and docs |
 | `app/` | `/` landing, `/components` catalogue, `/preview/[slug]` live previews, `/api/agent` agent demo |
 | `AGENTS.md`, `.cursor/rules/panelo.mdc` | Design rules for coding agents |

@@ -12,7 +12,7 @@ export type Entry = {
 };
 
 /** How a section previews its entries: a live demo, a scaled chart, or a whole screen from /preview/[slug]. */
-export type SectionKind = "component" | "chart" | "screen";
+export type SectionKind = "chart" | "screen";
 
 export type Section = {
   /** The registry's category slug, also the section's anchor on /components. */
@@ -29,47 +29,6 @@ const free = (name: string, slug: string, description: string): Entry => ({ name
 const pro = (name: string, slug: string, description: string): Entry => ({ name, href: `/components/${slug}`, description, tier: "pro", status: "shipped" });
 
 export const COMPONENT_SECTIONS: Section[] = [
-  {
-    id: "components",
-    title: "Components",
-    blurb: "shadcn-compatible parts built on Vercel's UI SDK.",
-    kind: "component",
-    entries: [
-      free("Accordion", "ui-accordion", "Stacked sections that expand one or many at a time."),
-      free("Animated Group", "ui-animated-group", "Staggered entrance animation for a set of items."),
-      free("Aspect Ratio", "ui-aspect-ratio", "Box that keeps a fixed width-to-height ratio."),
-      free("Avatar", "ui-avatar", "Image with an initials fallback."),
-      free("Badge", "ui-badge", "Small status label in four variants."),
-      free("Border Beam", "ui-border-beam", "Light beam that travels around a card border."),
-      free("Brand Logos", "ui-logos", "Vector marks for Vercel, Claude, npm, pnpm, Yarn, Bun and more."),
-      free("Breadcrumb", "ui-breadcrumb", "Path trail with separators."),
-      free("Button", "ui-button", "Default, outline, secondary, ghost, destructive and link actions."),
-      free("Card", "ui-card", "Surface with header, content and footer slots."),
-      free("Chart", "ui-chart", "Recharts wrapper with themed colors, tooltip and legend."),
-      free("Collapsible", "ui-collapsible", "Show and hide a single panel."),
-      free("Dialog", "ui-dialog", "Modal with title, description and close actions."),
-      free("Dropdown Menu", "ui-dropdown-menu", "Menus with items, checkboxes, radios, labels and submenus."),
-      free("Infinite Slider", "ui-infinite-slider", "Endless marquee for logos and testimonials."),
-      free("Input", "ui-input", "Text field with focus and invalid states."),
-      free("Label", "ui-label", "Accessible label for a form control."),
-      free("Popover", "ui-popover", "Floating panel anchored to a trigger."),
-      free("Progress", "ui-progress", "Horizontal bar for upload and task progress."),
-      free("Progressive Blur", "ui-progressive-blur", "Layered blur that fades content into an edge."),
-      free("Radio Group", "ui-radio-group", "Single choice from a short list."),
-      free("Scroll Area", "ui-scroll-area", "Scroll container with a styled, auto-hiding scrollbar."),
-      free("Select", "ui-select", "Single-choice list with keyboard typeahead."),
-      free("Separator", "ui-separator", "Horizontal or vertical divider."),
-      free("Sheet", "ui-sheet", "Drawer from any edge with swipe to close."),
-      free("Skeleton", "ui-skeleton", "Loading placeholder."),
-      free("Switch", "ui-switch", "On/off toggle for settings."),
-      free("Tabs", "ui-tabs", "Tab list with panels and arrow-key navigation."),
-      free("Text Effect", "ui-text-effect", "Animated text reveal by word, character or line."),
-      free("Textarea", "ui-textarea", "Multiline field that grows with its content."),
-      free("Toggle", "ui-toggle", "Two-state button."),
-      free("Toggle Group", "ui-toggle-group", "Set of toggles with single or multiple selection."),
-      free("Tooltip", "ui-tooltip", "Hint on hover and focus."),
-    ],
-  },
   {
     id: "dashboard-pages",
     title: "Dashboard Pages",
@@ -88,7 +47,19 @@ export const COMPONENT_SECTIONS: Section[] = [
       pro("Task Board Dashboard", "dashboard-pages-9", "Task overview with a greeting, AI announcement, four stat cards, board view tabs and a drag-and-drop kanban with keyboard moves."),
       pro("Workflow Builder", "dashboard-pages-10", "Node-based workflow builder: icon rail, searchable node library, a pan-and-zoom canvas with draggable nodes and live edges, and a settings panel that follows the selection."),
       pro("AI Automation Dashboard", "dashboard-pages-11", "AI workflow-automation dashboard with stat cards, an active-workflows table, a templates carousel, and an Ask AI assistant panel."),
+      free("Home Care Schedule", "dashboard-pages-13", "Home-care dispatch board: caregivers on a timeline with live status, drive times and a now line, visit cards, day and week views, area filters and new visits with clash checks."),
       pro("Marketing Analytics Dashboard", "dashboard-pages-12", "Marketing analytics dashboard with a KPI strip, a three-series trend chart, a tabbed lead inbox with AI score, and channel panels."),
+    ],
+  },
+  {
+    id: "profile-pages",
+    title: "Profile Pages",
+    blurb: "Profile pages for people, creators and teams.",
+    kind: "screen",
+    wide: true,
+    entries: [
+      pro("Team Member Profile", "profile-pages-2", "Profile with a banner and verified avatar, a ringing video call and a message drawer that replies, an expanding about with contact details, and sortable role cards that open each role's story."),
+      free("Designer Profile", "profile-pages-1", "Designer profile with cover and verified avatar, follow, hire request and message thread, an about card that expands, save-to-list, skills that filter a case-study carousel, and a detail view per project."),
     ],
   },
   {
@@ -98,6 +69,8 @@ export const COMPONENT_SECTIONS: Section[] = [
     kind: "screen",
     entries: [
       free("Split Login Page", "login-pages-1", "Split-screen login with an email/password form, social sign-in buttons, and an animated orbit of app logos."),
+      free("Painted Login Page", "login-pages-3", "Editorial login on a paper card over a generated pointillist painting that paints itself in, with a serif headline and a submit that appears when the form is ready."),
+      free("Sign Up Flow", "login-pages-2", "Three-step sign-up beside a violet art panel that tracks progress: account with validation, workspace with a live URL, then profile."),
     ],
   },
   {
@@ -106,17 +79,8 @@ export const COMPONENT_SECTIONS: Section[] = [
     blurb: "App sidebars with navigation and workspace switchers.",
     kind: "screen",
     entries: [
-      free("Workspace Sidebar", "sidebars-1", "App sidebar with workspace switcher, collapsible dashboard and folder groups, and a pinned footer."),
-      free("Workspace Sidebar with Drawer", "sidebars-2", "Workspace sidebar with a workspace switcher, collapsible folders and a mobile drawer."),
-    ],
-  },
-  {
-    id: "dashboard-headers",
-    title: "Dashboard Headers",
-    blurb: "Dashboard topbars with breadcrumbs and actions.",
-    kind: "screen",
-    entries: [
-      free("Dashboard Header", "dashboard-headers-1", "Dashboard header with breadcrumb navigation, share dropdown, and page actions toolbar."),
+      pro("App Sidebar", "sidebars-1", "Icon rail and panel in five layouts: rail with panel, panel alone, rail with icons, rail alone and icons alone, with a command menu, collapsible sections and projects."),
+      pro("Sidebar Collection", "sidebars-2", "Five product sidebars from one kit: workspace, enterprise, chat, HR and assistant. Folding trees and sections, section search, inline create, chat filters, command search, trial and upgrade cards."),
     ],
   },
   {
@@ -139,7 +103,10 @@ export const COMPONENT_SECTIONS: Section[] = [
       free("Revenue Lines", "revenue-chart", "Dual-line revenue chart with keyboard-navigable points and a hover readout."),
       free("Trends Chart", "trends-chart", "Three-series marketing trends chart with keyboard navigation."),
       free("Balance Chart", "balance-chart", "Stacked monthly balance bars with a breakdown on hover and a table view."),
-      free("Budget Card", "budget-card", "Budget lines as a legend and one proportional split bar."),
+      free("Activity Heatmap", "activity-heatmap", "Hour-by-day heatmap with a forecast in grey, day to year views, keyboard navigation and a spreadsheet view."),
+      free("Contribution Chart", "contribution-chart", "A year of daily activity as a calendar heatmap or an isometric 3D city of bars, with streak and busiest-day stats, linked hover and keyboard navigation."),
+      free("Link Graph", "link-graph", "Network of who mentions, links to and is cited by a site: hubs, clusters and an outer ring of mentions, with search, filters and a 3D view you can orbit."),
+      free("Rounded Pie", "pie-chart", "Part-to-whole pie with rounded slices and even gaps, shaded by share, with a linked legend that lifts each slice."),
     ],
   },
   {
@@ -149,8 +116,8 @@ export const COMPONENT_SECTIONS: Section[] = [
     kind: "screen",
     wide: true,
     entries: [
-      pro("Calendar Workspace", "calendars-1", "Calendar workspace with month and week views, a mini month, a schedule panel and a collapsible icon sidebar."),
-      pro("Project Calendar", "calendars-2", "Project calendar with multi-day tasks you can drag or move with the keyboard (and AI agents can move), a task editor and a mobile drawer."),
+      pro("Time Tracking Calendar", "calendars-1", "Time-tracking week: log entries from a top bar, drag to move or resize, click or drag to add, labels, favourites, search, and a Customize panel that remembers your layout."),
+      pro("Issue Calendar", "calendars-2", "Month and week calendar of issues: multi-day spans, drag to reschedule or stretch, a category panel you can drag from, tick-off sync, filters, search and a phone agenda."),
     ],
   },
 ];
@@ -161,14 +128,7 @@ export const sectionOf = (href: string) => COMPONENT_SECTIONS.find((section) => 
 
 const slugOf = (href: string) => href.replace("/components/", "");
 
-/** The registry item each catalogue entry installs: components come with agent-ui, everything else is its own item. */
-// ponytail: motion, logo and border-beam demos aren't in a registry item yet, so they show no install line.
-const NOT_IN_REGISTRY = new Set(["ui-animated-group", "ui-border-beam", "ui-logos", "ui-infinite-slider", "ui-progressive-blur", "ui-text-effect"]);
-
-export function installCommand(href: string): string | undefined {
-  const slug = slugOf(href);
-  const kind = sectionOf(href)?.kind;
-  if (NOT_IN_REGISTRY.has(slug)) return undefined;
-  const item = kind === "component" ? "agent-ui" : slug;
-  return `npx shadcn@latest add @panelo/${item}`;
+/** Each catalogue entry is its own registry item; its UI SDK parts come along as dependencies. */
+export function installCommand(href: string): string {
+  return `npx shadcn@latest add @panelo/${slugOf(href)}`;
 }
