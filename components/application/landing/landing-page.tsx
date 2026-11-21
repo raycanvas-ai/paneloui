@@ -5,6 +5,23 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   RiArrowDownSFill,
+  RiCalendar2Line,
+  RiCalendarLine,
+  RiContrastLine,
+  RiDownloadLine,
+  RiFileList3Line,
+  RiInfinityLine,
+  RiLayout4Line,
+  RiLayoutGridLine,
+  RiRefreshLine,
+  RiRobot2Line,
+  RiRocketLine,
+  RiSeedlingLine,
+  RiShieldStarLine,
+  RiShoppingBag3Line,
+  RiStackLine,
+  RiTeamLine,
+  RiUserLine,
   RiArrowRightLine,
   RiCheckLine,
   RiFileCopyLine,
@@ -415,7 +432,7 @@ function ScreensSection() {
       </SiteTabs>
       <Link href="#pricing" className={cx(pill("pro", "lg"), "mt-10")}>
         <RiFlashlightFill aria-hidden />
-        {sectionOf("dashboard-pages").length} pages in Pro – from $249 once
+        {sectionOf("dashboard-pages").length} pages in Pro – from $129 once
       </Link>
     </section>
   );
@@ -516,96 +533,134 @@ function ChartsSection() {
   );
 }
 
-const PLANS = [
+// Dodo Payments, brand "Panelo" (live). Product ids per mode: test ones are in the Dodo dashboard under the same brand.
+const checkout = (productId: string) => `https://checkout.dodopayments.com/buy/${productId}?quantity=1`;
+
+type Feature = { icon: ComponentType<{ className?: string }>; label: string };
+type Plan = { name: string; icon: ComponentType<{ className?: string }>; blurb: ReactNode; price: string; was?: string; badge?: string; cta: string; href: string; external?: boolean; featured?: boolean; features: Feature[] };
+
+const shared: Feature[] = [
+  { icon: RiStackLine, label: "Use it in unlimited projects" },
+  { icon: RiInfinityLine, label: "Keep the code forever" },
+];
+const pro: Feature[] = [
+  { icon: RiLayoutGridLine, label: "Every Pro dashboard page" },
+  { icon: RiCalendar2Line, label: "Every Pro calendar" },
+  { icon: RiRobot2Line, label: "Agent-ready UI SDK parts" },
+  { icon: RiContrastLine, label: "Light and dark themes" },
+];
+
+const PLANS: Plan[] = [
   {
-    name: "Free",
-    blurb: "The free components and blocks, yours to keep.",
-    price: "$0",
-    note: "forever",
-    chip: `${freeCount} free items`,
-    cta: "Browse components",
+    name: "Starter",
+    icon: RiSeedlingLine,
+    blurb: "The fundamentals of Panelo, free. Perfect for indie developers.",
+    price: "Free",
+    cta: "Browse free",
     href: "/components",
-    features: ["Lifetime access", "Unlimited projects", "All free blocks", "UI SDK parts", "Light and dark themes"],
+    features: [
+      { icon: RiFileList3Line, label: "Free user license" },
+      ...shared,
+      { icon: RiRefreshLine, label: "Free component updates" },
+      { icon: RiRobot2Line, label: "Agent-ready UI SDK parts" },
+      { icon: RiLayout4Line, label: `${freeCount} free components` },
+      { icon: RiContrastLine, label: "Light and dark themes" },
+    ],
   },
   {
-    name: "Essentials",
-    blurb: "For solo founders shipping polished dashboards.",
-    price: "$249",
-    was: "$349",
-    note: "once",
-    chip: "1 seat",
-    cta: "Buy Essentials",
-    href: "/checkout?plan=essentials",
-    features: ["Everything in Free", "Premium blocks", "AI assistant kit", "Premium code snippets", "Regular updates", "Priority support"],
+    name: "1 Year of Updates",
+    icon: RiCalendarLine,
+    blurb: (
+      <>
+        Every <b className="font-medium text-site-ink">Panelo Pro</b> page, calendar and block.
+      </>
+    ),
+    price: "$129",
+    was: "$159",
+    cta: "Buy now",
+    href: checkout("pdt_0NsQEqXEEbJlZCxNpWZ8l"),
+    external: true,
+    features: [{ icon: RiUserLine, label: "Single-user license" }, ...shared, { icon: RiRefreshLine, label: "Pro updates for 1 year" }, ...pro],
   },
   {
-    name: "Complete",
-    blurb: "The whole system: blocks, elements and full pages.",
-    price: "$299",
-    was: "$399",
-    note: "once",
-    chip: "Most popular",
-    cta: "Get Complete",
-    href: "/checkout?plan=complete",
+    name: "Lifetime Access",
+    icon: RiShieldStarLine,
+    blurb: (
+      <>
+        Every <b className="font-medium text-site-ink">Panelo Pro</b> page, calendar and block.
+      </>
+    ),
+    price: "$179",
+    was: "$229",
+    badge: "$50 launch discount",
+    cta: "Buy now",
+    href: checkout("pdt_0NsQEqa9WtiHLyYgBhHS0"),
+    external: true,
     featured: true,
-    features: ["Everything in Essentials", "Full dashboard pages", "Sidebars and headers", "Dashboard elements", "Settings pages", "Analytics pages"],
+    features: [{ icon: RiUserLine, label: "Single-user license" }, ...shared, { icon: RiRefreshLine, label: "Pro updates forever" }, ...pro],
   },
   {
-    name: "Team",
-    blurb: "For teams and agencies building at scale.",
-    price: "$499",
-    was: "$799",
-    note: "once",
-    chip: "10 seats",
-    cta: "Get Team",
-    href: "/checkout?plan=team",
-    features: ["Everything in Complete", "10 team members", "High-priority support"],
+    name: "Unlimited for Startups",
+    icon: RiRocketLine,
+    blurb: (
+      <>
+        Everything in Pro, licensed for <b className="font-medium text-site-ink">up to 5 developers</b>.
+      </>
+    ),
+    price: "$299",
+    cta: "Buy now",
+    href: checkout("pdt_0NsQEqdNkiFjQzrDZ6LQS"),
+    external: true,
+    features: [{ icon: RiTeamLine, label: "5-user license" }, ...shared, { icon: RiRefreshLine, label: "Pro updates forever" }, ...pro],
   },
 ];
 
 function PricingSection() {
   return (
-    <section id="pricing" className="mx-auto mt-36 flex w-full max-w-[1144px] scroll-mt-20 flex-col items-center px-6">
+    <section id="pricing" className="mx-auto mt-36 flex w-full max-w-[1200px] scroll-mt-20 flex-col items-center px-6">
       <SectionHead title="Pay once, own the code" body="One payment, no subscription. Every component is copied into your project as source, so it stays yours." />
-      <div className="mt-10 grid w-full grid-cols-1 gap-3.5 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-10 grid w-full grid-cols-1 gap-x-3.5 gap-y-3.5 sm:grid-cols-2 xl:grid-cols-4">
         {PLANS.map((plan) => (
-          <div
-            key={plan.name}
-            className={cx(
-              // Every card carries a 1px border so the featured one doesn't sit 1px lower than its neighbours.
-              "flex flex-col rounded-[16px] border p-5",
-              plan.featured ? "border-site-hairline bg-site-surface shadow-site-raised" : "border-transparent bg-site-pill",
-            )}
-          >
-            <span className="text-site-plan text-site-ink">{plan.name}</span>
-            <span className="mt-1 text-site-text text-site-muted">{plan.blurb}</span>
-            <div className="mt-5 flex items-baseline gap-2">
-              {plan.was && <span className="text-site-plan text-site-faint line-through">{plan.was}</span>}
-              <span className="text-site-price text-site-ink">{plan.price}</span>
-              <span className="text-site-lead text-site-muted">/{plan.note}</span>
+          <div key={plan.name} className="row-span-3 grid grid-rows-subgrid gap-1.5 rounded-[20px] bg-site-pill p-1.5">
+            <div className="relative rounded-[16px] bg-site-surface p-5 shadow-site-raised">
+              <plan.icon className="size-5 text-site-ink" aria-hidden />
+              {plan.badge && (
+                <span className="absolute end-4 top-4 inline-flex h-6 items-center rounded-full bg-site-pro px-2.5 text-site-body text-site-pro-text shadow-site-pro">{plan.badge}</span>
+              )}
+              <h3 className="mt-4 text-site-plan text-site-ink">{plan.name}</h3>
+              <p className="mt-1 text-site-text text-pretty text-site-muted">{plan.blurb}</p>
             </div>
-            <div className="mt-2 h-6">
-              {plan.chip && (
-                <span className={cx("inline-flex h-6 items-center rounded-full px-2.5 text-site-body", plan.featured ? "bg-site-pro text-site-pro-text shadow-site-pro" : "bg-site-pill text-site-muted")}>
-                  {plan.chip}
+            <div className="px-4 pt-4 pb-1">
+              <div className="flex items-center gap-3">
+                <span className="flex items-baseline gap-2">
+                  {plan.was && <s className="text-site-plan text-site-faint">{plan.was}</s>}
+                  <span className="text-site-price text-site-ink">{plan.price}</span>
                 </span>
+                <span className="flex flex-col text-site-body leading-tight text-site-muted">
+                  <span>{plan.price === "Free" ? "all the basics" : "all in Pro"}</span>
+                  <span className="text-site-faint">{plan.price === "Free" ? "no card required" : "paid once"}</span>
+                </span>
+              </div>
+              {plan.external ? (
+                <a href={plan.href} className={pill(plan.featured ? "primary" : "secondary", "lg", "mt-4 h-10 w-full")}>
+                  <RiShoppingBag3Line aria-hidden />
+                  {plan.cta}
+                </a>
+              ) : (
+                <Link href={plan.href} className={pill("secondary", "lg", "mt-4 h-10 w-full")}>
+                  <RiDownloadLine aria-hidden />
+                  {plan.cta}
+                </Link>
               )}
             </div>
-            <ul className="mt-5 flex flex-col gap-2.5 border-t border-site-hairline pt-5">
+            <ul className="flex flex-col gap-3 rounded-[16px] bg-site-surface p-5">
               {plan.features.map((feature) => (
-                <li key={feature} className="flex items-start gap-2.5 text-site-text text-site-ink">
-                  <span className={cx("mt-0.5 grid size-[18px] shrink-0 place-items-center rounded-full", plan.featured ? "bg-site-pro text-site-pro-icon" : "bg-site-surface text-site-muted")}>
-                    <RiCheckLine className="size-3" aria-hidden />
-                  </span>
-                  {feature}
+                <li key={feature.label} className="flex items-start gap-2.5 text-site-text text-site-muted">
+                  <feature.icon className="mt-0.5 size-4 shrink-0 text-site-faint" aria-hidden />
+                  {feature.label}
                 </li>
               ))}
             </ul>
-            <div className="mt-auto pt-8">
-              <Link href={plan.href} className={pill(plan.featured ? "primary" : "secondary", "lg", "h-10 w-full")}>
-                {plan.cta}
-              </Link>
-            </div>
           </div>
         ))}
       </div>
