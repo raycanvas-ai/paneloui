@@ -23,6 +23,9 @@
       }
     ],
     "paths": {
+      "@pro": [
+        "./components/panelo/pro-fallback.ts"
+      ],
       "@/*": [
         "./*"
       ]

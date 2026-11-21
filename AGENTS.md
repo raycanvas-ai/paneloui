@@ -1,5 +1,11 @@
 Panelo's design rules for coding agents.
 
+## Free vs pro code (this repo)
+
+- Pro blocks (every `tier: "pro"` entry in `components/application/docs/components-index.ts`) live in `components/panelo/pro/`, which is gitignored and never pushed. New pro blocks go there too.
+- Free code never imports a path inside `pro/`. It goes through `@pro` only (`PRO_LOADERS`, `PRO_PARTS`, `HAS_PRO`), which falls back to `components/panelo/pro-fallback.ts` so a fresh clone still builds. Pro code may import free code.
+- A free catalogue entry (e.g. the charts in `components/panelo/blocks/charts/`) must not live in or read from `pro/`.
+
 <!-- panelo:rules:start -->
 # Panelo design rules
 
@@ -45,3 +51,13 @@ This project uses Panelo (React + Tailwind CSS v4, source-owned components under
 
 When unsure about a token or a component's API, read the component's source under `components/` and the tokens in `styles/theme.css`.
 <!-- panelo:rules:end -->
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

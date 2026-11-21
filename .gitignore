@@ -9,3 +9,10 @@ next-env.d.ts
 # Keys stay out of git. .env.example documents what goes in .env.local.
 .env*
 !.env.example
+
+# Pro components stay local, never pushed. Free code reaches them only through
+# `@pro` (next.config.ts alias), which falls back to components/panelo/pro-fallback.ts.
+/components/panelo/pro/
+
+# Playwright output
+test-results/
