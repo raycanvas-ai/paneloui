@@ -1,5 +1,6 @@
 "use client";
 
+import { GitHubStars } from "@/components/application/site/github-stars";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -14,10 +15,10 @@ import {
   RiHome5Line,
   RiLayoutGridLine,
   RiLayoutLeftLine,
-  RiLayoutTopLine,
   RiLoginBoxLine,
   RiMenuLine,
   RiPriceTag3Line,
+  RiProfileLine,
   RiSearchLine,
   RiSparkling2Line,
   RiStackLine,
@@ -41,11 +42,10 @@ const NAV: { name: string; href: string; icon: Icon }[] = [
 ];
 
 const SECTION_ICONS: Record<string, Icon> = {
-  components: RiLayoutGridLine,
   "dashboard-pages": RiDashboardLine,
   "login-pages": RiLoginBoxLine,
+  "profile-pages": RiProfileLine,
   sidebars: RiLayoutLeftLine,
-  "dashboard-headers": RiLayoutTopLine,
   elements: RiStackLine,
   charts: RiBarChartBoxLine,
   calendars: RiCalendarLine,
@@ -82,8 +82,7 @@ function DocsSidebar({ onNavigate }: { onNavigate?: () => void }) {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  // Blocks and pages lead; the long list of base components goes last.
-  const ordered = [...COMPONENT_SECTIONS.filter((s) => s.id !== "components"), ...COMPONENT_SECTIONS.filter((s) => s.id === "components")];
+  const ordered = COMPONENT_SECTIONS;
   const groups = ordered.map((section) => ({
     ...section,
     shown: section.entries.filter((e) => e.name.toLocaleLowerCase().includes(q)),
@@ -213,6 +212,7 @@ export function DocsShell({ children }: { children: ReactNode }) {
             </Link>
           </div>
           <div className="flex items-center gap-1.5">
+            <GitHubStars className="hidden sm:inline-flex" />
             <ThemeToggle appearance="segmented" size="small" />
             <Link href="/#pricing" className={pill("pro")}>
               <RiFlashlightFill aria-hidden />
