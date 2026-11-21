@@ -1,4 +1,4 @@
-/* Finance demo data for the balance chart and budget card (shared with dashboard-pages-8). */
+/* Finance demo data for the balance chart (shared with dashboard-pages-8). */
 
 /** Card surface shared by every widget. */
 export const card = 'rounded-lg border border-border/70 bg-card shadow-xs'
@@ -44,12 +44,3 @@ export const months: Month[] = [
 export const total = (month: Month) => month.merchandise + month.recurrings + month.savings
 export const CHART_MAX = 180_000
 export const CHART_STEP = 30_000
-
-/** The theme's blue tone as a ramp, darkest first: the legend swatch and the split bar share it. */
-export const budget = [
-    { label: 'Subscriptions', value: 45_600, tone: 'bg-tone-blue-solid' },
-    { label: 'Apparel Sales', value: 120_450, tone: 'bg-tone-blue-solid/70' },
-    { label: 'Investments', value: 18_750, tone: 'bg-tone-blue-solid/50' },
-    { label: 'Emergency Fund', value: 8_900, tone: 'bg-tone-blue-solid/20' },
-    { label: 'Other Funds', value: 15_500, tone: 'bg-tone-blue-solid/10' },
-]
