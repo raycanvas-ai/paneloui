@@ -1,0 +1,10 @@
+// paneloui.com on Cloudflare Workers. Deploy from a checkout that has components/panelo/pro:
+//   PANELO_EXPORT=1 npx next build && npx wrangler deploy
+// A public clone would deploy the free catalogue only.
+{
+  "name": "panelo",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": { "directory": "./out", "binding": "ASSETS", "not_found_handling": "404-page" }
+}

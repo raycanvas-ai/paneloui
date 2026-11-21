@@ -30,7 +30,7 @@ function limited(ip: string) {
 }
 
 export async function POST(request: Request) {
-    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'local'
+    const ip = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'local'
     if (limited(ip)) return Response.json({ error: 'Too many requests. Try again in a few minutes.' }, { status: 429 })
 
     const raw = await request.text()

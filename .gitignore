@@ -16,3 +16,6 @@ next-env.d.ts
 
 # Playwright output
 test-results/
+
+# wrangler local state
+.wrangler/
