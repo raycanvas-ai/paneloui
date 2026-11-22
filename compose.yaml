@@ -1,4 +1,25 @@
-# The whole production stack: the app, and Caddy in front for HTTPS (certificates are automatic).
+# The whole production stack: the app, the two template demos, and Caddy in front for HTTPS
+# (certificates are automatic).
+
+# One image recipe for every template demo: each is a plain Next.js app.
+x-template-demo: &template-demo
+  restart: unless-stopped
+  expose: ["3000"]
+  # No secrets: the demos run on their built-in sample data.
+  environment: { NODE_ENV: production, NEXT_TELEMETRY_DISABLED: "1", PORT: "3000", HOSTNAME: 0.0.0.0 }
+
+x-template-dockerfile: &template-dockerfile |
+  FROM node:22-bookworm-slim
+  WORKDIR /app
+  ENV NEXT_TELEMETRY_DISABLED=1
+  COPY package.json package-lock.json ./
+  # --ignore-scripts: the templates' `prepare` installs git hooks, which a container has no use for.
+  RUN npm ci --ignore-scripts
+  COPY . .
+  RUN npm run build && chown -R node:node .next
+  USER node
+  CMD ["npx", "next", "start"]
+
 services:
   app:
     build: .
@@ -6,6 +27,12 @@ services:
     # Secrets live on the server only: /srv/panelo/.env, readable by the deploy user alone.
     env_file: /srv/panelo/.env
     expose: ["3000"]
+  demo-admin:
+    <<: *template-demo
+    build: { context: ./templates/panelo-admin, dockerfile_inline: *template-dockerfile }
+  demo-propflow:
+    <<: *template-demo
+    build: { context: ./components/panelo/pro/templates/propflow, dockerfile_inline: *template-dockerfile }
   caddy:
     image: caddy:2
     restart: unless-stopped
@@ -14,7 +41,7 @@ services:
       - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
-    depends_on: [app]
+    depends_on: [app, demo-admin, demo-propflow]
 volumes:
   caddy_data:
   caddy_config:
