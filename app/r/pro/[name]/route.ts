@@ -17,8 +17,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ name
   // Item names are slugs; anything else (dots, slashes) never reaches the filesystem.
   const name = (await params).name.replace(/\.json$/, "");
   if (!/^[a-z0-9-]+$/.test(name)) return Response.json({ error: "Not found." }, { status: 404 });
-  // ponytail: reads the built Pro registry from registry-pro/ on disk, which is how `next dev` serves it.
-  // The Worker has no disk: production needs these files in a private R2 bucket behind the same check.
+  // Built into registry-pro/ by scripts/build-registry.mts, inside the image and never in public/.
   const body = await readFile(`${process.cwd()}/registry-pro/${name}.json`, "utf8").catch(() => null);
   return body ? new Response(body, { headers: { "Content-Type": "application/json", "Cache-Control": "private, no-store" } }) : Response.json({ error: "Not found." }, { status: 404 });
 }
