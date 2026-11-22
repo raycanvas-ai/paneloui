@@ -5,18 +5,25 @@ import type { NextConfig } from "next";
 // real components/panelo/pro when this checkout has it, so a public clone still builds.
 const hasPro = existsSync(`${import.meta.dirname}/components/panelo/pro/index.ts`);
 
-// `PANELO_EXPORT=1 next build` writes the whole site as static files to out/ for Cloudflare.
-// Route handlers (*.ts) are left out of that build; worker/index.ts serves /api/agent instead.
-const exporting = process.env.PANELO_EXPORT === "1";
+// Security headers on every response. No CSP yet: the theme script and Next's inline scripts would
+// need nonces first. SAMEORIGIN still lets the catalogue frame its own /preview pages.
+const securityHeaders = [
+  { key: "Strict-Transport-Security", value: "max-age=31536000" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+];
 
 const nextConfig: NextConfig = {
-  ...(exporting ? { output: "export" as const, pageExtensions: ["tsx"] } : {}),
+  // A self-contained Node server in .next/standalone, which the Docker image runs (see Dockerfile).
+  output: "standalone",
   // Pin the workspace root to this project so Turbopack never walks up the
   // filesystem looking for a lockfile.
   turbopack: {
     root: import.meta.dirname,
     resolveAlias: hasPro ? { "@pro": "./components/panelo/pro/index.ts" } : {},
   },
+  headers: async () => [{ source: "/:path*", headers: securityHeaders }],
 };
 
 export default nextConfig;

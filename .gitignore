@@ -19,3 +19,9 @@ test-results/
 
 # wrangler local state
 .wrangler/
+
+# The built Pro registry: paid source, served only behind a licence key (app/r/pro).
+registry-pro/
+
+# Built by scripts/build-registry.mts at deploy time: the free registry (public) and the Pro one (private).
+public/r/
