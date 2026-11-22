@@ -1,0 +1,13 @@
+# www is canonical; the bare domain only redirects.
+www.paneloui.com {
+	encode zstd gzip
+	reverse_proxy app:3000 {
+		# The app rate-limits by client IP. There's no Cloudflare in front, so a client-sent
+		# Cf-Connecting-Ip is a forgery: drop it. Caddy sets X-Forwarded-For itself.
+		header_up -Cf-Connecting-Ip
+	}
+}
+
+paneloui.com {
+	redir https://www.paneloui.com{uri} permanent
+}

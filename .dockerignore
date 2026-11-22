@@ -1,0 +1,10 @@
+node_modules
+.next
+out
+.git
+**/.git
+.env*
+test-results
+public/r
+registry-pro
+deploy

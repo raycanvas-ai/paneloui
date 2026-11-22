@@ -1,0 +1,20 @@
+# The whole production stack: the app, and Caddy in front for HTTPS (certificates are automatic).
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    # Secrets live on the server only: /srv/panelo/.env, readable by the deploy user alone.
+    env_file: /srv/panelo/.env
+    expose: ["3000"]
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports: ["80:80", "443:443", "443:443/udp"]
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on: [app]
+volumes:
+  caddy_data:
+  caddy_config:
