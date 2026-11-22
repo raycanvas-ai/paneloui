@@ -4,6 +4,7 @@ import Google from "@auth/core/providers/google";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 
 import { getDb } from "@/lib/server/db";
+import { siteOrigin } from "@/lib/server/dodo";
 import { accounts, sessions, users, verificationTokens } from "@/lib/server/schema";
 
 export type SessionUser = { id: string; name?: string | null; email?: string | null; image?: string | null };
@@ -43,13 +44,23 @@ export function authConfig(): AuthConfig {
   };
 }
 
-export function handleAuth(request: Request) {
-  return Auth(request, authConfig());
+/**
+ * The request as the browser addressed it. Behind the proxy, Next sees the container's own origin
+ * (http://0.0.0.0:3000), and Auth.js would send that to Google as the callback and redirect people to it.
+ */
+async function atPublicOrigin(request: Request) {
+  const url = new URL(request.url);
+  const body = request.method === "GET" || request.method === "HEAD" ? undefined : await request.arrayBuffer();
+  return new Request(new URL(url.pathname + url.search, siteOrigin(request)), { method: request.method, headers: request.headers, body });
+}
+
+export async function handleAuth(request: Request) {
+  return Auth(await atPublicOrigin(request), authConfig());
 }
 
 /** The signed-in user for a request, or null. */
 export async function getUser(request: Request): Promise<SessionUser | null> {
-  const response = await Auth(new Request(new URL("/api/auth/session", request.url), { headers: request.headers }), authConfig());
+  const response = await Auth(new Request(new URL("/api/auth/session", siteOrigin(request)), { headers: request.headers }), authConfig());
   const data = (await response.json()) as { user?: SessionUser } | null;
   return data?.user?.id ? data.user : null;
 }
