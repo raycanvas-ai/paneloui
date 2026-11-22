@@ -9,6 +9,8 @@ ssh -i ~/.ssh/panelo_prod -o StrictHostKeyChecking=accept-new "$HOST" '
   git pull --ff-only
   git -C components/panelo/pro pull --ff-only
   docker compose up -d --build
+  # The Caddyfile is a single-file mount: git replaces the file, so Caddy only sees changes after a restart.
+  docker compose restart caddy
   docker image prune -f >/dev/null
   docker compose ps
 '
