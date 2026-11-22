@@ -11,9 +11,11 @@
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.47",
     "@ai-sdk/google": "^4.0.61",
+    "@ai-sdk/groq": "^4.0.86",
     "@ai-sdk/openai": "^4.0.53",
     "@ai-sdk/react": "^4.0.90",
-    "@anthropic-ai/sdk": "1.8.0",
+    "@auth/core": "^0.41.2",
+    "@auth/drizzle-adapter": "^1.11.2",
     "@internationalized/date": "^3.12.1",
     "@radix-ui/react-slot": "^1.5.0",
     "@remixicon/react": "^4.9.0",
@@ -23,8 +25,10 @@
     "ai": "^7.0.87",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "drizzle-orm": "^0.45.2",
     "lucide-react": "^1.73.0",
     "next": "16.3.3",
+    "postgres": "^3.4.9",
     "react": "19.2.4",
     "react-aria-components": "^1.17.0",
     "react-dom": "19.2.4",
@@ -37,6 +41,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "drizzle-kit": "^0.31.10",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
