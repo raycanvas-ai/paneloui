@@ -98,7 +98,14 @@ function LicenseCard({ license }: { license: License }) {
             label="Copy the registry entry"
             text={`"registries": {\n  "@panelo-pro": {\n    "url": "${origin}/r/pro/{name}.json",\n    "headers": { "Authorization": "Bearer \${PANELO_LICENSE_KEY}" }\n  }\n}`}
           />
+          <p className="text-site-body text-site-muted">The same key downloads Propflow, the Pro app template:</p>
+          <CopyBlock label="Copy the template command" text={`curl -fsSL -H "Authorization: Bearer ${key}" ${origin}/t/pro/propflow.tgz | tar -xz`} />
         </div>
+      )}
+      {!license.revoked && !expired && (
+        <Link href="/templates/propflow" className="mt-4 inline-block rounded-sm text-site-body text-site-muted underline underline-offset-4 outline-none hover:text-site-ink focus-visible:ring-2 focus-visible:ring-border-focus-ring">
+          Includes Propflow, the real-estate app template
+        </Link>
       )}
     </li>
   );
