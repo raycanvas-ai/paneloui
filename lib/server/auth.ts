@@ -30,9 +30,14 @@ export function authConfig(): AuthConfig {
     // Linking a second provider onto an account by email is safe only when the provider proved the
     // address: GitHub returns only a primary, verified email, and Google's claim is checked below.
     // Only providers with an OAuth app configured, so a deploy without one still serves everything else.
+    // Credentials passed explicitly: @auth/core, unlike next-auth, doesn't read AUTH_<PROVIDER>_ID itself.
     providers: [
-      ...(process.env.AUTH_GITHUB_ID ? [GitHub({ allowDangerousEmailAccountLinking: true })] : []),
-      ...(process.env.AUTH_GOOGLE_ID ? [Google({ allowDangerousEmailAccountLinking: true })] : []),
+      ...(process.env.AUTH_GITHUB_ID
+        ? [GitHub({ clientId: process.env.AUTH_GITHUB_ID, clientSecret: process.env.AUTH_GITHUB_SECRET, allowDangerousEmailAccountLinking: true })]
+        : []),
+      ...(process.env.AUTH_GOOGLE_ID
+        ? [Google({ clientId: process.env.AUTH_GOOGLE_ID, clientSecret: process.env.AUTH_GOOGLE_SECRET, allowDangerousEmailAccountLinking: true })]
+        : []),
     ],
     pages: { signIn: "/account", error: "/account" },
     callbacks: {
