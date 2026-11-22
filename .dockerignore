@@ -8,3 +8,5 @@ test-results
 public/r
 registry-pro
 deploy
+**/node_modules
+**/.next

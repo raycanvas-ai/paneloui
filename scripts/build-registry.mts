@@ -10,13 +10,15 @@
 // of `@/components/panelo/…` are rewritten to `@/components/panelo-ui/…`. Site images become
 // absolute URLs, and every item depends on `panelo-theme`, the tokens Panelo adds to stock shadcn.
 
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const SITE = (process.env.SITE_URL ?? "https://www.paneloui.com").replace(/\/$/, "");
 const FREE_OUT = join(ROOT, "public/r");
 const PRO_OUT = join(ROOT, "registry-pro");
+const FREE_TEMPLATES_OUT = join(ROOT, "public/t");
 const read = (path: string) => readFileSync(join(ROOT, path), "utf8");
 
 const pkg = JSON.parse(read("package.json")) as { dependencies: Record<string, string> };
@@ -132,7 +134,7 @@ function theme() {
 }
 
 // --- Write ---------------------------------------------------------------------------------------
-for (const dir of [FREE_OUT, PRO_OUT]) {
+for (const dir of [FREE_OUT, PRO_OUT, FREE_TEMPLATES_OUT]) {
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir, { recursive: true });
 }
@@ -161,3 +163,22 @@ for (const e of catalogue) {
 }
 if (missing.length) throw new Error(`Free catalogue items with no preview entry: ${missing.join(", ")}`);
 console.log(`Registry: ${free} free items + panelo-theme + agent-kit in public/r, ${pro} Pro items in registry-pro (private).`);
+
+// --- Templates: one tarball each, its folder at the top, so `tar -xz` makes ./<slug>. --------------------
+// Free ones are static files in public/t; Pro ones go to registry-pro/templates, served by app/t/pro.
+let templates = 0;
+for (const [source, out] of [
+  ["templates", FREE_TEMPLATES_OUT],
+  ["components/panelo/pro/templates", join(PRO_OUT, "templates")],
+]) {
+  if (!existsSync(join(ROOT, source))) continue;
+  mkdirSync(out, { recursive: true });
+  for (const slug of readdirSync(join(ROOT, source), { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name)) {
+    // COPYFILE_DISABLE keeps macOS tar from adding ._ metadata files.
+    execFileSync("tar", ["-czf", join(out, `${slug}.tgz`), "--exclude=node_modules", "--exclude=.next", "--exclude=*.tsbuildinfo", "--exclude=.DS_Store", "--exclude=.dockerignore", "-C", join(ROOT, source), slug], {
+      env: { ...process.env, COPYFILE_DISABLE: "1" },
+    });
+    templates++;
+  }
+}
+console.log(`Templates: ${templates} packed.`);

@@ -3,6 +3,9 @@
 @import "tailwindcss";
 /* Tailwind skips gitignored folders, and pro/ is gitignored. Name it so pro classes are generated; a clone without it is unaffected. */
 @source "../components/panelo/pro";
+/* Whole-app templates are separate Next apps with their own CSS; they never style this site. */
+@source not "../templates";
+@source not "../components/panelo/pro/templates";
 @import "./theme.css";
 @import "./typography.css";
 

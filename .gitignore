@@ -25,3 +25,4 @@ registry-pro/
 
 # Built by scripts/build-registry.mts at deploy time: the free registry (public) and the Pro one (private).
 public/r/
+public/t/
