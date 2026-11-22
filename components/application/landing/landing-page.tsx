@@ -64,18 +64,19 @@ const sectionOf = (id: string) => COMPONENT_SECTIONS.find((s) => s.id === id)?.e
 const proCount = ALL_ENTRIES.filter((e) => e.tier === "pro").length;
 const freeCount = ALL_ENTRIES.length - proCount;
 
+// Root-relative hashes, so the header works the same on /templates as on the home page.
 const NAV = [
   { label: "Components", href: "/components" },
-  { label: "Dashboard pages", href: "#pages" },
+  { label: "Templates", href: "/templates" },
   { label: "Agent demo", href: AGENT_DEMO },
-  { label: "Pricing", href: "#pricing" },
+  { label: "Pricing", href: "/#pricing" },
 ];
 
 // One column, one gutter, one rhythm: every row of the page starts on the same edge.
-const CONTAINER = "mx-auto w-full max-w-[1152px] px-6";
-const SECTION = "py-20 sm:py-28";
-const FOCUS = "outline-none focus-visible:ring-2 focus-visible:ring-border-focus-ring";
-const TEXT_LINK = cx("rounded-sm text-site-muted transition-colors duration-150 hover:text-site-ink", FOCUS);
+export const CONTAINER = "mx-auto w-full max-w-[1152px] px-6";
+export const SECTION = "py-20 sm:py-28";
+export const FOCUS = "outline-none focus-visible:ring-2 focus-visible:ring-border-focus-ring";
+export const TEXT_LINK = cx("rounded-sm text-site-muted transition-colors duration-150 hover:text-site-ink", FOCUS);
 // Entrances use @starting-style: no keyframes, and nothing moves under reduced motion.
 const ENTER = "transition-[opacity,translate] duration-300 ease-out starting:translate-y-1 starting:opacity-0 motion-reduce:transition-none";
 
@@ -98,7 +99,7 @@ function Bare({ className, children }: { className?: string; children: ReactNode
 }
 
 /** "Label →", the arrow nudging on hover. */
-function ArrowLink({ href, children, className }: { href: string; children: ReactNode; className?: string }) {
+export function ArrowLink({ href, children, className }: { href: string; children: ReactNode; className?: string }) {
   return (
     <Link href={href} className={cx(TEXT_LINK, "group inline-flex items-center gap-1 text-site-body-medium", className)}>
       {children}
@@ -108,7 +109,7 @@ function ArrowLink({ href, children, className }: { href: string; children: Reac
 }
 
 /** A section's opening line: the claim in ink, its support in grey, one sentence at heading size. */
-function Heading({ title, body, className }: { title: ReactNode; body: ReactNode; className?: string }) {
+export function Heading({ title, body, className }: { title: ReactNode; body: ReactNode; className?: string }) {
   return (
     <h2 className={cx("max-w-[720px] text-site-heading text-balance sm:text-site-display-sm", className)}>
       <span className="text-site-ink">{title}</span> <span className="text-site-muted">{body}</span>
@@ -140,7 +141,7 @@ function Feature({ title, body, stage, className, children }: { title: ReactNode
  * A product window, scaled from a 1280px-wide preview. Fitted to a phone that screen would
  * shrink to a quarter, so below `sm` it keeps a readable 720px and bleeds off the end edge.
  */
-function ScreenWindow({ children }: { children: ReactNode }) {
+export function ScreenWindow({ children }: { children: ReactNode }) {
   return (
     <div className="-me-6 overflow-x-clip sm:me-0 sm:overflow-x-visible">
       <div className="w-[720px] rounded-2xl bg-site-surface p-1.5 shadow-site-raised ring-1 ring-site-hairline sm:w-auto">
@@ -152,7 +153,7 @@ function ScreenWindow({ children }: { children: ReactNode }) {
   );
 }
 
-function SiteHeader() {
+export function SiteHeader() {
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
 
@@ -653,7 +654,7 @@ function PermissionsCard() {
 const AGENT_KIT = "npx shadcn@latest add @panelo/agent-kit";
 const KIT_PARTS = ["agent bridge, on UI SDK", "approval prompts", "chat hook", "/api/agent route, on Groq's free tier"];
 
-function CopyCommand({ command }: { command: string }) {
+export function CopyCommand({ command }: { command: string }) {
   const [copied, setCopied] = useState(false);
   return (
     <div className="flex min-h-10 w-full items-center gap-3 rounded-xl bg-site-surface py-1.5 ps-4 pe-1.5 shadow-site-raised ring-1 ring-site-hairline">
@@ -828,6 +829,9 @@ function TemplatesSection() {
           </TabsPanel>
         ))}
       </Tabs>
+      <ArrowLink href="/templates" className="mt-8">
+        Or start from a whole app: Panelo Admin, free, and Propflow in Pro
+      </ArrowLink>
     </section>
   );
 }
@@ -836,7 +840,7 @@ function TemplatesSection() {
 // arrives (app/checkout/route.ts). Keep LAUNCH_OFF in step with that code in Dodo.
 const LAUNCH_OFF = 50;
 const SHARED = ["Use it in unlimited projects", "Keep the code forever"];
-const PRO = ["Every Pro dashboard page", "Every Pro calendar", "Agent-ready UI SDK parts", "Light and dark themes"];
+const PRO = ["Every Pro dashboard page", "Every Pro calendar", "Propflow, the real-estate app template", "Agent-ready UI SDK parts", "Light and dark themes"];
 
 // `plan` names the product /checkout sells; the free plan links to the catalogue instead.
 type Plan = { name: string; blurb: string; price: number | null; cta: string; plan?: "year" | "lifetime" | "startups"; featured?: boolean; features: string[] };
@@ -847,7 +851,7 @@ const PLANS: Plan[] = [
     blurb: "The fundamentals of Panelo, free. Perfect for indie developers.",
     price: null,
     cta: "Browse free",
-    features: ["Free user license", ...SHARED, "Free component updates", "Agent-ready UI SDK parts", `${freeCount} free components`, "Light and dark themes"],
+    features: ["Free user license", ...SHARED, "Free component updates", `${freeCount} free components`, "Panelo Admin, the full app template", "Agent-ready UI SDK parts", "Light and dark themes"],
   },
   {
     name: "1 Year of Updates",
@@ -1022,13 +1026,14 @@ const FOOTER_COLUMNS = [
   {
     title: "Product",
     links: [
+      { label: "Templates", href: "/templates" },
       { label: "Agent demo", href: AGENT_DEMO },
-      { label: "Pricing", href: "#pricing" },
+      { label: "Pricing", href: "/#pricing" },
     ],
   },
 ];
 
-function SiteFooter() {
+export function SiteFooter() {
   return (
     <footer className="border-t border-site-hairline">
       <div className={cx(CONTAINER, "flex flex-col gap-12 pt-16 pb-10 md:flex-row md:justify-between")}>
