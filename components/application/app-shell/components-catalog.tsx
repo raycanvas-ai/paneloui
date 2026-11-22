@@ -151,18 +151,19 @@ export function PreviewCard({ entry }: { entry: Entry }) {
         )}
         <div className="pointer-events-none absolute inset-x-2.5 top-2.5 z-20 flex items-start justify-between gap-2">
           <Chip>{sectionOf(entry.href)?.title}</Chip>
-          {entry.tier === "pro" && <ProTag />}
         </div>
       </div>
       <div className="flex items-center gap-3 py-2.5 ps-[11.5px] pe-1">
         <div className="min-w-0 flex-1">
-          <h3 className="truncate text-site-body-medium text-site-ink">
+          {/* The Pro tag sits by the name, never on the live preview, where content would show through it. */}
+          <h3 className="flex min-w-0 items-center gap-2 text-site-body-medium text-site-ink">
             <Link
               href={entry.href}
-              className="outline-none after:absolute after:inset-0 after:rounded-[14px] focus-visible:after:ring-2 focus-visible:after:ring-border-focus-ring"
+              className="min-w-0 truncate outline-none after:absolute after:inset-0 after:rounded-[14px] focus-visible:after:ring-2 focus-visible:after:ring-border-focus-ring"
             >
               {entry.name}
             </Link>
+            {entry.tier === "pro" && <ProTag className="shrink-0" />}
           </h3>
           <p className="truncate text-site-body text-site-muted">{entry.description}</p>
         </div>
