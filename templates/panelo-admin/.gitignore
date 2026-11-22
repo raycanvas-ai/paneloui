@@ -1,0 +1,28 @@
+# Installed packages
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# Build output and caches
+/.next/
+/out/
+/build
+/coverage
+*.tsbuildinfo
+next-env.d.ts
+
+# Secrets and local environment
+.env*.local
+*.pem
+
+# Tooling
+.vercel
+.gstack/
+*.sh
+
+# Logs and OS noise
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store

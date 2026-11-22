@@ -1,0 +1,6 @@
+# Regenerate the theme preset registry and stage it, so it never drifts from src/styles/presets.
+npm run generate:presets
+git add src/lib/preferences/presets.ts
+
+# Lint and format only what is about to be committed.
+npx --no -- lint-staged

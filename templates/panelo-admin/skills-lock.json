@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "skills": {
+    "better-ui": {
+      "source": "jakubkrehel/skills",
+      "sourceType": "github",
+      "skillPath": "skills/better-ui/SKILL.md",
+      "computedHash": "086bb100281b79da584d6c5355730ce3828f23451b73da8d944b4a5069ff7f03"
+    },
+    "emil-design-eng": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/emil-design-eng/SKILL.md",
+      "computedHash": "d80dbb053bf35f3ef9f3ffe493054b76d93f4ae5e2c85a97ee1222677471a622"
+    },
+    "ui-sdk": {
+      "source": "vercel-labs/ui",
+      "commit": "282f44729ce08282ef1dc37fa093b1997bbeb848",
+      "sourceType": "github",
+      "skillPath": "packages/core/skills/ui-sdk/SKILL.md",
+      "computedHash": "7353586d36e12a3895bcec7d6d589ad26a18e7acff95b014ea63ccb12cfafc38"
+    }
+  }
+}

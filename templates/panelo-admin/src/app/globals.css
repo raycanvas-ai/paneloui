@@ -1,0 +1,351 @@
+@layer ui-sdk;
+
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Presets only override tokens; run `npm run generate:presets` after adding one. */
+@import "../styles/presets/ember.css";
+@import "../styles/presets/graphite.css";
+@import "../styles/presets/harbor.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ---------------------------------------------------------------------------
+   Tokens → Tailwind. Grouped by role: surfaces, brand, status, data, chrome.
+   --------------------------------------------------------------------------- */
+@theme inline {
+  --font-sans: var(--font-sans);
+  --font-heading: var(--font-sans);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-ring: var(--ring);
+
+  /* Status. Each is tuned to read on a normal surface, so `text-success` is legible
+     and `bg-success/10` is the tint; `-solid` is for filled chips and dots, with
+     `-foreground` as the text that sits on top of them. */
+  --color-destructive: var(--destructive);
+  --color-success: var(--success);
+  --color-success-solid: var(--success-solid);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-solid: var(--warning-solid);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-solid: var(--info-solid);
+  --color-info-foreground: var(--info-foreground);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* One --radius knob drives the whole scale, so presets can tighten or soften corners. */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+}
+
+/* ---------------------------------------------------------------------------
+   Panelo light (the "default" preset).
+   --------------------------------------------------------------------------- */
+:root {
+  --radius: 0.625rem;
+
+  --background: oklch(0.985 0.002 268);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+
+  --primary: oklch(0.545 0.196 268);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --ring: oklch(0.545 0.196 268);
+
+  /* Status. Darkened against white so the on-surface value clears 4.5:1;
+     the eye-catching version lives in -solid, which only ever carries a chip. */
+  --destructive: oklch(0.577 0.245 27.325);
+  --success: oklch(0.52 0.13 150);
+  --success-solid: oklch(0.53 0.15 150);
+  --success-foreground: oklch(0.985 0 0);
+  --warning: oklch(0.55 0.12 75);
+  --warning-solid: oklch(0.76 0.15 75);
+  --warning-foreground: oklch(0.25 0.04 75);
+  --info: oklch(0.52 0.15 245);
+  --info-solid: oklch(0.52 0.16 245);
+  --info-foreground: oklch(0.985 0 0);
+
+  /* Categorical, not a single-hue ramp: series are told apart by hue AND
+     lightness, so they survive greyscale printing and red-green colour blindness. */
+  --chart-1: oklch(0.52 0.19 268);
+  --chart-2: oklch(0.64 0.13 196);
+  --chart-3: oklch(0.48 0.19 310);
+  --chart-4: oklch(0.67 0.15 75);
+  --chart-5: oklch(0.58 0.2 18);
+
+  --sidebar: oklch(0.963 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.545 0.196 268);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.912 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Scrollbars: quiet enough to ignore, dark enough to grab. */
+  --scrollbar-thumb: oklch(0.84 0 0);
+  --scrollbar-thumb-hover: oklch(0.72 0 0);
+}
+
+/* ---------------------------------------------------------------------------
+   Panelo dark. Tuned to a #161616 ground, #1b1b1b surfaces and #222 hairlines.
+   --------------------------------------------------------------------------- */
+.dark {
+  --background: oklch(0.176 0.004 268);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.203 0.003 268);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.203 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+
+  --primary: oklch(0.7 0.16 268);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.7 0.16 268);
+
+  /* Inverted: on a dark ground the on-surface value is the LIGHT one, and the
+     chip fill darkens so white text still sits on it. */
+  --destructive: oklch(0.704 0.191 22.216);
+  --success: oklch(0.78 0.15 152);
+  --success-solid: oklch(0.53 0.14 152);
+  --success-foreground: oklch(0.985 0 0);
+  --warning: oklch(0.82 0.14 80);
+  --warning-solid: oklch(0.75 0.15 78);
+  --warning-foreground: oklch(0.22 0.04 75);
+  --info: oklch(0.78 0.11 240);
+  --info-solid: oklch(0.52 0.16 245);
+  --info-foreground: oklch(0.985 0 0);
+
+  /* Same hues as light, lifted in lightness and eased in chroma so they hold
+     up on the near-black ground instead of vibrating against it. */
+  --chart-1: oklch(0.68 0.17 268);
+  --chart-2: oklch(0.78 0.11 196);
+  --chart-3: oklch(0.66 0.17 310);
+  --chart-4: oklch(0.82 0.14 75);
+  --chart-5: oklch(0.7 0.18 18);
+
+  --sidebar: oklch(0.176 0.004 268);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.7 0.16 268);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.262 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.556 0 0);
+
+  --scrollbar-thumb: oklch(0.38 0 0);
+  --scrollbar-thumb-hover: oklch(0.5 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    /* Every scroll container gets a thin, quiet bar. The standard properties keep
+       the platform's overlay behaviour, so bars still fade out on macOS. */
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+  }
+
+  html {
+    @apply font-sans;
+    overscroll-behavior: none;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans), system-ui, sans-serif;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Typography. next/font puts its variables on <body>, so the mapping lives there
+   too; declaring var(--font-geist) on :root would resolve before it exists.
+   --------------------------------------------------------------------------- */
+body {
+  --font-sans: var(--font-geist);
+  --font-mono: var(--font-geist-mono);
+}
+html[data-font="inter"] body {
+  --font-sans: var(--font-inter);
+}
+html[data-font="dm-sans"] body {
+  --font-sans: var(--font-dm-sans);
+}
+
+/* Set for one frame while the colour scheme flips, so surfaces change together. */
+.disable-transitions * {
+  transition: none !important;
+}
+
+@layer utilities {
+  /* Spreadsheet-style panes that must advertise their scroll even at rest.
+     macOS uses overlay scrollbars and only ::-webkit-scrollbar opts out of
+     them, so this resets scrollbar-width back to auto — Chromium ignores the
+     ::-webkit-scrollbar rules whenever scrollbar-width is set. */
+  .scrollbar-thin {
+    scrollbar-width: auto;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track,
+  .scrollbar-thin::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+  /* A transparent border plus content-box clipping leaves the thumb 6px wide
+     with breathing room on both sides, instead of filling the whole gutter. */
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    background-clip: content-box;
+    border: 2px solid transparent;
+    border-radius: 9999px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+    background-clip: content-box;
+  }
+
+  /* Opt out entirely — for panes that scroll but shouldn't show it. */
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Staged entrance for infrequent moments only (auth, onboarding, error and
+   empty states), never for high-frequency UI. Split content into semantic
+   chunks and give each `animate-stage stage-N`: N * 100ms stagger. Reduced
+   motion keeps the fade and drops the movement and blur. */
+@keyframes stage-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(4px);
+  }
+}
+
+@keyframes stage-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@utility animate-stage {
+  animation: stage-enter 400ms cubic-bezier(0.23, 1, 0.32, 1) both;
+  animation-delay: calc(var(--stage, 0) * 100ms);
+
+  @media (prefers-reduced-motion: reduce) {
+    animation-name: stage-fade;
+  }
+}
+
+@utility stage-* {
+  --stage: --value(integer);
+}
+
+/* ---------------------------------------------------------------------------
+   Invoice printing: only the portal'd paper prints, at US Letter size.
+   --------------------------------------------------------------------------- */
+[data-print-root] {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: Letter;
+    margin: 0;
+  }
+
+  html,
+  body {
+    width: 8.5in !important;
+    height: 11in !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
+  body > *:not([data-print-root]) {
+    display: none !important;
+  }
+
+  [data-print-root] {
+    display: block !important;
+    width: 8.5in !important;
+    height: 11in !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    background: white !important;
+  }
+
+  [data-print-root] [data-print-paper] {
+    width: 8.5in !important;
+    height: 11in !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+  }
+
+  [data-print-root] [data-print-paper],
+  [data-print-root] [data-print-paper] * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

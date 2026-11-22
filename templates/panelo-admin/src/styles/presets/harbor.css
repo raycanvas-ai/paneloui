@@ -1,0 +1,24 @@
+/* @preset Harbor — calm teal on cool greys, softer corners. */
+
+html[data-theme-preset="harbor"] {
+  --radius: 0.75rem;
+  --background: oklch(0.985 0.003 200);
+  --primary: oklch(0.55 0.11 195);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.55 0.11 195);
+  --sidebar-primary: oklch(0.55 0.11 195);
+  --chart-1: oklch(0.55 0.11 195);
+  --chart-2: oklch(0.6 0.15 255);
+}
+
+html.dark[data-theme-preset="harbor"] {
+  --background: oklch(0.18 0.006 205);
+  --card: oklch(0.21 0.007 205);
+  --sidebar: oklch(0.18 0.006 205);
+  --primary: oklch(0.74 0.12 195);
+  --primary-foreground: oklch(0.2 0.02 200);
+  --ring: oklch(0.74 0.12 195);
+  --sidebar-primary: oklch(0.74 0.12 195);
+  --chart-1: oklch(0.72 0.12 195);
+  --chart-2: oklch(0.72 0.13 255);
+}

@@ -1,0 +1,80 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.12/schema.json",
+  "files": {
+    "ignoreUnknown": true,
+    "includes": ["**", "!node_modules", "!.next", "!out", "!dist", "!.github", "!.husky", "!src/components/ui"]
+  },
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "formatter": {
+    "enabled": true,
+    "useEditorconfig": true,
+    "indentStyle": "space",
+    "lineWidth": 120
+  },
+  "html": { "formatter": { "selfCloseVoidElements": "always" } },
+  "css": { "parser": { "tailwindDirectives": true } },
+  "linter": {
+    "enabled": true,
+    "domains": { "react": "recommended", "next": "recommended" },
+    "rules": {
+      "preset": "recommended",
+      "complexity": { "noImportantStyles": "off" },
+      "correctness": {
+        "noNestedComponentDefinitions": "error",
+        "noUndeclaredDependencies": "error",
+        "noUndeclaredVariables": "error"
+      },
+      "nursery": {
+        "noFloatingPromises": "error",
+        "noMisusedPromises": "error",
+        "useNullishCoalescing": "error",
+        "useSortedClasses": "on"
+      },
+      "performance": { "noImgElement": "warn" },
+      "style": {
+        "noCommonJs": "error",
+        "noHeadElement": "warn",
+        "noInferrableTypes": "error",
+        "noNamespace": "error",
+        "noNestedTernary": "warn",
+        "noParameterAssign": "error",
+        "noUselessElse": "error",
+        "useAsConstAssertion": "error",
+        "useFilenamingConvention": "error",
+        "useSelfClosingElements": "error"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "warn",
+        "noConstantBinaryExpressions": "error",
+        "noEmptyBlockStatements": "error",
+        "noImportCycles": "error",
+        "noUnknownAtRules": "off",
+        "noUnnecessaryConditions": "warn"
+      }
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              "react",
+              "react/**",
+              ":BLANK_LINE:",
+              "next/**",
+              ":BLANK_LINE:",
+              ":PACKAGE:",
+              ":BLANK_LINE:",
+              ":ALIAS:",
+              ":BLANK_LINE:",
+              ":PATH:"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
