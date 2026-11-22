@@ -6,7 +6,7 @@ React components, charts and full dashboard pages built on Vercel's UI SDK, so A
 
 ```bash
 npm install
-cp .env.example .env.local   # optional: ANTHROPIC_API_KEY powers the live agent demo
+cp .env.example .env.local   # optional: GROQ_API_KEY (free, console.groq.com) powers the live agent demo
 npm run dev
 ```
 
