@@ -1402,3 +1402,8 @@ html[data-look-vt]::view-transition-new(root) {
     scrollbar-color: var(--scrollbar-thumb) transparent;
   }
 }
+
+/* The landing hero's drifting columns: the track holds its set twice, so half its height is one loop. */
+@keyframes site-drift {
+  to { transform: translateY(-50%); }
+}
