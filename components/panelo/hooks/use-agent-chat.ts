@@ -8,7 +8,7 @@ type Block = { type: string; id?: string; name?: string; input?: any; text?: str
 export type AgentStep = { ref: string; action: string; args?: unknown[] }
 type Step = AgentStep
 
-export type AgentChatEntry = { role: 'user' | 'assistant'; text: string } | { role: 'step'; text: string; ok: boolean }
+export type AgentChatEntry = { role: 'user'; text: string } | { role: 'assistant'; text: string; error?: boolean } | { role: 'step'; text: string; ok: boolean }
 
 // ponytail: a hard stop on tool round trips per request; raise it for long multi-screen tasks.
 const MAX_TURNS = 8
@@ -18,7 +18,7 @@ function describe({ ref, action, args = [] }: Step) {
     const [arg] = args
     switch (action) {
         case 'press':
-            return args.length ? `Chose ${arg} in ${ref}` : `Pressed ${ref}`
+            return args.length ? `Chose “${arg}” from ${ref}` : `Pressed ${ref}`
         case 'setValue':
             return `Set ${ref} to “${arg}”`
         case 'setPressed':
@@ -31,6 +31,16 @@ function describe({ ref, action, args = [] }: Step) {
         default:
             return `${action} ${ref}`
     }
+}
+
+/**
+ * A failed step's reason in one sentence a person can act on. The bridge's errors are written for
+ * the model (one lists every label on the page), so a person gets the gist and the model the rest.
+ */
+export function humanize(message: string) {
+    const missing = message.match(/No component "([^"]+)"/)
+    if (missing) return `I couldn’t find “${missing[1]}” on the page, so I stopped there.`
+    return message.split(/(?<=\.)\s/)[0]
 }
 
 /**
@@ -107,7 +117,7 @@ export function useAgentChat({ endpoint = '/api/agent', onRun }: { endpoint?: st
         } catch (error) {
             // A half-finished turn can't be continued, so the next message starts a fresh conversation.
             history.current = []
-            add({ role: 'assistant', text: (error as Error).message })
+            add({ role: 'assistant', text: (error as Error).message, error: true })
         } finally {
             setBusy(false)
         }
@@ -124,9 +134,9 @@ export function useAgentChat({ endpoint = '/api/agent', onRun }: { endpoint?: st
         add({ role: 'user', text: prompt })
         try {
             const result = await runSteps(steps)
-            add({ role: 'assistant', text: result.error ? `I stopped there: ${result.error.message}` : reply })
+            add({ role: 'assistant', text: result.error ? `${humanize(result.error.message)} Nothing after that step ran.` : reply, error: Boolean(result.error) })
         } catch (error) {
-            add({ role: 'assistant', text: (error as Error).message })
+            add({ role: 'assistant', text: (error as Error).message, error: true })
         } finally {
             setBusy(false)
         }
