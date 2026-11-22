@@ -21,8 +21,14 @@ export function PromoBar() {
         className="pointer-events-none absolute top-1/2 left-0 h-[200%] w-30 animate-[site-banner-sweep_7s_ease-in-out_infinite] bg-[radial-gradient(closest-side,rgb(255_255_255/0.36),rgb(255_255_255/0.16)_50%,transparent)] motion-reduce:hidden"
       />
       <Link href="/#pricing" className="group relative flex h-full items-center justify-center gap-3 px-10 text-site-body">
+        {/* Phones get the offer alone; wider screens add what Pro holds. */}
         <span className="truncate">
-          <span className="font-semibold">Workflow Builder, Team Inbox</span> and {proCount - 2} more pages in Pro
+          <span className="font-semibold">$50 off Pro</span>
+          <span className="sm:hidden"> for launch</span>
+          <span className="hidden sm:inline">
+            {" "}
+            for launch: {proCount} pages, calendars and blocks, from <span className="font-semibold">$129</span> once
+          </span>
         </span>
         <span className="inline-flex h-[26px] shrink-0 items-center gap-1 rounded-md bg-site-on-banner/20 px-2.5 font-semibold transition-colors group-hover:bg-site-on-banner/30">
           Get Pro
