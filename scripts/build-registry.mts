@@ -143,7 +143,7 @@ const write = (dir: string, data: { name: string }) => writeFileSync(join(dir, `
 write(FREE_OUT, theme());
 write(
   FREE_OUT,
-  item("agent-kit", "Agent kit", "The UI SDK agent bridge, approval prompts, a chat hook and the /api/agent route (Groq's free tier).", ["components/panelo/lib/agent.ts", "components/panelo/hooks/use-agent-chat.ts", "app/api/agent/route.ts"], (f) => inLibrary(f) || f === "app/api/agent/route.ts", { "app/api/agent/route.ts": "app/api/agent/route.ts" }),
+  item("agent-kit", "Agent kit", "The UI SDK agent bridge, approval prompts, a chat hook and the /api/agent route (Groq's free tier).", ["components/panelo/lib/agent.ts", "components/panelo/hooks/use-agent-chat.ts", "app/api/agent/route.ts"], (f) => (inLibrary(f) && !f.startsWith("components/panelo/pro/")) || f === "app/api/agent/route.ts", { "app/api/agent/route.ts": "app/api/agent/route.ts" }),
 );
 
 let free = 0;
@@ -157,7 +157,9 @@ for (const e of catalogue) {
     missing.push(e.slug);
     continue;
   }
-  write(e.tier === "pro" ? PRO_OUT : FREE_OUT, item(e.slug, e.name, e.description, [entry], inLibrary));
+  // A free item may never reach into pro/: collect() throws if one imports it, so Pro code can't ship publicly.
+  const allowed = e.tier === "pro" ? inLibrary : (f: string) => inLibrary(f) && !f.startsWith("components/panelo/pro/");
+  write(e.tier === "pro" ? PRO_OUT : FREE_OUT, item(e.slug, e.name, e.description, [entry], allowed));
   if (e.tier === "pro") pro++;
   else free++;
 }
