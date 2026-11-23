@@ -1,0 +1,32 @@
+# Every 15 minutes, from outside the server: the site, its database, the demos, the payment webhook and
+# the Pro gate. A failed run emails whoever last changed this file (GitHub's default for scheduled runs).
+name: Uptime
+on:
+  schedule: [{ cron: "*/15 * * * *" }]
+  workflow_dispatch:
+permissions: {}
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check production
+        run: |
+          fail=0
+          check() {
+            code=$(curl -s -o /dev/null -m 20 --retry 2 --retry-delay 10 -X "$1" -w '%{http_code}' "$2")
+            if [ "$code" = "$3" ]; then echo "ok    $code  $1 $2"; else echo "FAIL  $code  $1 $2 (want $3)"; fail=1; fi
+          }
+          check GET  https://www.paneloui.com/                               200
+          check GET  https://www.paneloui.com/api/health                     200
+          check GET  https://www.paneloui.com/templates                      200
+          check GET  https://demo-admin.paneloui.com/dashboard/default       200
+          check GET  https://demo-propflow.paneloui.com/dashboard/overview   200
+          # Unsigned webhooks and keyless Pro requests must be refused, not served or crashed on.
+          check POST https://www.paneloui.com/api/webhooks/dodo              401
+          check GET  https://www.paneloui.com/r/pro/dashboard-pages-11       401
+          # Caddy renews certificates itself; this catches it if renewal ever stops.
+          end=$(echo | openssl s_client -connect www.paneloui.com:443 -servername www.paneloui.com 2>/dev/null | openssl x509 -noout -enddate | cut -d= -f2)
+          days=$(( ($(date -d "$end" +%s) - $(date +%s)) / 86400 ))
+          if [ "$days" -ge 14 ]; then echo "ok    certificate, $days days left"; else echo "FAIL  certificate expires in $days days"; fail=1; fi
+          exit $fail
