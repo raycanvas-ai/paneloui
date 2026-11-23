@@ -20,9 +20,10 @@ export type Template = {
 export const SITE = "https://www.paneloui.com";
 
 /**
- * Templates launch together on December 1, three of them. Until `open` flips, the pages and live demos are
- * up but nothing downloads: the build skips the free tarball and /t/pro answers 404. Flip it on launch day,
- * with the third template added to TEMPLATES.
+ * Templates launch together on December 1, three of them. Until `open` flips, nothing about them is public:
+ * /templates shows only that they're coming, their pages 404, the build packs no tarballs, /t/pro answers 404,
+ * and the demo subdomains redirect to /templates. On launch day: add the third template to TEMPLATES, set
+ * `open: true`, and follow "Templates" in deploy/README.md.
  */
 export const TEMPLATES_LAUNCH = { open: false, date: "December 1", count: 3 } as const;
 

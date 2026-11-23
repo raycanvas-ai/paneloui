@@ -12,15 +12,18 @@ paneloui.com {
 	redir https://www.paneloui.com{uri} permanent
 }
 
-# Live template demos, linked from /templates. Kept out of search: the product pages are what should rank.
+# Live template demos. Until templates launch they redirect to /templates (nothing about them is public);
+# on launch day, swap each `redir` for its `reverse_proxy` line. Kept out of search either way.
 demo-admin.paneloui.com {
 	encode zstd gzip
 	header X-Robots-Tag "noindex, nofollow"
-	reverse_proxy demo-admin:3000
+	redir https://www.paneloui.com/templates
+	# reverse_proxy demo-admin:3000
 }
 
 demo-propflow.paneloui.com {
 	encode zstd gzip
 	header X-Robots-Tag "noindex, nofollow"
-	reverse_proxy demo-propflow:3000
+	redir https://www.paneloui.com/templates
+	# reverse_proxy demo-propflow:3000
 }

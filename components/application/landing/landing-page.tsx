@@ -989,7 +989,7 @@ const FAQ = [
   },
   {
     q: "When do the templates arrive?",
-    a: "December 1: three whole-app templates, one free and two in Pro. Every Pro plan includes them, including plans bought before launch. Two are already running as live demos.",
+    a: "December 1: three whole-app templates, one free and two in Pro. Every Pro plan includes the Pro ones, plans bought before launch too.",
   },
   {
     q: "Can I get a refund?",

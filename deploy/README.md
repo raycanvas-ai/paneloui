@@ -65,9 +65,14 @@ that file. GitHub pauses scheduled workflows after 60 days without a commit; re-
 
 ## Templates
 
-Sources: `templates/<slug>` (free) and `components/panelo/pro/templates/<slug>` (Pro). The demos run as
-the `demo-*` services. Downloads open when `TEMPLATES_LAUNCH.open` in `components/application/site/templates.ts`
-is `true`; until then the build packs nothing and `/t/pro` answers 404.
+Sources: `templates/<slug>` (free) and `components/panelo/pro/templates/<slug>` (Pro). Until launch nothing
+about them is public. Launch day, in order:
+
+1. Add the third template to `TEMPLATES` and set `TEMPLATES_LAUNCH.open` to `true`
+   (`components/application/site/templates.ts`); add its screenshots to `public/templates/<slug>/`.
+2. In `deploy/Caddyfile`, swap each demo's `redir` for its `reverse_proxy` line (and add the third).
+3. Add the demo checks back to `.github/workflows/uptime.yml`.
+4. Deploy, then start the demos: `docker compose --profile templates up -d --build`.
 
 ## Database changes
 

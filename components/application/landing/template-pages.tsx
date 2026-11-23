@@ -14,12 +14,7 @@ const shot = (t: Template, file: string) => `/templates/${t.slug}/${file}.webp`;
 const { open, date, count } = TEMPLATES_LAUNCH;
 
 function Tier({ t }: { t: Template }) {
-  return (
-    <>
-      {t.tier === "pro" ? <ProTag /> : <Chip>Free</Chip>}
-      {!open && <Chip>{date}</Chip>}
-    </>
-  );
+  return t.tier === "pro" ? <ProTag /> : <Chip>Free</Chip>;
 }
 
 /** A screenshot on the same mat as the landing page's product windows. */
@@ -42,15 +37,13 @@ function Page({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** /templates: every whole-app template, cover first. */
+/** /templates: every whole-app template, cover first. Before launch, only that they're coming. */
 export function TemplatesIndex() {
+  if (!open) return <TemplatesTeaser />;
   return (
     <Page>
       <section className={cx(CONTAINER, SECTION)}>
-        <Heading
-          title="Templates."
-          body={open ? "Whole apps, not parts: download one, run it, make it yours." : `${count} whole apps arrive ${date}, one of them free. Try two of them live now.`}
-        />
+        <Heading title="Templates." body="Whole apps, not parts: download one, run it, make it yours." />
         <div className="mt-14 grid gap-6 md:grid-cols-2">
           {TEMPLATES.map((t) => (
             <Link key={t.slug} href={`/templates/${t.slug}`} className={cx("group flex flex-col gap-5 rounded-3xl", FOCUS)}>
@@ -65,22 +58,42 @@ export function TemplatesIndex() {
               </div>
             </Link>
           ))}
-          {!open && TEMPLATES.length < count && (
-            // Holds the third template's place until launch day, the same size as a real card.
-            <div className="flex flex-col gap-5">
-              <div className="grid aspect-[16/10] place-items-center rounded-2xl border border-dashed border-site-ring bg-site-surface p-1.5">
+        </div>
+      </section>
+    </Page>
+  );
+}
+
+// What's coming, without showing any of it: one free, the rest in Pro.
+const TEASER = Array.from({ length: count }, (_, i) => ({ n: i + 1, tier: i === 0 ? ("free" as const) : ("pro" as const) }));
+
+function TemplatesTeaser() {
+  return (
+    <Page>
+      <section className={cx(CONTAINER, SECTION)}>
+        <Heading title="Templates." body={`${count} whole apps arrive ${date}: download one, run it, make it yours.`} />
+        <ul className="mt-14 grid gap-6 md:grid-cols-3">
+          {TEASER.map((slot) => (
+            <li key={slot.n} className="flex flex-col gap-4">
+              <div className="grid aspect-[16/10] place-items-center rounded-2xl border border-dashed border-site-ring bg-site-surface">
                 <span className="flex items-center gap-2 text-site-body text-site-muted">
                   <RiCalendarEventLine className="size-4" aria-hidden />
-                  Revealed {date}
+                  {date}
                 </span>
               </div>
-              <div className="flex flex-col gap-1.5 px-1">
-                <span className="text-site-section text-site-ink">One more template</span>
-                <p className="text-site-body text-pretty text-site-muted">Launches with the other two. Pro plans bought now include it.</p>
+              <div className="flex items-center gap-2 px-1">
+                <span className="text-site-body-medium text-site-ink">Template {slot.n}</span>
+                {slot.tier === "pro" ? <ProTag /> : <Chip>Free</Chip>}
               </div>
-            </div>
-          )}
-        </div>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-12 max-w-[560px] text-site-text text-pretty text-site-muted">
+          Each is a complete Next.js app with every screen built out, light and dark. Every Pro plan includes the Pro templates, plans bought before launch too.
+        </p>
+        <ArrowLink href="/#pricing" className="mt-6">
+          See Pro plans
+        </ArrowLink>
       </section>
     </Page>
   );
