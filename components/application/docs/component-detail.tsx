@@ -78,8 +78,17 @@ export function ComponentDetail({ entry }: { entry: Entry }) {
       </div>
       <p className="mt-3 max-w-[760px] text-site-lead text-pretty text-site-muted">{entry.description}</p>
       {install && (
-        <div className="mt-5">
+        <div className="mt-5 flex flex-col gap-2">
           <InstallCommand command={install} />
+          {entry.tier === "pro" && (
+            <p className="text-site-body text-site-muted">
+              Needs a Pro licence key: your{" "}
+              <Link href="/account" className="rounded-sm text-site-ink underline underline-offset-4 outline-none focus-visible:ring-2 focus-visible:ring-border-focus-ring">
+                account page
+              </Link>{" "}
+              has the key and the two lines for components.json.
+            </p>
+          )}
         </div>
       )}
 

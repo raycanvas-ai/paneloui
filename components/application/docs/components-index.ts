@@ -130,5 +130,7 @@ const slugOf = (href: string) => href.replace("/components/", "");
 
 /** Each catalogue entry is its own registry item; its UI SDK parts come along as dependencies. */
 export function installCommand(href: string): string {
-  return `npx shadcn@latest add @panelo/${slugOf(href)}`;
+  // Pro items come from the keyed registry (@panelo-pro, set up from the account page); free ones from @panelo.
+  const pro = ALL_ENTRIES.find((e) => e.href === href)?.tier === "pro";
+  return `npx shadcn@latest add @panelo${pro ? "-pro" : ""}/${slugOf(href)}`;
 }

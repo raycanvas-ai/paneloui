@@ -8,7 +8,7 @@ import { createAgent, type AgentComponent } from "@ui-sdk/react/agent";
 import { elementOf } from "@ui-sdk/react/observe";
 import { Tabs, TabsIndicator, TabsList, TabsPanel, TabsTab } from "@ui-sdk/react/tabs";
 
-import { ALL_ENTRIES, COMPONENT_SECTIONS } from "@/components/application/docs/components-index";
+import { ALL_ENTRIES, COMPONENT_SECTIONS, installCommand } from "@/components/application/docs/components-index";
 import { AGENT_DEMO } from "@/components/application/docs/docs-shell";
 import { LAUNCH_OFF, PLANS } from "@/components/application/site/pricing";
 import { ScreenFrame } from "@/components/application/docs/preview-frames";
@@ -749,7 +749,8 @@ function InstallLine() {
   }, []);
   return (
     <code className="font-mono text-body-2-regular text-site-muted">
-      <span className="text-site-faint select-none">$ </span>npx shadcn@latest add <span className="text-site-ink">@panelo/{INSTALL_ITEMS[i]}</span>
+      <span className="text-site-faint select-none">$ </span>npx shadcn@latest add{" "}
+      <span className="text-site-ink">{installCommand(`/components/${INSTALL_ITEMS[i]}`).replace("npx shadcn@latest add ", "")}</span>
     </code>
   );
 }
@@ -929,7 +930,7 @@ const FAQ = [
   },
   {
     q: "How do I install a component?",
-    a: 'Add "@panelo": "https://www.paneloui.com/r/{name}.json" under registries in components.json, then run npx shadcn@latest add @panelo/<item>. The source lands in your project.',
+    a: 'Add "@panelo": "https://www.paneloui.com/r/{name}.json" under registries in components.json, then run npx shadcn@latest add @panelo/<item>. Pro items install the same way from @panelo-pro with your licence key; your account page has the exact lines. The source lands in your project.',
   },
   {
     q: "Does it work in my shadcn/ui project?",
