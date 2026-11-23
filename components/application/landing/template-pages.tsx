@@ -43,7 +43,7 @@ export function TemplatesIndex() {
   return (
     <Page>
       <section className={cx(CONTAINER, SECTION)}>
-        <Heading title="Templates." body="Whole apps, not parts: download one, run it, make it yours." />
+        <Heading as="h1" title="Templates." body="Whole apps, not parts: download one, run it, make it yours." />
         <div className="mt-14 grid gap-6 md:grid-cols-2">
           {TEMPLATES.map((t) => (
             <Link key={t.slug} href={`/templates/${t.slug}`} className={cx("group flex flex-col gap-5 rounded-3xl", FOCUS)}>
@@ -71,7 +71,7 @@ function TemplatesTeaser() {
   return (
     <Page>
       <section className={cx(CONTAINER, SECTION)}>
-        <Heading title="Templates." body={`${count} whole apps arrive ${date}: download one, run it, make it yours.`} />
+        <Heading as="h1" title="Templates." body={`${count} whole apps arrive ${date}: download one, run it, make it yours.`} />
         <ul className="mt-14 grid gap-6 md:grid-cols-3">
           {TEASER.map((slot) => (
             <li key={slot.n} className="flex flex-col gap-4">

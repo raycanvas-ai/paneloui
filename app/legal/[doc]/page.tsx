@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { SiteFooter, SiteHeader } from "@/components/application/landing/landing-page";
 import { LEGAL, LEGAL_UPDATED, legalDoc } from "@/components/application/site/legal";
+import { pageMeta } from "@/components/application/site/seo";
 import { cx } from "@/utils/cx";
 
 export function generateStaticParams() {
@@ -12,7 +13,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ doc: string }> }): Promise<Metadata> {
   const doc = legalDoc((await params).doc);
-  return doc ? { title: doc.title, description: doc.intro } : {};
+  return doc ? pageMeta(`/legal/${doc.slug}`, doc.title, doc.intro) : {};
 }
 
 /** /legal/<doc>: licence, terms, privacy and refunds, with the other three a click away. */

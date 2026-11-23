@@ -25,8 +25,13 @@ const geist = Geist({ variable: "--font-geist", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: { default: "Panelo UI - dashboard components AI agents can operate", template: "%s - Panelo UI" },
+  // Relative canonicals and share images resolve against the production origin.
+  metadataBase: new URL("https://www.paneloui.com"),
+  title: { default: "React Dashboard Components for shadcn/ui | Panelo UI", template: "%s | Panelo UI" },
   description: "React and Tailwind dashboard components, charts and templates built on Vercel's UI SDK, so AI agents can read and operate them.",
+  applicationName: "Panelo UI",
+  openGraph: { siteName: "Panelo UI", type: "website", locale: "en_US" },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

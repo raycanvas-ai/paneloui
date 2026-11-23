@@ -1,0 +1,95 @@
+import type { Metadata } from "next";
+
+import { ALL_ENTRIES, COMPONENT_SECTIONS, type Entry } from "@/components/application/docs/components-index";
+import { PLANS } from "@/components/application/site/pricing";
+import { SITE } from "@/components/application/site/templates";
+
+// Search and sharing metadata in one place. Titles lead with what people search for ("React dashboard
+// components", "shadcn/ui"), the brand last; every number comes from the catalogue or the plans.
+
+export const BRAND = "Panelo UI";
+export const shippedEntries = ALL_ENTRIES.filter((e) => e.status === "shipped");
+
+// The site-wide share card (app/opengraph-image.tsx). Named here because a page that sets its own
+// openGraph replaces the inherited one, image included; a route's own opengraph-image file still wins.
+const SHARE_IMAGE = "/opengraph-image";
+
+/** A page's canonical URL and matching Open Graph fields, so shares and search agree on the address. */
+export function pageMeta(path: string, title: string, description: string, extra: Metadata = {}): Metadata {
+  return {
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: { title, description, url: path, siteName: BRAND, type: "website", locale: "en_US", images: [SHARE_IMAGE] },
+    twitter: { card: "summary_large_image", title, description, images: [SHARE_IMAGE] },
+    ...extra,
+  };
+}
+
+// What each catalogue section is, in the words people search with.
+const KIND: Record<string, string> = {
+  "dashboard-pages": "React Dashboard Page",
+  "profile-pages": "React Profile Page",
+  "login-pages": "React Login Page",
+  sidebars: "React Sidebar",
+  elements: "React Component",
+  charts: "React Chart",
+  calendars: "React Calendar",
+};
+
+export const sectionIdOf = (entry: Entry) => COMPONENT_SECTIONS.find((s) => s.entries.includes(entry))?.id ?? "elements";
+export const kindOf = (entry: Entry) => KIND[sectionIdOf(entry)] ?? "React Component";
+
+export function entryMeta(entry: Entry): Metadata {
+  // "<Name>: React Dashboard Page", or "<Name> for React" when the name already says what it is
+  // ("Revenue Chart"), so no title repeats itself. Under 60 characters with the brand; shadcn/ui is in the description.
+  const nouns = kindOf(entry).split(" ").slice(1);
+  const title = nouns.some((n) => entry.name.includes(n)) ? `${entry.name} for React` : `${entry.name}: ${kindOf(entry)}`;
+  const terms = entry.tier === "free" ? "Free and MIT-licensed" : "Panelo Pro";
+  const description = `${entry.description} ${terms}; installs with the shadcn CLI.`;
+  // Its own card (app/components/[slug]/opengraph-image.tsx), named explicitly so the site-wide one doesn't win.
+  const image = `${entry.href}/opengraph-image`;
+  const meta = pageMeta(entry.href, title, description);
+  return { ...meta, openGraph: { ...meta.openGraph, images: [image] }, twitter: { ...meta.twitter, images: [image] } };
+}
+
+/** JSON-LD as a script tag. `<` is escaped so data can never close the tag early. */
+export function JsonLd({ data }: { data: object }) {
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} />;
+}
+
+const ORG = { "@type": "Organization", "@id": `${SITE}/#org`, name: BRAND, url: SITE, logo: `${SITE}/icon.png`, email: "support@paneloui.com" };
+
+/** The home page's graph: who makes Panelo, the site, and the product with its real plans and prices. */
+export const homeGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    ORG,
+    { "@type": "WebSite", "@id": `${SITE}/#site`, url: SITE, name: BRAND, publisher: { "@id": `${SITE}/#org` } },
+    {
+      "@type": "SoftwareApplication",
+      name: BRAND,
+      applicationCategory: "DeveloperApplication",
+      operatingSystem: "Web",
+      url: SITE,
+      description: `${shippedEntries.length} React and Tailwind dashboard components, pages and charts for shadcn/ui, built on Vercel's UI SDK so AI agents can operate them.`,
+      publisher: { "@id": `${SITE}/#org` },
+      offers: PLANS.map((plan) => ({
+        "@type": "Offer",
+        name: plan.name,
+        price: plan.price ?? 0,
+        priceCurrency: "USD",
+        url: `${SITE}/#pricing`,
+        availability: "https://schema.org/InStock",
+      })),
+    },
+  ],
+};
+
+export function breadcrumbs(items: { name: string; path: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, i) => ({ "@type": "ListItem", position: i + 1, name: item.name, item: `${SITE}${item.path}` })),
+  };
+}
