@@ -9,11 +9,11 @@ import { ALL_ENTRIES } from "@/components/application/docs/components-index";
 
 const proCount = ALL_ENTRIES.filter((e) => e.tier === "pro").length;
 
-/** The site-wide offer bar, on every page but the bare previews the catalogue frames. Dismissed for the visit. */
+/** The site-wide offer bar, on every page but the bare previews the catalogue frames and the full-window agent demo. Dismissed for the visit. */
 export function PromoBar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(true);
-  if (!open || pathname?.startsWith("/preview")) return null;
+  if (!open || pathname?.startsWith("/preview") || pathname === "/agent-demo") return null;
   return (
     <div className="relative h-[38px] overflow-hidden bg-site-banner-via bg-linear-to-b from-site-banner-from via-site-banner-via to-site-banner-to text-site-on-banner">
       <span

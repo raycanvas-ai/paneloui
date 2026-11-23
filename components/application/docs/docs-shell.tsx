@@ -30,7 +30,7 @@ import { ThemeToggle } from "@/components/application/theme/theme-toggle";
 import { Logo } from "@/components/foundations/brand/logo";
 import { cx } from "@/utils/cx";
 
-export const AGENT_DEMO = "/preview/dashboard-pages-11?assistant";
+export const AGENT_DEMO = "/agent-demo";
 
 type Icon = RemixiconComponentType;
 
