@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 
+import { TEMPLATES_LAUNCH } from "@/components/application/site/templates";
 import { limited } from "@/lib/server/dodo";
 import { licenseForKey } from "@/lib/server/licenses";
 
@@ -8,6 +9,7 @@ import { licenseForKey } from "@/lib/server/licenses";
  * registry; the tarballs are built into registry-pro/templates/ and never sit in public/.
  */
 export async function GET(request: Request, { params }: { params: Promise<{ name: string }> }) {
+  if (!TEMPLATES_LAUNCH.open) return Response.json({ error: `Templates launch ${TEMPLATES_LAUNCH.date}.` }, { status: 404 });
   if (limited("templates", request, 30)) return Response.json({ error: "Too many requests." }, { status: 429 });
   const key = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
   if (!(await licenseForKey(key))) return Response.json({ error: "A valid Panelo Pro licence key is required." }, { status: 401 });

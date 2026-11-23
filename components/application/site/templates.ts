@@ -19,6 +19,13 @@ export type Template = {
 
 export const SITE = "https://www.paneloui.com";
 
+/**
+ * Templates launch together on December 1, three of them. Until `open` flips, the pages and live demos are
+ * up but nothing downloads: the build skips the free tarball and /t/pro answers 404. Flip it on launch day,
+ * with the third template added to TEMPLATES.
+ */
+export const TEMPLATES_LAUNCH = { open: false, date: "December 1", count: 3 } as const;
+
 export const TEMPLATES: Template[] = [
   {
     slug: "panelo-admin",

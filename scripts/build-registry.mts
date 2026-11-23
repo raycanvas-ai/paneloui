@@ -165,12 +165,16 @@ if (missing.length) throw new Error(`Free catalogue items with no preview entry:
 console.log(`Registry: ${free} free items + panelo-theme + agent-kit in public/r, ${pro} Pro items in registry-pro (private).`);
 
 // --- Templates: one tarball each, its folder at the top, so `tar -xz` makes ./<slug>. --------------------
+// Nothing is packed before launch day (TEMPLATES_LAUNCH in components/application/site/templates.ts).
+const { TEMPLATES_LAUNCH } = (await import("../components/application/site/templates.ts")) as typeof import("../components/application/site/templates.ts");
 // Free ones are static files in public/t; Pro ones go to registry-pro/templates, served by app/t/pro.
 let templates = 0;
-for (const [source, out] of [
-  ["templates", FREE_TEMPLATES_OUT],
-  ["components/panelo/pro/templates", join(PRO_OUT, "templates")],
-]) {
+for (const [source, out] of TEMPLATES_LAUNCH.open
+  ? [
+      ["templates", FREE_TEMPLATES_OUT],
+      ["components/panelo/pro/templates", join(PRO_OUT, "templates")],
+    ]
+  : []) {
   if (!existsSync(join(ROOT, source))) continue;
   mkdirSync(out, { recursive: true });
   for (const slug of readdirSync(join(ROOT, source), { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name)) {
@@ -181,4 +185,4 @@ for (const [source, out] of [
     templates++;
   }
 }
-console.log(`Templates: ${templates} packed.`);
+console.log(TEMPLATES_LAUNCH.open ? `Templates: ${templates} packed.` : `Templates: none packed, they launch ${TEMPLATES_LAUNCH.date}.`);

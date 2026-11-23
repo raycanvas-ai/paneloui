@@ -2,17 +2,24 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { RiArrowLeftLine, RiArrowRightUpLine, RiCheckLine } from "@remixicon/react";
+import { RiArrowLeftLine, RiArrowRightUpLine, RiCalendarEventLine, RiCheckLine } from "@remixicon/react";
 
 import { ArrowLink, CONTAINER, CopyCommand, FOCUS, Heading, SECTION, SiteFooter, SiteHeader, TEXT_LINK } from "@/components/application/landing/landing-page";
 import { Chip, pill, ProTag } from "@/components/application/site/site-ui";
-import { downloadCommand, type Template, TEMPLATES } from "@/components/application/site/templates";
+import { downloadCommand, type Template, TEMPLATES, TEMPLATES_LAUNCH } from "@/components/application/site/templates";
 import { cx } from "@/utils/cx";
 
 const shot = (t: Template, file: string) => `/templates/${t.slug}/${file}.webp`;
 
+const { open, date, count } = TEMPLATES_LAUNCH;
+
 function Tier({ t }: { t: Template }) {
-  return t.tier === "pro" ? <ProTag /> : <Chip>Free</Chip>;
+  return (
+    <>
+      {t.tier === "pro" ? <ProTag /> : <Chip>Free</Chip>}
+      {!open && <Chip>{date}</Chip>}
+    </>
+  );
 }
 
 /** A screenshot on the same mat as the landing page's product windows. */
@@ -40,7 +47,10 @@ export function TemplatesIndex() {
   return (
     <Page>
       <section className={cx(CONTAINER, SECTION)}>
-        <Heading title="Templates." body="Whole apps, not parts: download one, run it, make it yours." />
+        <Heading
+          title="Templates."
+          body={open ? "Whole apps, not parts: download one, run it, make it yours." : `${count} whole apps arrive ${date}, one of them free. Try two of them live now.`}
+        />
         <div className="mt-14 grid gap-6 md:grid-cols-2">
           {TEMPLATES.map((t) => (
             <Link key={t.slug} href={`/templates/${t.slug}`} className={cx("group flex flex-col gap-5 rounded-3xl", FOCUS)}>
@@ -55,6 +65,21 @@ export function TemplatesIndex() {
               </div>
             </Link>
           ))}
+          {!open && TEMPLATES.length < count && (
+            // Holds the third template's place until launch day, the same size as a real card.
+            <div className="flex flex-col gap-5">
+              <div className="grid aspect-[16/10] place-items-center rounded-2xl border border-dashed border-site-ring bg-site-surface p-1.5">
+                <span className="flex items-center gap-2 text-site-body text-site-muted">
+                  <RiCalendarEventLine className="size-4" aria-hidden />
+                  Revealed {date}
+                </span>
+              </div>
+              <div className="flex flex-col gap-1.5 px-1">
+                <span className="text-site-section text-site-ink">One more template</span>
+                <p className="text-site-body text-pretty text-site-muted">Launches with the other two. Pro plans bought now include it.</p>
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </Page>
@@ -66,7 +91,14 @@ export function TemplateDetail({ slug }: { slug: string }) {
   const t = TEMPLATES.find((x) => x.slug === slug)!;
   const [active, setActive] = useState(t.shots[0].file);
   const steps = [
-    { title: "Download", body: t.tier === "pro" ? "Set PANELO_LICENSE_KEY from your account page, then run the command above." : "Run the command above. No sign-up." },
+    {
+      title: "Download",
+      body: !open
+        ? `From ${date}: one command${t.tier === "pro" ? ", with the licence key from your account page" : ", no sign-up"}.`
+        : t.tier === "pro"
+          ? "Set PANELO_LICENSE_KEY from your account page, then run the command above."
+          : "Run the command above. No sign-up.",
+    },
     { title: "Run it", body: "npm install, then npm run dev. Sample data is built in, so every screen works at once." },
     { title: "Make it yours", body: "Name and links in src/config/app-config.ts, themes in src/styles/presets, data in src/data: swap it for your API." },
   ];
@@ -95,8 +127,17 @@ export function TemplateDetail({ slug }: { slug: string }) {
           </a>
         </div>
         <div className="mt-6 max-w-[860px]">
-          <CopyCommand command={downloadCommand(t)} />
-          {t.tier === "pro" && (
+          {open ? (
+            <CopyCommand command={downloadCommand(t)} />
+          ) : (
+            <p className="flex items-center gap-2 text-site-body text-site-muted">
+              <RiCalendarEventLine className="size-4 shrink-0" aria-hidden />
+              {t.tier === "pro"
+                ? `Downloads open ${date}. Every Pro plan includes it, so buying now gets it on launch day.`
+                : `Downloads open ${date}, free. The live demo is open now.`}
+            </p>
+          )}
+          {open && t.tier === "pro" && (
             <p className="mt-3 text-site-body text-site-muted">
               Already Pro? Your key is on your{" "}
               <Link href="/account" className={cx(TEXT_LINK, "text-site-ink underline underline-offset-4")}>

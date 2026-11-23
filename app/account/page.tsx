@@ -6,6 +6,7 @@ import { RiCheckLine, RiFileCopyLine } from "@remixicon/react";
 
 import { authPost } from "@/components/application/site/auth";
 import { SignInButtons } from "@/components/application/site/auth-button";
+import { TEMPLATES_LAUNCH } from "@/components/application/site/templates";
 import { pill } from "@/components/application/site/site-ui";
 import { Logo } from "@/components/foundations/brand/logo";
 import { cx } from "@/utils/cx";
@@ -98,13 +99,17 @@ function LicenseCard({ license }: { license: License }) {
             label="Copy the registry entry"
             text={`"registries": {\n  "@panelo-pro": {\n    "url": "${origin}/r/pro/{name}.json",\n    "headers": { "Authorization": "Bearer \${PANELO_LICENSE_KEY}" }\n  }\n}`}
           />
-          <p className="text-site-body text-site-muted">The same key downloads Propflow, the Pro app template:</p>
-          <CopyBlock label="Copy the template command" text={`curl -fsSL -H "Authorization: Bearer ${key}" ${origin}/t/pro/propflow.tgz | tar -xz`} />
+          {TEMPLATES_LAUNCH.open && (
+            <>
+              <p className="text-site-body text-site-muted">The same key downloads Propflow, the Pro app template:</p>
+              <CopyBlock label="Copy the template command" text={`curl -fsSL -H "Authorization: Bearer ${key}" ${origin}/t/pro/propflow.tgz | tar -xz`} />
+            </>
+          )}
         </div>
       )}
       {!license.revoked && !expired && (
         <Link href="/templates/propflow" className="mt-4 inline-block rounded-sm text-site-body text-site-muted underline underline-offset-4 outline-none hover:text-site-ink focus-visible:ring-2 focus-visible:ring-border-focus-ring">
-          Includes Propflow, the real-estate app template
+          {TEMPLATES_LAUNCH.open ? "Includes Propflow, the real-estate app template" : `Includes the Pro app templates, launching ${TEMPLATES_LAUNCH.date}`}
         </Link>
       )}
     </li>
