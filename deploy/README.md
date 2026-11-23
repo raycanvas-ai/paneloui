@@ -30,10 +30,12 @@ Caddy keeps serving the old container until the new one is up.
 
 | Variable | What |
 | --- | --- |
-| `DATABASE_URL` | Supabase pooler URL for `panelo_app`, ending `?sslmode=require` |
-| `AUTH_SECRET`, `AUTH_URL=https://www.paneloui.com`, `AUTH_TRUST_HOST=true` | Auth.js |
+| `SITE_URL` | `https://www.paneloui.com`: redirects, Dodo's return URL and Auth.js callbacks use it, since the app sits behind Caddy |
+| `DATABASE_URL` | Supabase pooler URL for `panelo_app` (Frankfurt, port 6543), ending `?sslmode=require` |
+| `AUTH_SECRET` | Auth.js session signing |
 | `AUTH_GITHUB_ID/SECRET`, `AUTH_GOOGLE_ID/SECRET` | Production OAuth apps; callbacks at `https://www.paneloui.com/api/auth/callback/{github,google}` |
-| `DODO_PAYMENTS_API_KEY`, `DODO_PAYMENTS_ENVIRONMENT`, `DODO_WEBHOOK_SECRET` | Checkout and licences. `live_mode` only when named; anything else is test mode |
+| `DODO_PAYMENTS_API_KEY`, `DODO_PAYMENTS_ENVIRONMENT` | Checkout and licences. `live_mode` only when named; anything else is test mode |
+| `DODO_WEBHOOK_SECRET` | The test and live endpoints' signing secrets, comma-separated |
 | `GROQ_API_KEY` | Typed requests in the agent demo (free tier) |
 
 ## Everyday
@@ -45,6 +47,27 @@ docker compose restart app      # restart without a rebuild
 ```
 
 Roll back: `git -C /srv/panelo/app checkout <commit> && docker compose up -d --build`.
+
+## Backups
+
+`deploy/backup.sh` runs nightly from the deploy user's crontab (03:17 UTC) and keeps 14 days of
+`pg_dump`s in `/srv/panelo/backups`; its log is `backups/backup.log`. Restore into a database with
+`gunzip -c backups/panelo-<date>.sql.gz | psql "<session-pooler URL, port 5432>"`.
+
+The dumps sit on the same server: copy one off now and then (`scp panelo@<server>:/srv/panelo/backups/<file> .`),
+or upgrade Supabase to Pro for its own daily backups.
+
+## Monitoring
+
+`.github/workflows/uptime.yml` checks the site, `/api/health` (app and database), both demos, the webhook
+and the Pro gate every 15 minutes, plus the certificate's expiry. A failure emails whoever last changed
+that file. GitHub pauses scheduled workflows after 60 days without a commit; re-enable it from the Actions tab.
+
+## Templates
+
+Sources: `templates/<slug>` (free) and `components/panelo/pro/templates/<slug>` (Pro). The demos run as
+the `demo-*` services. Downloads open when `TEMPLATES_LAUNCH.open` in `components/application/site/templates.ts`
+is `true`; until then the build packs nothing and `/t/pro` answers 404.
 
 ## Database changes
 
