@@ -7,6 +7,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
+# The deploy's id for Next's version-skew handling (next.config.ts); compose passes the git commit.
+ARG NEXT_DEPLOYMENT_ID
+ENV NEXT_DEPLOYMENT_ID=$NEXT_DEPLOYMENT_ID
 # The registry first: free items into public/r (served as files), Pro into registry-pro (private).
 RUN node --experimental-strip-types --no-warnings scripts/build-registry.mts && npm run build
 

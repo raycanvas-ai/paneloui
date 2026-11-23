@@ -17,6 +17,9 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   // A self-contained Node server in .next/standalone, which the Docker image runs (see Dockerfile).
   output: "standalone",
+  // Version skew: each deploy gets its own id (the git commit, passed in by compose), so a tab still running
+  // the previous build reloads on its next navigation instead of asking for files that are gone.
+  deploymentId: process.env.NEXT_DEPLOYMENT_ID || undefined,
   // Pin the workspace root to this project so Turbopack never walks up the
   // filesystem looking for a lockfile.
   turbopack: {

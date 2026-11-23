@@ -24,7 +24,8 @@ x-template-dockerfile: &template-dockerfile |
 
 services:
   app:
-    build: .
+    # DEPLOY_ID is the git commit (deploy/deploy.sh sets it); Next uses it to reload tabs left on an old build.
+    build: { context: ., args: { NEXT_DEPLOYMENT_ID: "${DEPLOY_ID:-dev}" } }
     restart: unless-stopped
     # Secrets live on the server only: /srv/panelo/.env, readable by the deploy user alone.
     env_file: /srv/panelo/.env
