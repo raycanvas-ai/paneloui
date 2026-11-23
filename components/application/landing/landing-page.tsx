@@ -10,6 +10,7 @@ import { Tabs, TabsIndicator, TabsList, TabsPanel, TabsTab } from "@ui-sdk/react
 
 import { ALL_ENTRIES, COMPONENT_SECTIONS } from "@/components/application/docs/components-index";
 import { AGENT_DEMO } from "@/components/application/docs/docs-shell";
+import { LAUNCH_OFF, PLANS } from "@/components/application/site/pricing";
 import { ScreenFrame } from "@/components/application/docs/preview-frames";
 import { AuthButton } from "@/components/application/site/auth-button";
 import { GitHubStars } from "@/components/application/site/github-stars";
@@ -62,7 +63,6 @@ const ProSidebar = proPart("app-sidebar");
 const byHref = (href: string) => ALL_ENTRIES.find((e) => e.href === href)!;
 const sectionOf = (id: string) => COMPONENT_SECTIONS.find((s) => s.id === id)?.entries ?? [];
 const proCount = ALL_ENTRIES.filter((e) => e.tier === "pro").length;
-const freeCount = ALL_ENTRIES.length - proCount;
 
 // Root-relative hashes, so the header works the same on /templates as on the home page.
 const NAV = [
@@ -109,11 +109,11 @@ export function ArrowLink({ href, children, className }: { href: string; childre
 }
 
 /** A section's opening line: the claim in ink, its support in grey, one sentence at heading size. */
-export function Heading({ title, body, className }: { title: ReactNode; body: ReactNode; className?: string }) {
+export function Heading({ title, body, className, as: Tag = "h2" }: { title: ReactNode; body: ReactNode; className?: string; as?: "h1" | "h2" }) {
   return (
-    <h2 className={cx("max-w-[720px] text-site-heading text-balance sm:text-site-display-sm", className)}>
+    <Tag className={cx("max-w-[720px] text-site-heading text-balance sm:text-site-display-sm", className)}>
       <span className="text-site-ink">{title}</span> <span className="text-site-muted">{body}</span>
-    </h2>
+    </Tag>
   );
 }
 
@@ -835,50 +835,6 @@ function TemplatesSection() {
     </section>
   );
 }
-
-// Paid plans charge list price minus the launch code, which /checkout applies before the buyer
-// arrives (app/checkout/route.ts). Keep LAUNCH_OFF in step with that code in Dodo.
-const LAUNCH_OFF = 50;
-const SHARED = ["Use it in unlimited projects", "Keep the code forever"];
-const PRO = ["Every Pro dashboard page", "Every Pro calendar", "Pro app templates, from Dec 1", "Agent-ready UI SDK parts", "Light and dark themes"];
-
-// `plan` names the product /checkout sells; the free plan links to the catalogue instead.
-type Plan = { name: string; blurb: string; price: number | null; cta: string; plan?: "year" | "lifetime" | "startups"; featured?: boolean; features: string[] };
-
-const PLANS: Plan[] = [
-  {
-    name: "Starter",
-    blurb: "The fundamentals of Panelo, free. Perfect for indie developers.",
-    price: null,
-    cta: "Browse free",
-    features: ["Free user license", ...SHARED, "Free component updates", `${freeCount} free components`, "Free app template, from Dec 1", "Agent-ready UI SDK parts", "Light and dark themes"],
-  },
-  {
-    name: "1 Year of Updates",
-    blurb: "Every Panelo Pro page, calendar and block.",
-    price: 129,
-    cta: "Buy now",
-    plan: "year",
-    features: ["Single-user license", ...SHARED, "Pro updates for 1 year", ...PRO],
-  },
-  {
-    name: "Lifetime Access",
-    blurb: "Every Panelo Pro page, calendar and block, updated forever.",
-    price: 179,
-    cta: "Buy now",
-    plan: "lifetime",
-    featured: true,
-    features: ["Single-user license", ...SHARED, "Pro updates forever", ...PRO],
-  },
-  {
-    name: "Unlimited for Startups",
-    blurb: "Everything in Pro, licensed for up to 5 developers.",
-    price: 299,
-    cta: "Buy now",
-    plan: "startups",
-    features: ["5-user license", ...SHARED, "Pro updates forever", ...PRO],
-  },
-];
 
 /**
  * Plans as cards on one grid. Every card stacks the same rows in the same order (name, line,
