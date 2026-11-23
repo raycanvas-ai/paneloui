@@ -830,7 +830,7 @@ function TemplatesSection() {
         ))}
       </Tabs>
       <ArrowLink href="/templates" className="mt-8">
-        Or start from a whole app: Panelo Admin, free, and Propflow in Pro
+        Whole-app templates arrive December 1: three of them, one free
       </ArrowLink>
     </section>
   );
@@ -840,7 +840,7 @@ function TemplatesSection() {
 // arrives (app/checkout/route.ts). Keep LAUNCH_OFF in step with that code in Dodo.
 const LAUNCH_OFF = 50;
 const SHARED = ["Use it in unlimited projects", "Keep the code forever"];
-const PRO = ["Every Pro dashboard page", "Every Pro calendar", "Propflow, the real-estate app template", "Agent-ready UI SDK parts", "Light and dark themes"];
+const PRO = ["Every Pro dashboard page", "Every Pro calendar", "Pro app templates, from Dec 1", "Agent-ready UI SDK parts", "Light and dark themes"];
 
 // `plan` names the product /checkout sells; the free plan links to the catalogue instead.
 type Plan = { name: string; blurb: string; price: number | null; cta: string; plan?: "year" | "lifetime" | "startups"; featured?: boolean; features: string[] };
@@ -851,7 +851,7 @@ const PLANS: Plan[] = [
     blurb: "The fundamentals of Panelo, free. Perfect for indie developers.",
     price: null,
     cta: "Browse free",
-    features: ["Free user license", ...SHARED, "Free component updates", `${freeCount} free components`, "Panelo Admin, the full app template", "Agent-ready UI SDK parts", "Light and dark themes"],
+    features: ["Free user license", ...SHARED, "Free component updates", `${freeCount} free components`, "Free app template, from Dec 1", "Agent-ready UI SDK parts", "Light and dark themes"],
   },
   {
     name: "1 Year of Updates",
@@ -948,6 +948,16 @@ function PricingSection() {
           </li>
         ))}
       </ul>
+      <p className="mt-8 text-center text-site-body text-pretty text-site-muted">
+        One-time payment through Dodo Payments, our merchant of record.{" "}
+        <Link href="/legal/licence" className={cx(TEXT_LINK, "underline underline-offset-4")}>
+          Licence
+        </Link>{" "}
+        ·{" "}
+        <Link href="/legal/refunds" className={cx(TEXT_LINK, "underline underline-offset-4")}>
+          Refunds
+        </Link>
+      </p>
     </section>
   );
 }
@@ -963,7 +973,7 @@ const FAQ = [
   },
   {
     q: "How do I install a component?",
-    a: 'Add "@panelo": "https://panelo.com/r/{name}.json" under registries in components.json, then run npx shadcn@latest add @panelo/<item>. The source lands in your project.',
+    a: 'Add "@panelo": "https://www.paneloui.com/r/{name}.json" under registries in components.json, then run npx shadcn@latest add @panelo/<item>. The source lands in your project.',
   },
   {
     q: "Does it work in my shadcn/ui project?",
@@ -975,7 +985,15 @@ const FAQ = [
   },
   {
     q: "Is Pro a one-time payment?",
-    a: "Yes. Pay once, no subscription, and keep the code forever.",
+    a: "Yes. Pay once, no subscription, and keep the code forever. 1 Year of Updates stops sending new Pro releases after a year; everything you installed stays yours.",
+  },
+  {
+    q: "When do the templates arrive?",
+    a: "December 1: three whole-app templates, one free and two in Pro. Every Pro plan includes them, including plans bought before launch. Two are already running as live demos.",
+  },
+  {
+    q: "Can I get a refund?",
+    a: "Sales are final, since the source is yours the moment you install it: try the free components and live demos first. A duplicate charge, or a purchase we can't deliver, is refunded in full. See the refund policy.",
   },
   {
     q: "Does it support dark mode?",
@@ -1031,6 +1049,15 @@ const FOOTER_COLUMNS = [
       { label: "Pricing", href: "/#pricing" },
     ],
   },
+  {
+    title: "Legal",
+    links: [
+      { label: "Licence", href: "/legal/licence" },
+      { label: "Terms", href: "/legal/terms" },
+      { label: "Privacy", href: "/legal/privacy" },
+      { label: "Refunds", href: "/legal/refunds" },
+    ],
+  },
 ];
 
 export function SiteFooter() {
@@ -1044,7 +1071,7 @@ export function SiteFooter() {
           </Link>
           <p className="max-w-[260px] text-site-body text-site-muted">Agent-ready React dashboards, built on Vercel&apos;s UI SDK.</p>
         </div>
-        <nav aria-label="Footer" className="grid grid-cols-2 gap-x-16 gap-y-10 sm:grid-cols-3">
+        <nav aria-label="Footer" className="grid grid-cols-2 gap-x-16 gap-y-10 sm:grid-cols-4">
           {FOOTER_COLUMNS.map((column) => (
             <div key={column.title} className="flex flex-col gap-2.5">
               <span className="text-site-body-medium text-site-ink">{column.title}</span>
