@@ -71,15 +71,23 @@ export function verifyWebhook(rawBody: string, headers: Headers, secret: string)
   });
 }
 
-// ponytail: per-instance memory; requests spread over Worker instances get more headroom. Move to KV if abused.
+// ponytail: in-process memory, which is exact on one server; move to Redis if Panelo ever runs several.
+const WINDOW = 10 * 60_000;
 const hits = new Map<string, number[]>();
+let swept = 0;
 
 /** True when `ip` has used up `max` requests to `bucket` in the last 10 minutes. */
 export function limited(bucket: string, request: Request, max: number) {
   const ip = request.headers.get("cf-connecting-ip") || request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
   const key = `${bucket}:${ip}`;
   const now = Date.now();
-  const recent = (hits.get(key) ?? []).filter((t) => now - t < 10 * 60_000);
+  // Forget addresses idle for a whole window, at most once a minute: the privacy page promises IPs are held
+  // for 10 minutes at most, and without this the map would grow for as long as the server runs.
+  if (now - swept > 60_000) {
+    swept = now;
+    for (const [k, times] of hits) if (now - times[times.length - 1] >= WINDOW) hits.delete(k);
+  }
+  const recent = (hits.get(key) ?? []).filter((t) => now - t < WINDOW);
   recent.push(now);
   hits.set(key, recent);
   return recent.length > max;
