@@ -1,12 +1,11 @@
 // Panelo's legal pages, one entry per /legal/<doc>. Plain language on purpose: a buyer should be able to
-// read every page in a minute. Contact goes through the purchase receipt (Dodo routes replies to us) until
-// paneloui.com has a mailbox.
+// read every page in a minute.
 
 export type LegalDoc = { slug: string; title: string; intro: string; sections: { heading: string; body: string[] }[] };
 
 export const LEGAL_UPDATED = "23 November 2026";
-const ISSUES = "https://github.com/raycanvas-ai/paneloui/issues";
-const CONTACT = `reply to your purchase receipt, or open an issue at ${ISSUES} and we'll take it to email`;
+export const SUPPORT_EMAIL = "support@paneloui.com";
+const CONTACT = `email ${SUPPORT_EMAIL}`;
 
 export const LEGAL: LegalDoc[] = [
   {
