@@ -19,7 +19,7 @@ const PLAN_NAMES: Record<License["plan"], string> = { year: "1 Year of Updates",
 // Auth.js errors land here as ?error=…; the ones a person can act on get words.
 const AUTH_ERRORS: Record<string, string> = {
   OAuthAccountNotLinked: "That email already signed in with another provider. Use the one you used first.",
-  AccessDenied: "Sign-in was refused. Google accounts need a verified email.",
+  AccessDenied: "Sign-in was refused: your GitHub or Google account needs a verified email address.",
 };
 
 const postJson = (url: string, body: unknown) => fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });

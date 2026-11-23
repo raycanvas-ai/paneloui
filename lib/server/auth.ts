@@ -41,8 +41,22 @@ export function authConfig(): AuthConfig {
     ],
     pages: { signIn: "/account", error: "/account" },
     callbacks: {
-      // Licences are claimed by email, so an unverified Google address must never get in.
-      signIn: ({ account, profile }) => (account?.provider === "google" ? profile?.email_verified === true : true),
+      // Licences are claimed by email, so only a verified address may sign in. Google says so in the
+      // profile. GitHub's provider takes the primary (or first) address without checking, so ask GitHub
+      // which of the account's addresses are verified; one added but never confirmed is refused.
+      signIn: async ({ account, profile }) => {
+        if (account?.provider === "google") return profile?.email_verified === true;
+        if (account?.provider === "github") {
+          const response = await fetch("https://api.github.com/user/emails", {
+            headers: { Authorization: `Bearer ${account.access_token}`, Accept: "application/vnd.github+json", "User-Agent": "panelo" },
+          });
+          if (!response.ok) return false;
+          const emails = (await response.json()) as { email: string; verified: boolean }[];
+          const email = String(profile?.email ?? "").toLowerCase();
+          return !!email && emails.some((e) => e.verified && e.email.toLowerCase() === email);
+        }
+        return false;
+      },
       // Return only what the page needs; the session row itself carries the cookie's token.
       session: ({ session, user }) => ({ user: { id: user.id, name: user.name, email: user.email, image: user.image }, expires: session.expires }),
     },
