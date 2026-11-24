@@ -571,7 +571,10 @@ function Hero() {
             />
             Raycanvas
           </a>{" "}
-          · in partnership with <span className="text-site-ink">shadcn labs</span>
+          · in partnership with{" "}
+          <a href="https://x.com/shadcnlabs" className={cx(TEXT_LINK, "text-site-ink")}>
+            shadcn labs
+          </a>
         </p>
       </div>
       <Showcase />
@@ -1081,7 +1084,10 @@ export function SiteFooter() {
           <a href="https://raycanvas.ai" className={TEXT_LINK}>
             Raycanvas
           </a>{" "}
-          in partnership with shadcn labs
+          in partnership with{" "}
+          <a href="https://x.com/shadcnlabs" className={TEXT_LINK}>
+            shadcn labs
+          </a>
         </p>
         <p>React 19 · Next.js 16 · Tailwind CSS v4 · Vercel UI SDK</p>
       </div>
