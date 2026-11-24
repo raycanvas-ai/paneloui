@@ -1,8 +1,9 @@
 import { COMPONENT_SECTIONS } from "@/components/application/docs/components-index";
 import { LEGAL } from "@/components/application/site/legal";
 import { LAUNCH_OFF, listPrice, PLANS } from "@/components/application/site/pricing";
-import { shippedEntries } from "@/components/application/site/seo";
-import { SITE, TEMPLATES_LAUNCH } from "@/components/application/site/templates";
+import { FAQ } from "@/components/application/site/faq";
+import { MAKER, PARTNER, REPO_URL, shippedEntries, SIBLINGS, UI_SDK_URL } from "@/components/application/site/seo";
+import { SITE, TEMPLATES_LAUNCH, TEMPLATES_UPCOMING } from "@/components/application/site/templates";
 
 export const dynamic = "force-static";
 
@@ -17,6 +18,14 @@ export function GET() {
     "# Panelo UI",
     "",
     `> ${shippedEntries.length} React and Tailwind CSS dashboard components, pages and charts for shadcn/ui (${free} free, the rest in Panelo Pro), built on Vercel's UI SDK so AI agents can read the page and act through the same controls users click. Source is copied into your project with the shadcn CLI.`,
+    "",
+    "## About",
+    "",
+    `- Built by [${MAKER.name}](${MAKER.url}), in partnership with [${PARTNER.name}](${PARTNER.url}). From the creators of ${SIBLINGS.map((s) => `[${s.name}](${s.url})`).join(" and ")}.`,
+    `- Built on [Vercel's UI SDK](${UI_SDK_URL}): every control exposes itself to agents, which read the page as named controls and act through the same component API a click uses.`,
+    "- Works in any shadcn/ui project: items install with the shadcn CLI into components/panelo-ui, next to components/ui.",
+    "- Stack: React 19, Next.js 16, Tailwind CSS v4. Light and dark themes on every item.",
+    `- Source: [GitHub](${REPO_URL}). Free components are MIT-licensed; Pro is a one-time purchase.`,
     "",
     "## Install",
     "",
@@ -42,7 +51,11 @@ export function GET() {
     TEMPLATES_LAUNCH.open
       ? `- [Templates](${SITE}/templates): whole-app Next.js dashboard templates.`
       : `- ${TEMPLATES_LAUNCH.count} whole-app Next.js dashboard templates launch ${TEMPLATES_LAUNCH.date}: one free, the rest included in every Pro plan. ${SITE}/templates`,
+    `- ${TEMPLATES_UPCOMING} more templates are in the works, with no dates yet.`,
     "",
+    "## FAQ",
+    "",
+    ...FAQ.flatMap((item) => [`### ${item.q}`, "", item.a, ""]),
     "## More",
     "",
     `- [Agent demo](${SITE}/agent-demo): a live dashboard an AI agent operates through the UI SDK.`,
