@@ -1042,7 +1042,13 @@ export function SiteFooter() {
         </nav>
       </div>
       <div className={cx(CONTAINER, "flex flex-wrap justify-between gap-x-6 gap-y-2 pb-12 text-site-body text-site-faint")}>
-        <p>© 2026 Panelo UI</p>
+        <p>
+          © 2026 Panelo UI · Built by{" "}
+          <a href="https://raycanvas.ai" className={TEXT_LINK}>
+            Raycanvas
+          </a>{" "}
+          in partnership with shadcn labs
+        </p>
         <p>React 19 · Next.js 16 · Tailwind CSS v4 · Vercel UI SDK</p>
       </div>
     </footer>
