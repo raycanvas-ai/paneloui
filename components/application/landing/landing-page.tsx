@@ -589,8 +589,8 @@ function Hero() {
   return (
     <section className="pt-16 sm:pt-24">
       <div className={cx(CONTAINER, "flex flex-col items-center text-center")}>
-        <Link href="/#pricing" className={cx("group inline-flex items-center gap-2 rounded-full bg-site-pro py-1 ps-1 pe-3 text-site-body-medium text-site-pro-text shadow-site-pro transition-[filter] duration-150 hover:brightness-[0.97]", FOCUS)}>
-          <span className="rounded-full bg-linear-to-b from-site-banner-from to-site-banner-to px-2 py-0.5 text-site-chip text-site-on-banner">${LAUNCH_OFF} OFF</span>
+        <Link href="/#pricing" className={cx("group inline-flex items-center gap-2 rounded-full bg-site-pro py-0.5 ps-0.5 pe-3 text-site-body-medium text-site-pro-text shadow-site-pro transition-[filter] duration-150 hover:brightness-[0.97]", FOCUS)}>
+          <span className="rounded-full bg-linear-to-b from-site-banner-from to-site-banner-to px-2 py-px text-site-chip text-site-on-banner">${LAUNCH_OFF} OFF</span>
           Early-bird launch deal
           <RiArrowRightLine className="size-4 transition-transform duration-150 group-hover:translate-x-0.5 motion-reduce:transition-none" aria-hidden />
         </Link>
