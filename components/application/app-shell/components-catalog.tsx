@@ -149,7 +149,8 @@ export function PreviewCard({ entry }: { entry: Entry }) {
         {options.fade && (
           <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-11 bg-linear-to-b from-transparent to-site-preview" />
         )}
-        <div className="pointer-events-none absolute inset-x-2.5 top-2.5 z-20 flex items-start justify-between gap-2">
+        {/* On a phone the chip would cover most of the miniature, and the section heading already says it. */}
+        <div className="pointer-events-none absolute inset-x-2.5 top-2.5 z-20 hidden items-start justify-between gap-2 sm:flex">
           <Chip>{sectionOf(entry.href)?.title}</Chip>
         </div>
       </div>
