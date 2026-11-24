@@ -1,6 +1,6 @@
 "use client";
 
-import { GitHubStars } from "@/components/application/site/github-stars";
+import { GitHubLink } from "@/components/application/site/github-link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -212,7 +212,7 @@ export function DocsShell({ children }: { children: ReactNode }) {
             </Link>
           </div>
           <div className="flex items-center gap-1.5">
-            <GitHubStars className="hidden sm:inline-flex" />
+            <GitHubLink className="hidden sm:inline-flex" />
             <ThemeToggle appearance="segmented" size="small" />
             <Link href="/#pricing" className={pill("pro")}>
               <RiFlashlightFill aria-hidden />
