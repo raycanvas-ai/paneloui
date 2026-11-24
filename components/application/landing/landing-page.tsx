@@ -204,8 +204,8 @@ export function SiteHeader() {
               for the whole transition, so the default 820ms read as stuck. */}
           <ThemeToggle appearance="segmented" size="small" transitionDuration={280} className="hidden sm:inline-flex" />
           <AuthButton className="hidden sm:inline-flex" />
-          <Link href="/components" className={pill("primary")}>
-            Browse components
+          <Link href="/#pricing" className={pill("primary")}>
+            Get Pro
           </Link>
           <button type="button" aria-label="Open menu" onClick={() => setMenuOpen(true)} className={pill("ghost", "sm", "w-7 px-0 lg:hidden")}>
             <RiMenuLine aria-hidden />
@@ -615,7 +615,7 @@ function Hero() {
             Browse components
           </Link>
           <Link href={AGENT_DEMO} className={pill("secondary", "lg")}>
-            Try the agent demo
+            Watch an agent run it
           </Link>
         </div>
       </div>
