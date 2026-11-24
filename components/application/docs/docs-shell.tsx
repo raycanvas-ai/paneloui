@@ -28,6 +28,7 @@ import { COMPONENT_SECTIONS } from "@/components/application/docs/components-ind
 import { pill } from "@/components/application/site/site-ui";
 import { ThemeToggle } from "@/components/application/theme/theme-toggle";
 import { Logo } from "@/components/foundations/brand/logo";
+import { Sheet, SheetContent, SheetTitle } from "@/components/panelo/ui/sheet";
 import { cx } from "@/utils/cx";
 
 export const AGENT_DEMO = "/agent-demo";
@@ -179,26 +180,19 @@ const SUMMARY = COMPONENT_SECTIONS.map((section) => `${section.entries.length} $
 export function DocsShell({ children }: { children: ReactNode }) {
   const [navOpen, setNavOpen] = useState(false);
 
-  useEffect(() => {
-    if (!navOpen) return;
-    const onKey = (event: KeyboardEvent) => event.key === "Escape" && setNavOpen(false);
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [navOpen]);
-
   return (
     <div className="flex min-h-dvh flex-1 items-start bg-site-ground font-sans text-site-ink">
       <aside className="sticky top-0 z-30 hidden h-dvh w-64 shrink-0 px-2.5 pt-2 lg:block">
         <DocsSidebar />
       </aside>
-      {navOpen && (
-        <div className="fixed inset-0 z-50 flex lg:hidden">
-          <button type="button" aria-label="Close navigation" onClick={() => setNavOpen(false)} className="absolute inset-0 cursor-pointer bg-black/30" />
-          <div className="relative h-full w-64 bg-site-ground px-2.5 pt-2">
-            <DocsSidebar onNavigate={() => setNavOpen(false)} />
-          </div>
-        </div>
-      )}
+      {/* Phones and tablets: the same sidebar in a drawer that slides in and out, with focus trap, Escape,
+          swipe-to-close and scroll lock from the UI SDK drawer. */}
+      <Sheet side="left" open={navOpen} onOpenChange={setNavOpen}>
+        <SheetContent className="w-64 max-w-[85vw] gap-0 rounded-none border-0 bg-site-ground px-2.5 pt-2 pb-0 lg:hidden" overlayClassName="lg:hidden">
+          <SheetTitle className="sr-only">Navigation</SheetTitle>
+          <DocsSidebar onNavigate={() => setNavOpen(false)} />
+        </SheetContent>
+      </Sheet>
 
       <main className="m-2 flex min-h-[calc(100dvh-1rem)] min-w-0 flex-1 flex-col self-stretch rounded-[18px] border border-site-panel-border bg-site-panel shadow-site-panel lg:ms-0">
         <header className="flex items-center justify-between gap-2 px-4 pt-4 pb-2.5 sm:px-7">
