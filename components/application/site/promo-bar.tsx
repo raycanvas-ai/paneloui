@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Gift } from "@keyline-icons/react/duotone";
 import { RiArrowRightLine, RiCloseLine } from "@remixicon/react";
 
 import { LAUNCH_ENDS, LAUNCH_OFF } from "@/components/application/site/pricing";
@@ -27,17 +28,30 @@ export function PromoBar() {
     return () => clearInterval(id);
   }, []);
   if (now !== null && now >= LAUNCH_ENDS) return null;
-  if (!open || pathname?.startsWith("/preview") || pathname === "/agent-demo") return null;
+  if (!open || pathname?.startsWith("/preview") || pathname === "/agent-demo")
+    return null;
   return (
     <div className="relative h-[38px] overflow-hidden bg-site-banner-via bg-linear-to-b from-site-banner-from via-site-banner-via to-site-banner-to text-site-on-banner">
       <span
         aria-hidden
         className="pointer-events-none absolute top-1/2 left-0 h-[200%] w-30 animate-[site-banner-sweep_7s_ease-in-out_infinite] bg-[radial-gradient(closest-side,rgb(255_255_255/0.36),rgb(255_255_255/0.16)_50%,transparent)] motion-reduce:hidden"
       />
-      <Link href="/#pricing" className="group relative flex h-full items-center justify-center gap-3 px-10 text-site-body">
-        <span className="truncate">
-          <span className="font-semibold">Early bird – ${LAUNCH_OFF} off Pro</span>
-          {now !== null && <span className="tabular-nums">, ends in {left(LAUNCH_ENDS - now)}</span>}
+      <Link
+        href="/#pricing"
+        className="group relative flex h-full items-center justify-center gap-3 px-10 text-site-body"
+      >
+        <span className="flex min-w-0 items-center gap-2">
+          <Gift className="size-4 shrink-0" aria-hidden />
+          <span className="truncate">
+            <span className="font-semibold">
+              Early bird – ${LAUNCH_OFF} off Pro
+            </span>
+            {now !== null && (
+              <span className="tabular-nums">
+                , ends in {left(LAUNCH_ENDS - now)}
+              </span>
+            )}
+          </span>
         </span>
         <span className="inline-flex h-[26px] shrink-0 items-center gap-1 rounded-md bg-site-on-banner/20 px-2.5 font-semibold transition-colors group-hover:bg-site-on-banner/30">
           Get Pro
