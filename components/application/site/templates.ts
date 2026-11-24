@@ -27,6 +27,9 @@ export const SITE = "https://www.paneloui.com";
  */
 export const TEMPLATES_LAUNCH = { open: false, date: "December 1", count: 3 } as const;
 
+/** After launch day: how many more templates are being built. Deliberately no date, they ship as each is ready. */
+export const TEMPLATES_UPCOMING = "30+";
+
 export const TEMPLATES: Template[] = [
   {
     slug: "panelo-admin",

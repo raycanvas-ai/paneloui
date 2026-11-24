@@ -6,7 +6,7 @@ import { RiArrowLeftLine, RiArrowRightUpLine, RiCalendarEventLine, RiCheckLine }
 
 import { ArrowLink, CONTAINER, CopyCommand, FOCUS, Heading, SECTION, SiteFooter, SiteHeader, TEXT_LINK } from "@/components/application/landing/landing-page";
 import { Chip, pill, ProTag } from "@/components/application/site/site-ui";
-import { downloadCommand, type Template, TEMPLATES, TEMPLATES_LAUNCH } from "@/components/application/site/templates";
+import { downloadCommand, type Template, TEMPLATES, TEMPLATES_LAUNCH, TEMPLATES_UPCOMING } from "@/components/application/site/templates";
 import { cx } from "@/utils/cx";
 
 const shot = (t: Template, file: string) => `/templates/${t.slug}/${file}.webp`;
@@ -59,8 +59,18 @@ export function TemplatesIndex() {
             </Link>
           ))}
         </div>
+        <MoreComing />
       </section>
     </Page>
+  );
+}
+
+/** The templates after the launch three: a count, never a date. */
+function MoreComing() {
+  return (
+    <p className="mt-10 text-site-body text-pretty text-site-muted">
+      <span className="text-site-ink">{TEMPLATES_UPCOMING} more templates are in the works.</span> No dates yet: each ships when it&apos;s ready.
+    </p>
   );
 }
 
@@ -88,7 +98,8 @@ function TemplatesTeaser() {
             </li>
           ))}
         </ul>
-        <p className="mt-12 max-w-[560px] text-site-text text-pretty text-site-muted">
+        <MoreComing />
+        <p className="mt-6 max-w-[560px] text-site-text text-pretty text-site-muted">
           Each is a complete Next.js app with every screen built out, light and dark. Every Pro plan includes the Pro templates, plans bought before launch too.
         </p>
         <ArrowLink href="/#pricing" className="mt-6">
