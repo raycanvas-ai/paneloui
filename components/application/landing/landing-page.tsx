@@ -1051,28 +1051,12 @@ function FaqSection() {
 
 const FOOTER_COLUMNS = [
   {
-    title: "Library",
-    links: [
-      { label: "Dashboard pages", href: "/components#dashboard-pages" },
-      { label: "Profile pages", href: "/components#profile-pages" },
-      { label: "Charts", href: "/components#charts" },
-      { label: "Calendars", href: "/components#calendars" },
-    ],
-  },
-  {
-    title: "Blocks",
-    links: [
-      { label: "Sidebars", href: "/components#sidebars" },
-      { label: "Elements", href: "/components#elements" },
-      { label: "Login pages", href: "/components#login-pages" },
-    ],
-  },
-  {
     title: "Product",
     links: [
       { label: "Templates", href: "/templates" },
       { label: "Agent demo", href: AGENT_DEMO },
       { label: "Pricing", href: "/#pricing" },
+      { label: "Blog", href: "/blog" },
     ],
   },
   {
@@ -1084,6 +1068,18 @@ const FOOTER_COLUMNS = [
       { label: "Refunds", href: "/legal/refunds" },
     ],
   },
+];
+
+// The guides linked from every page: the pillar posts and the comparisons buyers search for.
+const FOOTER_GUIDES = [
+  { label: "Vercel's UI SDK explained", href: "/blog/vercel-ui-sdk-explained" },
+  { label: "What is agent-ready UI?", href: "/blog/what-is-agent-ready-ui" },
+  { label: "shadcn heatmap chart", href: "/blog/shadcn-heatmap-chart" },
+  { label: "GitHub contribution graph in React", href: "/blog/github-contribution-graph-react" },
+  { label: "Tremor alternative", href: "/blog/tremor-alternative" },
+  { label: "shadcnblocks alternative", href: "/blog/shadcnblocks-alternative" },
+  { label: "Tailwind Plus alternative", href: "/blog/tailwind-plus-catalyst-alternative" },
+  { label: "Design tokens in Tailwind CSS v4", href: "/blog/design-tokens-tailwind-v4" },
 ];
 
 export function SiteFooter() {
@@ -1114,7 +1110,7 @@ export function SiteFooter() {
             </a>
           </p>
         </div>
-        <nav aria-label="Footer" className="grid grid-cols-2 gap-x-16 gap-y-10 sm:grid-cols-4">
+        <nav aria-label="Footer" className="grid grid-cols-2 gap-x-16 gap-y-10">
           {FOOTER_COLUMNS.map((column) => (
             <div key={column.title} className="flex flex-col gap-2.5">
               <span className="text-site-body-medium text-site-ink">{column.title}</span>
@@ -1127,13 +1123,47 @@ export function SiteFooter() {
           ))}
         </nav>
       </div>
+      {/* Every component and the key guides, one link each: a way in from any page, for people and crawlers. */}
+      <div className={CONTAINER}>
+        <nav aria-label="All components" className="grid grid-cols-2 gap-x-8 gap-y-10 border-t border-site-hairline py-12 sm:grid-cols-3 lg:grid-cols-4">
+          {COMPONENT_SECTIONS.map((section) => {
+            const entries = section.entries.filter((e) => e.status === "shipped");
+            return entries.length ? (
+              <div key={section.id} className="flex flex-col gap-2.5">
+                <Link href={`/components#${section.id}`} className={cx(TEXT_LINK, "w-fit text-site-body-medium text-site-ink")}>
+                  {section.title}
+                </Link>
+                {entries.map((entry) => (
+                  <Link key={entry.href} href={entry.href} className={cx(TEXT_LINK, "w-fit text-site-body")}>
+                    {entry.name}
+                    {entry.tier === "pro" && <span className="ms-1.5 text-site-faint">Pro</span>}
+                  </Link>
+                ))}
+              </div>
+            ) : null;
+          })}
+          <div className="flex flex-col gap-2.5">
+            <Link href="/blog" className={cx(TEXT_LINK, "w-fit text-site-body-medium text-site-ink")}>
+              Guides
+            </Link>
+            {FOOTER_GUIDES.map((guide) => (
+              <Link key={guide.href} href={guide.href} className={cx(TEXT_LINK, "w-fit text-site-body")}>
+                {guide.label}
+              </Link>
+            ))}
+            <Link href="/blog" className={cx(TEXT_LINK, "w-fit text-site-body text-site-ink")}>
+              All guides
+            </Link>
+          </div>
+        </nav>
+      </div>
       <div className={cx(CONTAINER, "flex flex-wrap justify-between gap-x-6 gap-y-2 pb-12 text-site-body text-site-faint")}>
         <p>
           © 2026 Panelo UI · Built by{" "}
           <a href="https://raycanvas.ai" className={TEXT_LINK}>
             Raycanvas
           </a>{" "}
-          in partnership with{" "}
+          · Backed by{" "}
           <a href="https://x.com/shadcnlabs" className={TEXT_LINK}>
             Shadcn Labs
           </a>
