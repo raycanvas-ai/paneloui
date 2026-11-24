@@ -2,6 +2,8 @@
 
 React components, charts and full dashboard pages built on Vercel's UI SDK, so AI agents can operate the dashboards they render. Source-owned: copy them in and change anything.
 
+Built by [Raycanvas](https://raycanvas.ai) in partnership with shadcn labs.
+
 ## Run it
 
 ```bash
