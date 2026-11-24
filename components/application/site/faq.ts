@@ -36,7 +36,7 @@ export const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Can I get a refund?",
-    a: "Sales are final, since the source is yours the moment you install it: try the free components and live demos first. A duplicate charge, or a purchase we can't deliver, is refunded in full. See the refund policy.",
+    a: "No. All sales are final: Pro is source code, yours the moment you pay. Try the free components, previews and live agent demo first. See the refund policy.",
   },
   {
     q: "Does it support dark mode?",

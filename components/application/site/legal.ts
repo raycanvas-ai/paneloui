@@ -3,7 +3,7 @@
 
 export type LegalDoc = { slug: string; title: string; intro: string; sections: { heading: string; body: string[] }[] };
 
-export const LEGAL_UPDATED = "23 November 2026";
+export const LEGAL_UPDATED = "24 November 2026";
 export const SUPPORT_EMAIL = "support@paneloui.com";
 const CONTACT = `email ${SUPPORT_EMAIL}`;
 
@@ -117,24 +117,24 @@ export const LEGAL: LegalDoc[] = [
   {
     slug: "refunds",
     title: "Refunds",
-    intro: "Pro is source code: the moment you install it, it's yours to keep. So sales are final, with the exceptions below.",
+    intro: "All sales are final. Once you've paid for Pro, there are no refunds.",
     sections: [
       {
-        heading: "Before you buy",
-        body: ["Every free component, the component previews and the live demos are open to try first, so you can see exactly what Pro is."],
+        heading: "Why",
+        body: ["Pro is source code, delivered the moment you pay. Code can't be handed back, so a sale can't be taken back."],
       },
       {
-        heading: "When we refund in full",
+        heading: "Try everything first",
         body: [
-          "You were charged twice for the same plan.",
-          "You paid but can't get access, and we can't fix it within 7 days of you telling us.",
-          "The payment wasn't made by you or anyone you authorised.",
+          "Every free component, every component preview, the free template and the live agent demo are open to anyone. Buy once you're sure Pro fits.",
         ],
       },
       {
-        heading: "How",
+        heading: "If something goes wrong",
         body: [
-          `Within 14 days of the purchase, ${CONTACT}. Refunds go back to the original payment method through Dodo Payments. A refund ends the licence and its key.`,
+          "Charged twice for the same plan? The extra charge is reversed: that's a billing mistake, not a refund.",
+          `Can't get your key or install Pro? Email ${SUPPORT_EMAIL} and we'll fix your access.`,
+          "Disputing or charging back a payment ends the licence and its key.",
           "Nothing here limits rights that your local consumer law gives you.",
         ],
       },
