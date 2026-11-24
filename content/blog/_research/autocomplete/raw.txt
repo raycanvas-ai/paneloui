@@ -1,0 +1,846 @@
+shadcn
+shadcn ui
+shadcn/ui
+shadcn components
+shadcn svelte
+shadcn table
+shadcn themes
+shadcn mcp
+shadcn charts
+shadcn sidebar
+shadcn ui
+shadcn ui components
+shadcn ui skills
+shadcn ui kit
+shadcn ui themes
+shadcn ui templates
+shadcn ui mcp
+shadcn ui github
+shadcn ui table
+shadcn ui examples
+shadcn/ui
+shadcn/ui + tailwind
+shadcn/ui skills
+shadcn/ui mcp
+shadcn/ui components
+shadcn/ui charts
+shadcn/ui examples
+shadcn/ui dashboard
+shadcn/ui blocks
+shadcn/ui vs mui
+shadcn dashboard
+shadcn dashboard templates
+shadcn dashboard examples
+shadcn dashboard blocks
+shadcn dashboard github
+shadcn dashboard ui
+shadcn dashboard cards
+shadcn dashboard design
+shadcn dashboard components
+shadcn dashboard demo
+shadcn blocks
+shadcn blocks free
+shadcn blocks dashboard
+shadcn blocks github
+shadcn blocks ui
+shadcn blocks vs components
+shadcn blocks admin
+shadcn blocks navbar
+shadcn blocks login
+shadcn blocks figma
+shadcn charts
+shadcn charts library
+shadcn charts figma
+shadcn charts and graphs
+shadcn charts ui
+shadcn charts examples
+shadcn charts vue
+shadcn charts vs recharts
+shadcn charts install
+shadcn charts recharts
+shadcn charts
+shadcn chart library
+shadcn chart components
+shadcn chart ui
+shadcn charts figma
+shadcn charts and graphs
+shadcn chart colors
+shadcn charts examples
+shadcn registry
+shadcn registry mcp
+shadcn registry directory
+shadcn registry list
+shadcn registry template
+shadcn registry json
+shadcn registry github
+shadcn registry url
+shadcn registry example
+shadcn registry starter
+shadcn cli
+shadcn clickable card
+shadcn cli github
+shadcn cli v4
+shadcn clipboard
+shadcn cli 3.0
+shadcn cli 4
+shadcn cli install
+shadcn cli npm
+shadcn click to copy
+shadcn components
+shadcn components.json
+shadcn components library
+shadcn components free
+shadcn components figma
+shadcn components sidebar
+shadcn components examples
+shadcn components github
+shadcn components ui
+shadcn components svelte
+shadcn themes
+shadcn theme generator
+shadcn theme builder
+shadcn theme switcher
+shadcn theme toggle
+shadcn theme provider
+shadcn themes examples
+shadcn theme colors
+shadcn theme customizer
+shadcn theme editor
+shadcn themes
+shadcn themes generator
+shadcn themes examples
+shadcn themes colors
+shadcn themes free
+shadcn themes github
+shadcn themes mcp
+shadcn themes new york
+shadcn themes reddit
+shadcn themes zinc
+shadcn templates
+shadcn templates free
+shadcn templates dashboard
+shadcn template admin
+shadcn template github
+shadcn template landing page
+shadcn template nextjs
+shadcn template ui
+shadcn template admin dashboard
+shadcn template figma
+shadcn templates
+shadcn templates free
+shadcn templates dashboard
+shadcn templates admin
+shadcn templates landing page
+shadcn templates github
+shadcn templates ecommerce
+shadcn templates nextjs
+shadcn templates figma
+shadcn templates ui
+shadcn admin
+shadcn admin dashboard
+shadcn admin template
+shadcn admin kit
+shadcn admin ui
+shadcn admin panel
+shadcn admin github
+shadcn admin dashboard template
+shadcn admin dashboard github
+shadcn admin template free
+shadcn admin template
+shadcn admin template free
+shadcn admin template github
+shadcn admin template nextjs
+shadcn admin template download github
+shadcn admin template react
+shadcn admin template figma
+shadcn dashboard template
+shadcn dashboard template github
+shadcn dashboard template nextjs
+shadcn admin dashboard
+shadcn admin dashboard template
+shadcn admin dashboard github
+shadcn admin dashboard template free
+shadcn admin dashboard free
+shadcn admin dashboard nextjs
+shadcn admin dashboard demo
+shadcn admin dashboard example
+shadcn admin dashboard ui
+shadcn admin dashboard starter
+shadcn nextjs
+shadcn nextjs template
+shadcn nextjs installation
+shadcn nextjs setup
+shadcn nextjs dashboard
+shadcn nextjs starter
+next js 16 shadcn
+shadcn nextjs boilerplate
+shadcn nextjs monorepo
+shadcn nextjs admin template
+shadcn next js
+shadcn next js install
+shadcn next js template
+shadcn next js setup
+shadcn next js 16
+shadcn next js dashboard
+shadcn next js dashboard template
+shadcn next js admin template
+shadcn next js starter
+shadcn next js 15
+shadcn ui dashboard
+shadcn ui dashboard template
+shadcn ui dashboard example
+shadcn ui dashboard components
+shadcn ui dashboard free
+shadcn ui dashboard template free
+dashboard ui examples
+dashboard ui ideas
+dashboard ui design ideas
+shadcn ui blocks
+shadcn ui blocks free
+shadcn ui blocks dashboard
+shadcn ui blocks github
+shadcn ui blocks sidebar
+shadcn ui blocks login
+shadcn ui blocks & templates
+shadcn ui blocks navbar
+shadcn ui block library
+shadcn ui marketingblocks
+shadcn ui charts
+shadcn ui charts recharts
+shadcn ui charts examples
+shadcn ui charts figma
+shadcn ui chart component
+shadcn ui graphs
+shadcn ui templates
+shadcn ui templates free
+shadcn ui templates dashboard
+shadcn ui templates github
+shadcn ui templates examples
+shadcn ui template dashboard free
+shadcn ui template landing page
+shadcn ui template figma
+shadcn ui website templates
+shadcn ui tailwind templates
+shadcn ui themes
+shadcn ui theme generator
+shadcn ui theme toggle
+shadcn ui theme provider
+shadcn ui theme switcher
+shadcn ui theme builder
+shadcn ui theme colors
+shadcn ui theme editor
+shadcn ui theme creator
+shadcn ui theme customizer
+shadcn ui components
+shadcn ui components library
+shadcn ui components free
+shadcn ui components json
+shadcn ui components github
+shadcn ui components react
+shadcn ui components list
+shadcn ui components examples
+shadcn ui components table
+shadcn ui components with variables & tailwind classes
+shadcn ui registry
+shadcn ui registry template
+shadcn ui registry directory
+shadcn ui registry mcp
+shadcn ui registry starter
+shadcn ui registration form
+best shadcn ui registry
+shadcn ui custom registry
+how to update registry
+what is nodrivetypeautorun in registry
+shadcn ui alternatives
+shadcn ui alternative for react
+shadcn ui alternative for angular
+shadcn ui alternative for vue
+shadcn ui alternative reddit
+shadcn ui alternative 2026
+shadcn ui replacement
+shadcn ui library alternative
+shadcn ui components alternative
+shadcn ui kit alternative
+shadcn vs tailwind
+shadcn vs radix
+shadcn vs
+shadcn vs mui
+shadcn vs material ui
+shadcn vs mantine
+shadcn vs base ui
+shadcn vs daisyui
+shadcn vs react
+shadcn vs radix ui
+shadcn ui vs material ui
+shadcn ui vs mui
+shadcn ui vs tailwind
+shadcn ui vs radix
+shadcn ui vs daisyui
+shadcn ui vs
+shadcn ui vs tailwind css
+shadcn ui vs bootstrap
+ui select vs ui choice
+good ui vs bad ui
+shadcn login
+shadcn login page
+shadcn login block
+shadcn login form
+shadcn login component
+shadcn login page template
+shadcn login screen
+shadcn login template
+shadcn login ui
+shadcn sidebar
+shadcn sidebar examples
+shadcn sidebar inset
+shadcn sidebar component
+shadcn sidebar blocks
+shadcn sidebar menu
+shadcn sidebar designs
+shadcn sidebar variants
+shadcn sidebar trigger
+shadcn sidebar code
+shadcn data table
+shadcn data table example
+shadcn data table pagination
+shadcn data table column filter
+shadcn data table component
+shadcn data table server side pagination
+shadcn data table sticky header
+shadcn data table column width
+shadcn data table github
+shadcn data table responsive
+shadcn calendar
+shadcn calendar component
+shadcn calendar picker
+shadcn calendar view
+shadcn calendar with events
+shadcn calendar ui
+shadcn calendar with time
+shadcn calendar range
+shadcn calendar month picker
+shadcn calendar scheduler
+shadcn kanban
+shadcn kanban board
+shadcn kanban component
+shadcn kanban view
+shadcn kanban ui
+shadcn kanban template
+shadcn kanban free
+shadcn kanban example
+shadcn kanban board component
+shadcn kanban block
+shadcn ai
+shadcn ai chat
+shadcn ai components
+shadcn ai chat components
+shadcn ai elements
+shadcn ai ui
+shadcn ai skills
+shadcn ai chatbot
+shadcn ai agent
+shadcn ai sdk
+shadcn mcp
+shadcn mcp server
+shadcn mcp claude code
+shadcn mcp antigravity
+shadcn mcp github
+shadcn mcp skill
+shadcn mcp claude
+shadcn mcp codex
+shadcn mcp opencode
+shadcn mcp server claude code
+shadcn ui library
+shadcn ui library figma
+shadcn ui library react
+shadcn ui library alternative
+shadcn ui library github
+shadcn ui lib
+shadcn ui lib utils
+shadcn ui framework
+shadcn ui component library
+best shadcn ui library
+shadcn ui kit
+shadcn ui kit figma
+shadcn ui kit pro
+shadcn ui kit pro download
+shadcn ui kit free download
+shadcn ui kit free
+shadcn ui kit dashboard
+shadcn ui kit download
+shadcn ui kit github
+shadcn ui kit pro free download
+shadcn progress bar
+shadcn progress
+shadcn pro
+shadcn project
+shadcn profile
+shadcn profile page
+shadcn prose
+shadcn pro blocks
+shadcn prompt input
+shadcn product card
+shadcn free templates
+shadcn free blocks
+shadcn free
+shadcn free components
+shadcn free admin template
+shadcn free dashboard template
+shadcn free dashboard
+shadcn free themes
+shadcn free figma
+shadcn free navbar
+shadcn landing pages
+shadcn landing page templates
+shadcn landing page github
+shadcn landing page components
+shadcn landing page blocks
+shadcn landing page free
+shadcn landing page template free
+shadcn landing page examples
+shadcn landing page saas
+shadcn landing page template github
+shadcn tailwind v4
+shadcn tailwind v4 theme generator
+shadcn tailwind v4 theme
+shadcn tailwind v4 migration
+shadcn tailwind v4 not working
+shadcn + tailwind v4 github
+shadcn tailwind 4
+shadcn tailwind 4 theme generator
+shadcn tailwind 4 support
+shadcn ui tailwind v4
+shadcn tailwind 4
+shadcn tailwind 4 theme
+shadcn tailwind 4 migration
+shadcn tailwind 4 theme generator
+shadcn tailwind 4 not working
+shadcn tailwind 4 support
+shadcn vue tailwind 4
+shadcn ui tailwind 4
+shadcn svelte tailwind 4
+shadcn upgrade tailwind 4
+shadcn recharts
+shadcn recharts 3
+shadcn recharts v3
+shadcn recharts version
+recharts shadcn ui
+recharts shadcn charts
+shadcn vs recharts
+shadcn ui recharts v3
+shadcn ui charts recharts
+install recharts shadcn
+shadcn crm
+shadcn crm template
+shadcn crm dashboard
+shadcn crm example
+shadcn crm ui
+shadcn crm design
+shadcn/ui crm template
+shadcn ui kit crm
+shadcn analytics dashboard
+shadcn analytics
+shadcn analytics components
+shadcn analytics page
+shadcn ui analytics
+shadcn ui analytics dashboard
+shadcn profile page
+shadcn profile page template
+shadcn profile page example
+shadcn profile page block
+shadcn profile page design
+shadcn profile page ui
+shadcn user profile page
+shadcn profile settings page
+shadcn edit profile page
+profile page examples
+shadcn login page
+shadcn login page template
+shadcn login page example
+shadcn login page ui
+shadcn login page design
+shadcn login page component
+shadcn login page free
+shadcn login page code
+shadcn login page block
+shadcn home page
+shadcn sign up
+shadcn sign up form
+shadcn sign up page
+shadcn sign up component
+shadcn sign up block
+shadcn sign in
+shadcn login page
+shadcn sign in form
+shadcn sign in with google
+shadcn sign in component
+shadcn heatmap
+shadcn heatmap chart
+shadcn heatmap component
+shadcn heatmap calendar
+heatmap shadcn ui
+shadcn github heatmap
+shadcn-ui-calendar-heatmap
+react heatmap shadcn
+shadcn pie chart
+shadcn pie chart legend
+shadcn pie chart example
+shadcn pie graph
+shadcn ui pie chart
+shadcn svelte pie chart
+pie chart and examples
+pie chart topics
+shadcn line chart
+shadcn ui line chart
+shadcn vue line chart
+line chart examples
+line chart best practices
+shadcn bar chart
+shadcn bar graph
+shadcn stacked bar chart
+shadcn ui bar chart
+shadcn horizontal bar chart
+shadcn radial bar chart
+types of graphs bar
+shadcn area chart
+shadcn chart area interactive
+shadcn ui area chart
+explain area chart
+what does area chart show
+area chart when to use
+what is area chart
+shadcn examples
+shadcn examples github
+shadcn examples dashboard
+shadcn examples code
+shadcn examples tasks
+shadcn examples sidebar
+shadcn examples pages
+shadcn examples table
+shadcn examples website
+shadcn examples ui
+shadcn starter template
+shadcn starter kit
+shadcn starter
+shadcn starter github
+shadcn starter project
+shadcn starter template github
+shadcn starter dashboard
+shadcn starter pack
+shadcn starter nextjs
+laravel shadcn starter kit
+shadcn saas template
+shadcn saas
+shadcn saas dashboard
+shadcn saas landing page
+shadcn saas boilerplate
+shadcn saas landing page template
+shadcn saas dashboard template
+shadcn saas example
+shadcn saas components
+shadcn saas template free
+shadcn create registry
+shadcn add registry
+shadcn registry build
+shadcn custom registry
+shadcn private registry
+shadcn ui custom registry
+custom number plate maker near me
+shadcn registry json
+registry examples
+shadcn components.json
+shadcn components json style
+shadcn icon library components.json
+shadcn components.json icon library
+shadcn components.json example
+shadcn components json aliases
+shadcn components json schema
+shadcn components json base ui
+shadcn components json rsc
+shadcn components json registries
+shadcn add all components
+shadcn add component
+shadcn add
+shadcn add button
+shadcn add all
+shadcn add form
+shadcn add multiple components
+shadcn add card
+shadcn add badge
+shadcn address autocomplete
+npx shadcn@latest init
+npx shadcn@latest
+npx shadcn
+npx shadcn@latest add form
+npx shadcn@latest add dashboard-01
+npx shadcn@latest add
+npx shadcn@latest add sonner
+shadcn agents
+shadcn agent skills
+shadcn agent ui
+shadcn agent chat
+shadcn agent chat ui
+shadcn agent components
+shadcn agents.md
+shadcn llms.txt
+shadcn ui llms txt
+shadcn svelte llms txt
+shadcn vue llms txt
+shadcn llms full txt
+shadcn figma
+shadcn figma library
+shadcn figma kit
+shadcn figma design system
+shadcn figma file
+shadcn figma ui kit
+shadcn figma components
+shadcn figma plugin
+shadcn figma template
+shadcn alternatives
+shadcn alternatives 2026
+shadcn alternatives reddit
+shadcn alternatives free
+shadcn alternatives 2025
+shadcn alternatives for react
+shadcn alternatives for angular
+shadcn alternatives vue
+shadcn alternatives for svelte
+shadcn alternatives for react native
+best shadcn component library
+best shadcn themes
+best shadcn registries
+best shadcn libraries
+best shadcn presets
+best shadcn figma library
+best shadcn ui library
+best shadcn templates
+best shadcn components
+best shadcn ui
+how to use shadcn
+how to install shadcn
+how to pronounce shadcn
+how to install shadcn in nextjs
+how to use shadcn ui in react
+how to use shadcn ui
+how to install shadcn in react
+how to update shadcn components
+how to remove shadcn components
+how to install shadcn in react vite
+how to install shadcn
+how to install shadcn in nextjs
+how to install shadcn in react
+how to install shadcn in react vite
+how to install shadcn form
+how to install shadcn in existing project
+how to install shadcn ui
+how to install shadcn components
+how to install shadcn in react vite with javascript
+how to install shadcn ui in next js
+how to use shadcn
+how to use shadcn with claude code
+how to use shadcn ui in react
+how to use shadcn ui
+how to use shadcn in figma
+how to use shadcn in react
+how to use shadcn blocks
+how to use shadcn in next js
+how to use shadcn mcp
+how to use shadcn components
+how to create a shadcn registry
+how to make a registry
+how to customize shadcn components
+how to customize shadcn
+how to customize shadcn ui components
+how to customize shadcn theme
+how to customize shadcn ui
+how to customize shadcn sonner
+how to change shadcn theme
+how to change shadcn base color
+how to change shadcn style
+how to change shadcn preset
+what is shadcn
+what is shadcn/ui
+what is shadcn ui
+what is shadcn built on
+what is shadcn.io
+what is shadcn registry
+what is shadcn ui used for
+what is shadcn used for
+what is shadcn monorepo
+what is shadcnblocks
+what is shadcn ui
+what is shadcn ui used for
+what is shadcn ui components
+what is shadcn ui based on
+what is shadcn ui kit
+what is tailwind shadcn ui
+what is preset in shadcn ui
+what is https ui shadcn com
+what is rtl in shadcn ui
+what is monorepo in shadcn ui
+is shadcn free
+is shadcn open source
+is shadcn react only
+is shadcn a design system
+is shadcn react
+is shadcn headless
+is shadcn a component library
+is shadcn the best ui library
+is shadcn good
+is shadcn ui free
+why shadcn
+why shadcn is so popular
+why shadcn ui
+why shadcn is bad
+why shadcn uses oklch
+shadcn why use
+shadcn why no cursor pointer
+why use shadcn ui
+why is shadcn good
+why is shadcn free
+shadcn ui react
+shadcn ui react native
+shadcn ui react js
+shadcn ui react npm
+shadcn ui react hook form
+shadcn ui react vite
+shadcn ui react aria
+shadcn ui react 19
+shadcn ui react native expo
+shadcn ui react day picker
+shadcn react 19
+shadcn react 19 support
+shadcn ui react 19
+shadcn forwardref react 19
+shadcn upgrade to react 19
+shadcn next 16
+shadcn next js 16
+shadcn ui next js 16
+next 15 results
+now 16 release date
+next gen list
+shadcn vite
+shadcn vite install
+shadcn vite react
+shadcn vite setup
+shadcn vite template
+shadcn vite js
+shadcn vite monorepo
+shadcn vite tailwind
+shadcn vite 8
+shadcn vite react js
+shadcn marketplace
+shadcn marketplace template
+shadcn ui marketplace
+shadcn directory
+shadcn directory structure
+shadcn directory tree
+shadcn directory template
+shadcn directory component
+shadcn registry directory
+shadcn ui directory
+best shadcn directory
+shadcn file directory
+shadcn change directory
+awesome shadcn
+awesome shadcn ui
+awesome shadcn github
+awesome shadcn components
+awesome shadcn svelte
+awesome shadcn ui github
+awesome shadcn vue
+awesome shadcn themes
+awesome shadcn registry
+awesome shadcn blocks
+shadcn libraries
+shadcn libraries list
+shadcn libraries reddit
+shadcn libraries github
+shadcn ui libraries
+shadcn component libraries
+best shadcn libraries
+shadcn similar libraries
+shadcn based libraries
+shadcn icon libraries
+shadcn component libraries
+shadcn component library radix or base
+shadcn component library radix vs base
+shadcn component library figma
+shadcn component library radix
+shadcn component library github
+shadcn components library free
+shadcn component library reddit
+shad cn component library
+best shadcn component libraries
+shadcn extensions
+shadcn extensions multi select
+shadcn ui extensions
+best shadcn extensions
+shadcn vue extensions
+shadcn third party components
+third party types
+third party website list
+third party or 3rd party grammar
+third party examples
+shadcn ui free templates
+shadcn ui themes free
+free shadcn blocks
+free shadcn components
+free shadcn templates
+free shadcn dashboard
+free shadcn
+free shadcn themes
+free shadcn dashboard template
+free shadcn figma kit
+free shadcn ui blocks
+free shadcn ui components
+shadcn admin template free
+shadcn ui dashboard template free
+shadcn admin dashboard template free
+shadcn ui admin template free
+dashboard template examples
+dashboard template ideas
+shadcn finance dashboard
+shadcn financial dashboard
+shadcn fintech finance dashboard template
+what is a financial dashboard
+financial dashboard power bi example
+hdb financial services emi details
+how to check mahindra finance loan statement
+shadcn workflow builder
+shadcn workflow
+shadcn workflow components
+shadcn workflow ui
+shadcn workflow editor
+shadcn next workflows
+shadcn ai workflow
+shadcn ai chat
+shadcn ai chat components
+shadcn ai chatbot
+shadcn ai chat ui
+shadcn ai chat template
+shadcn ai chat interface
+shadcn ai chat app
+shadcn ai chat block
+shadcn ai chat input
+shadcn ai chatbot ui
+shadcn ai components
+shadcn components ai chat
+shadcn ai elements
+shadcn ui ai components
+shadcn ai agent components
+shadcn io ai components
+shadcn svelte ai components
+shadcn ai chat ui components
+shadcn vue ai components
+components of artificial intelligence
+shadcn ui ai
+shadcn ui ai components
+shadcn ui ai chat
+shadcn ui ai chat component
+shadcn ui ai skill
+shadcn ui ai chatbot
+shadcn ui ai generator
+shadcn ui ai agent
+shadcn ui ai sdk
+shadcn ui ai chat template
