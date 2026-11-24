@@ -560,20 +560,22 @@ function Hero() {
             Try the agent demo
           </Link>
         </div>
-        <p className="mt-6 text-site-body text-site-faint">
+        <p className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-site-body text-site-faint">
           Built by{" "}
-          <a href="https://raycanvas.ai" className={cx(TEXT_LINK, "inline-flex items-center gap-1 align-bottom text-site-ink")}>
+          <a href="https://raycanvas.ai" className={cx(TEXT_LINK, "inline-flex items-center gap-1.5 text-site-lead text-site-ink")}>
             {/* The mark as a mask, so it takes the link's colour in both themes. */}
             <span
               aria-hidden
-              className="inline-block size-3.5 bg-current"
+              className="inline-block size-5 bg-current"
               style={{ maskImage: "url(/brand/raycanvas-mark.svg)", maskSize: "contain", maskRepeat: "no-repeat", maskPosition: "center" }}
             />
             Raycanvas
           </a>{" "}
           · in partnership with{" "}
-          <a href="https://x.com/shadcnlabs" className={cx(TEXT_LINK, "text-site-ink")}>
-            shadcn labs
+          <a href="https://x.com/shadcnlabs" className={cx(TEXT_LINK, "inline-flex items-center gap-1.5 text-site-lead text-site-ink")}>
+            {/* eslint-disable-next-line @next/next/no-img-element -- a 20px avatar, not worth next/image */}
+            <img src="/brand/shadcn-labs.png" alt="" width={20} height={20} className="size-5 rounded-md" />
+            Shadcn Labs
           </a>
         </p>
       </div>
@@ -1086,7 +1088,7 @@ export function SiteFooter() {
           </a>{" "}
           in partnership with{" "}
           <a href="https://x.com/shadcnlabs" className={TEXT_LINK}>
-            shadcn labs
+            Shadcn Labs
           </a>
         </p>
         <p>React 19 · Next.js 16 · Tailwind CSS v4 · Vercel UI SDK</p>
