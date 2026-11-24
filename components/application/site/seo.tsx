@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { ALL_ENTRIES, COMPONENT_SECTIONS, type Entry } from "@/components/application/docs/components-index";
+import { FAQ } from "@/components/application/site/faq";
 import { PLANS } from "@/components/application/site/pricing";
 import { SITE } from "@/components/application/site/templates";
 
@@ -8,6 +9,15 @@ import { SITE } from "@/components/application/site/templates";
 // components", "shadcn/ui"), the brand last; every number comes from the catalogue or the plans.
 
 export const BRAND = "Panelo UI";
+// Who makes Panelo, stated the same way on the page, in structured data and in /llms.txt.
+export const MAKER = { name: "Raycanvas", url: "https://raycanvas.ai" };
+export const PARTNER = { name: "Shadcn Labs", url: "https://x.com/shadcnlabs" };
+export const SIBLINGS = [
+  { name: "Ruixen UI", url: "https://ruixen.com" },
+  { name: "snapcn", url: "https://snapcn.dev" },
+];
+export const REPO_URL = "https://github.com/raycanvas-ai/paneloui";
+export const UI_SDK_URL = "https://ui-sdk.dev";
 export const shippedEntries = ALL_ENTRIES.filter((e) => e.status === "shipped");
 
 // The site-wide share card (app/opengraph-image.png). Named here because a page that sets its own
@@ -58,9 +68,17 @@ export function JsonLd({ data }: { data: object }) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} />;
 }
 
-const ORG = { "@type": "Organization", "@id": `${SITE}/#org`, name: BRAND, url: SITE, logo: `${SITE}/icon.png`, email: "support@paneloui.com" };
+const ORG = {
+  "@type": "Organization",
+  "@id": `${SITE}/#org`,
+  name: MAKER.name,
+  url: MAKER.url,
+  email: "support@paneloui.com",
+  brand: { "@type": "Brand", name: BRAND, logo: `${SITE}/icon.png` },
+  sameAs: ["https://github.com/raycanvas-ai"],
+};
 
-/** The home page's graph: who makes Panelo, the site, and the product with its real plans and prices. */
+/** The home page's graph: who makes Panelo, the site, the product with its real plans and prices, and the FAQ. */
 export const homeGraph = {
   "@context": "https://schema.org",
   "@graph": [
@@ -72,8 +90,13 @@ export const homeGraph = {
       applicationCategory: "DeveloperApplication",
       operatingSystem: "Web",
       url: SITE,
-      description: `${shippedEntries.length} React and Tailwind dashboard components, pages and charts for shadcn/ui, built on Vercel's UI SDK so AI agents can operate them.`,
+      image: `${SITE}${SHARE_IMAGE.url}`,
+      description: `${shippedEntries.length} React and Tailwind dashboard components, pages and charts for shadcn/ui, built on Vercel's UI SDK so AI agents can operate them. Free components are MIT-licensed.`,
+      softwareRequirements: "React 19, Tailwind CSS v4, shadcn/ui, Vercel UI SDK",
+      sameAs: [REPO_URL],
+      creator: { "@id": `${SITE}/#org` },
       publisher: { "@id": `${SITE}/#org` },
+      contributor: { "@type": "Organization", name: PARTNER.name, url: PARTNER.url },
       offers: PLANS.map((plan) => ({
         "@type": "Offer",
         name: plan.name,
@@ -82,6 +105,11 @@ export const homeGraph = {
         url: `${SITE}/#pricing`,
         availability: "https://schema.org/InStock",
       })),
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${SITE}/#faq`,
+      mainEntity: FAQ.map((item) => ({ "@type": "Question", name: item.q, acceptedAnswer: { "@type": "Answer", text: item.a } })),
     },
   ],
 };
