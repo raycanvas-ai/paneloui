@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { RiArrowRightLine, RiCloseLine, RiFlashlightFill } from "@remixicon/react";
+import { RiArrowRightLine, RiCloseLine } from "@remixicon/react";
 
 import { LAUNCH_ENDS, LAUNCH_OFF } from "@/components/application/site/pricing";
 
@@ -34,13 +34,15 @@ export function PromoBar() {
         aria-hidden
         className="pointer-events-none absolute top-1/2 left-0 h-[200%] w-30 animate-[site-banner-sweep_7s_ease-in-out_infinite] bg-[radial-gradient(closest-side,rgb(255_255_255/0.36),rgb(255_255_255/0.16)_50%,transparent)] motion-reduce:hidden"
       />
-      <Link href="/#pricing" className="group relative flex h-full items-center justify-center gap-1.5 px-10 text-site-body">
-        <RiFlashlightFill className="size-3.5 shrink-0" aria-hidden />
+      <Link href="/#pricing" className="group relative flex h-full items-center justify-center gap-3 px-10 text-site-body">
         <span className="truncate">
           <span className="font-semibold">Early bird – ${LAUNCH_OFF} off Pro</span>
           {now !== null && <span className="tabular-nums">, ends in {left(LAUNCH_ENDS - now)}</span>}
         </span>
-        <RiArrowRightLine className="size-3.5 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5 motion-reduce:transition-none" aria-hidden />
+        <span className="inline-flex h-[26px] shrink-0 items-center gap-1 rounded-md bg-site-on-banner/20 px-2.5 font-semibold transition-colors group-hover:bg-site-on-banner/30">
+          Get Pro
+          <RiArrowRightLine className="size-3.5" aria-hidden />
+        </span>
       </Link>
       <button
         type="button"
