@@ -4,7 +4,7 @@
 export const FAQ: { q: string; a: string }[] = [
   {
     q: "Who builds Panelo UI?",
-    a: "Raycanvas builds Panelo UI, in partnership with Shadcn Labs. The same team created Ruixen UI and snapcn.",
+    a: "Raycanvas builds Panelo UI, backed by Shadcn Labs. The same team created Ruixen UI and snapcn.",
   },
   {
     q: "What makes Panelo agent-ready?",

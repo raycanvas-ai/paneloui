@@ -96,7 +96,7 @@ export const homeGraph = {
       sameAs: [REPO_URL],
       creator: { "@id": `${SITE}/#org` },
       publisher: { "@id": `${SITE}/#org` },
-      contributor: { "@type": "Organization", name: PARTNER.name, url: PARTNER.url },
+      funder: { "@type": "Organization", name: PARTNER.name, url: PARTNER.url },
       offers: PLANS.map((plan) => ({
         "@type": "Offer",
         name: plan.name,
