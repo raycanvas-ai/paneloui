@@ -27,6 +27,8 @@ const nextConfig: NextConfig = {
     resolveAlias: hasPro ? { "@pro": "./components/panelo/pro/index.ts" } : {},
   },
   headers: async () => [{ source: "/:path*", headers: securityHeaders }],
+  // People type the plural; the blog lives at /blog.
+  redirects: async () => [{ source: "/blogs/:path*", destination: "/blog/:path*", permanent: true }],
 };
 
 export default nextConfig;
