@@ -15,6 +15,7 @@ import { LAUNCH_OFF, PLANS } from "@/components/application/site/pricing";
 import { ScreenFrame } from "@/components/application/docs/preview-frames";
 import { AuthButton } from "@/components/application/site/auth-button";
 import { GitHubStars } from "@/components/application/site/github-stars";
+import { CONTAINER, FOCUS, SECTION, TEXT_LINK } from "@/components/application/site/layout-classes";
 import { pill } from "@/components/application/site/site-ui";
 import { ThemeToggle } from "@/components/application/theme/theme-toggle";
 import { Logo } from "@/components/foundations/brand/logo";
@@ -73,11 +74,10 @@ const NAV = [
   { label: "Pricing", href: "/#pricing" },
 ];
 
-// One column, one gutter, one rhythm: every row of the page starts on the same edge.
-export const CONTAINER = "mx-auto w-full max-w-[1152px] px-6";
-export const SECTION = "py-20 sm:py-28";
-export const FOCUS = "outline-none focus-visible:ring-2 focus-visible:ring-border-focus-ring";
-export const TEXT_LINK = cx("rounded-sm text-site-muted transition-colors duration-150 hover:text-site-ink", FOCUS);
+// The layout classes live in a plain module so server pages (blog, 404) can use them too; a "use client"
+// module's exports reach server components as references, not strings.
+export { CONTAINER, FOCUS, SECTION, TEXT_LINK };
+
 // Entrances use @starting-style: no keyframes, and nothing moves under reduced motion.
 const ENTER = "transition-[opacity,translate] duration-300 ease-out starting:translate-y-1 starting:opacity-0 motion-reduce:transition-none";
 
