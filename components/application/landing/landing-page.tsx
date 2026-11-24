@@ -494,7 +494,7 @@ const PROGRESS: [string, number | null][] = [
  */
 function Showcase() {
   return (
-    <div className="relative mt-14 sm:mt-16 lg:h-[720px] lg:overflow-hidden lg:[mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
+    <div className="relative mt-14 hidden sm:mt-16 lg:block lg:h-[720px] lg:overflow-hidden lg:[mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
       <div className="px-6 lg:absolute lg:inset-y-0 lg:left-1/2 lg:flex lg:-translate-x-1/2 lg:gap-5 lg:px-0">
         <Drift seconds={70} className="hidden xl:block">
           <Panel className="shadow-site-raised">
@@ -564,6 +564,27 @@ function ShadcnMark({ className }: { className?: string }) {
   );
 }
 
+// Home Care Schedule as a picture, not a live page: three widths per theme, so a phone fetches the 720px file.
+const SCHEDULE_SIZES = "(min-width: 1136px) 1088px, calc(100vw - 48px)";
+const scheduleSrcSet = (theme: "light" | "dark") => [720, 1280, 2560].map((w) => `/brand/home-care-schedule-${theme}-${w}.webp ${w}w`).join(", ");
+
+function ScheduleShot() {
+  const img = "block h-auto w-full rounded-lg ring-1 ring-site-hairline sm:rounded-[10px]";
+  return (
+    <Link
+      href="/components/dashboard-pages-13"
+      aria-label="Home Care Schedule, a free Panelo UI dashboard page"
+      className={cx("block rounded-xl bg-site-surface p-1 shadow-site-raised ring-1 ring-site-hairline sm:rounded-2xl sm:p-1.5", FOCUS)}
+    >
+      {/* Light is the default theme, so it loads first; the dark file is lazy and only fetched once it's shown. */}
+      {/* eslint-disable-next-line @next/next/no-img-element -- pre-sized WebPs with their own srcset */}
+      <img src="/brand/home-care-schedule-light-1280.webp" srcSet={scheduleSrcSet("light")} sizes={SCHEDULE_SIZES} width={1280} height={855} alt="" fetchPriority="high" className={cx(img, "dark:hidden")} />
+      {/* eslint-disable-next-line @next/next/no-img-element -- pre-sized WebPs with their own srcset */}
+      <img src="/brand/home-care-schedule-dark-1280.webp" srcSet={scheduleSrcSet("dark")} sizes={SCHEDULE_SIZES} width={1280} height={855} alt="" loading="lazy" className={cx(img, "hidden dark:block")} />
+    </Link>
+  );
+}
+
 function Hero() {
   return (
     <section className="pt-16 sm:pt-24">
@@ -593,28 +614,42 @@ function Hero() {
             Try the agent demo
           </Link>
         </div>
+        {/* Two phrases that wrap as wholes: one line on wide screens, one phrase per line on a phone. */}
         <p className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-site-body text-site-faint">
-          Built by{" "}
-          <a href="https://raycanvas.ai" className={cx(TEXT_LINK, "inline-flex items-center gap-1.5 text-site-lead text-site-ink")}>
-            {/* The mark as a mask, so it takes the link's colour in both themes. */}
-            <span
-              aria-hidden
-              className="inline-block size-5 bg-current"
-              style={{ maskImage: "url(/brand/raycanvas-mark.svg)", maskSize: "contain", maskRepeat: "no-repeat", maskPosition: "center" }}
-            />
-            Raycanvas
-          </a>{" "}
-          · in partnership with{" "}
-          <a href="https://x.com/shadcnlabs" className={cx(TEXT_LINK, "inline-flex items-center gap-1.5 text-site-lead text-site-ink")}>
-            {/* eslint-disable-next-line @next/next/no-img-element -- a 20px avatar, not worth next/image */}
-            <img src="/brand/shadcn-labs.png" alt="" width={20} height={20} className="size-5 rounded-md" />
-            Shadcn Labs
-          </a>
+          <span className="inline-flex items-center gap-2">
+            Built by
+            <a href="https://raycanvas.ai" className={cx(TEXT_LINK, "inline-flex items-center gap-1.5 text-site-lead text-site-ink")}>
+              {/* The mark as a mask, so it takes the link's colour in both themes. */}
+              <span
+                aria-hidden
+                className="inline-block size-5 bg-current"
+                style={{ maskImage: "url(/brand/raycanvas-mark.svg)", maskSize: "contain", maskRepeat: "no-repeat", maskPosition: "center" }}
+              />
+              Raycanvas
+            </a>
+          </span>
+          <span aria-hidden className="max-sm:hidden">
+            ·
+          </span>
+          <span className="inline-flex items-center gap-2">
+            Backed by
+            <a href="https://x.com/shadcnlabs" className={cx(TEXT_LINK, "inline-flex items-center gap-1.5 text-site-lead text-site-ink")}>
+              {/* eslint-disable-next-line @next/next/no-img-element -- a 20px avatar, not worth next/image */}
+              <img src="/brand/shadcn-labs.png" alt="" width={20} height={20} className="size-5 rounded-md" />
+              Shadcn Labs
+            </a>
+          </span>
         </p>
       </div>
-      <Showcase />
-      <p className={cx(CONTAINER, "mt-6 text-center text-site-body text-site-faint")}>
-        The centre card is live: a scripted agent works it through the real UI SDK bridge.
+      {/* A whole free page in front of the carousel, from its top edge: the cards drift behind it and past its sides. */}
+      <div className="relative">
+        <div className={cx(CONTAINER, "relative z-10 mt-12 max-w-[1088px] sm:mt-14 lg:absolute lg:inset-x-0 lg:top-0 lg:-mt-8")}>
+          <ScheduleShot />
+        </div>
+        <Showcase />
+      </div>
+      <p className={cx(CONTAINER, "mt-6 hidden text-center text-site-body text-site-faint lg:block")}>
+        In front: Home Care Schedule, a free dashboard page. Behind it: Panelo&apos;s components, drifting.
       </p>
     </section>
   );
