@@ -1090,6 +1090,148 @@ const FOOTER_COLUMNS: FooterGroup[][] = [
 
 const FOOTER_HEADING = "w-fit text-site-body-medium text-site-ink";
 
+// The CTA's art: the two hands from Michelangelo's Creation of Adam (public domain, Wikimedia Commons), as a halftone.
+// /brand/hands-density.png is baked offline from the fresco: each pixel is how dense the dots should be there
+// (skin from its warmth against the plaster, his contour strokes cut as gaps between fingers, shading for form,
+// and a fade away from the fingertips so it never ends in a hard edge). Dots are drawn here, at a fixed pitch, so
+// they stay crisp at any width and take the theme's blue.
+// touchX/touchY: where the fingertips meet; reach: how far above them the top of Adam's hand sits (shares of the map).
+// Above that only God's upper arm remains, already faded to scattered dots, so the card may crop it.
+const HANDS = { src: "/brand/hands-density.png", width: 830, height: 225, touchX: 386 / 830, touchY: 117 / 225, reach: 99 / 225 };
+const PITCH = 3;
+const DOT = 2;
+// 8×8 Bayer matrix: an ordered dither, the even printed-grid look of the reference.
+const BAYER8 = [0, 32, 8, 40, 2, 34, 10, 42, 48, 16, 56, 24, 50, 18, 58, 26, 12, 44, 4, 36, 14, 46, 6, 38, 60, 28, 52, 20, 62, 30, 54, 22, 3, 35, 11, 43, 1, 33, 9, 41, 51, 19, 59, 27, 49, 17, 57, 25, 15, 47, 7, 39, 13, 45, 5, 37, 63, 31, 55, 23, 61, 29, 53, 21];
+let handsMap: Promise<ImageData> | null = null;
+const loadHands = () =>
+  (handsMap ??= new Promise<ImageData>((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement("canvas");
+      c.width = HANDS.width;
+      c.height = HANDS.height;
+      const ctx = c.getContext("2d", { willReadFrequently: true })!;
+      ctx.drawImage(img, 0, 0);
+      resolve(ctx.getImageData(0, 0, HANDS.width, HANDS.height));
+    };
+    img.onerror = reject;
+    img.src = HANDS.src;
+  }));
+
+/**
+ * Draws the hands behind a card's copy, fingertips meeting just above the card's heading, sized so the whole
+ * picture fits inside the card. The copy keeps itself readable with a halo in the card's colour (TEXT_HALO).
+ * On first view the dots settle in from the fingertips outward; not with reduced motion.
+ */
+function HalftoneHands() {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = ref.current;
+    const card = canvas?.parentElement;
+    if (!canvas || !card) return;
+    let dots: { x: number; y: number; delay: number }[] = [];
+    let frame = 0;
+    let revealed = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let start = 0;
+
+    const paint = (now: number) => {
+      const ctx = canvas.getContext("2d")!;
+      const dpr = window.devicePixelRatio || 1;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = getComputedStyle(canvas).color;
+      // Before the card is seen nothing shows; once the reveal has run, everything does.
+      const t = revealed ? Infinity : start ? now - start : -1;
+      for (const d of dots) if (t >= d.delay) ctx.fillRect(d.x, d.y, DOT, DOT);
+      if (start && !revealed) {
+        if (t < 1200) frame = requestAnimationFrame(paint);
+        else revealed = true;
+      }
+    };
+
+    const layout = async () => {
+      const map = await loadHands();
+      const { width: w, height: h } = card.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      // Fingertips meet on the centre line, just above the heading; the art is as large as the room above allows
+      // with Adam's hand whole, and never much wider than the card (on phones the arms fade out past the edges).
+      const heading = card.querySelector("h2")?.getBoundingClientRect();
+      const tx = w / 2;
+      const ty = heading ? heading.top - card.getBoundingClientRect().top - 10 : h / 3;
+      const aspect = HANDS.width / HANDS.height;
+      const artH = Math.min((ty - 8) / HANDS.reach, (w * 1.1) / aspect);
+      const artW = artH * aspect;
+      const artX = tx - HANDS.touchX * artW;
+      const artY = ty - HANDS.touchY * artH;
+      const far = Math.hypot(w, h) / 2;
+      dots = [];
+      for (let j = 0, y = 0; y < h; j++, y += PITCH) {
+        for (let i = 0, x = 0; x < w; i++, x += PITCH) {
+          const u = Math.floor(((x - artX) / artW) * HANDS.width);
+          const v = Math.floor(((y - artY) / artH) * HANDS.height);
+          if (u < 0 || v < 0 || u >= HANDS.width || v >= HANDS.height) continue;
+          const density = map.data[(v * HANDS.width + u) * 4] / 255;
+          if (density <= (BAYER8[(j % 8) * 8 + (i % 8)] + 0.5) / 64) continue;
+          // Settle in from the fingertips: nearer dots first, with a little scatter.
+          const delay = (Math.hypot(x - tx, y - ty) / far) * 900 + ((i * 73856093) ^ (j * 19349663)) % 250;
+          dots.push({ x, y, delay });
+        }
+      }
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(paint);
+    };
+
+    const ro = new ResizeObserver(() => void layout());
+    ro.observe(card);
+    // Reveal once, the first time the card comes into view.
+    const io = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting || revealed || start) return;
+      start = performance.now();
+      frame = requestAnimationFrame(paint);
+      io.disconnect();
+    }, { threshold: 0.35 });
+    if (!revealed) io.observe(card);
+    return () => {
+      ro.disconnect();
+      io.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }, []);
+  return <canvas ref={ref} aria-hidden className="pointer-events-none absolute inset-0 size-full text-site-banner-via" />;
+}
+
+// A soft halo in the card's own colour (site-preview, the grey of the pricing cards) around every glyph: the dots behind thin out right at the letters only,
+// so the copy reads cleanly while the hands stay whole around it.
+const TEXT_HALO =
+  "[text-shadow:0_0_4px_var(--color-site-preview),0_0_10px_var(--color-site-preview),0_0_18px_var(--color-site-preview),0_0_28px_var(--color-site-preview)]";
+
+/** The last ask before the footer: start free, or take Pro while the early-bird price lasts. */
+function CtaSection() {
+  return (
+    <section className={cx(CONTAINER, "pb-20 sm:pb-28")}>
+      <div className="relative flex flex-col items-center overflow-hidden rounded-3xl bg-site-preview px-6 pt-24 pb-12 ring-1 ring-site-hairline ring-inset text-center sm:pt-28 sm:pb-14">
+        <HalftoneHands />
+        <h2 className={cx("relative max-w-[640px] text-site-heading text-balance sm:text-site-display-sm", TEXT_HALO)}>
+          <span className="text-site-ink">Ship the dashboard.</span> <span className="text-site-muted">Let agents run it.</span>
+        </h2>
+        <p className={cx("relative mt-4 max-w-[520px] text-site-lead text-pretty text-site-muted", TEXT_HALO)}>
+          Start with the free components, or get every Pro page from ${Math.min(...PLANS.flatMap((p) => (p.price === null ? [] : [p.price])))} once, ${LAUNCH_OFF} off while early bird lasts.
+        </p>
+        <div className="relative mt-8 flex w-full flex-col justify-center gap-2 sm:w-auto sm:flex-row">
+          <Link href="/#pricing" className={pill("primary", "lg")}>
+            Get Pro
+          </Link>
+          <Link href="/components" className={pill("secondary", "lg")}>
+            Browse components
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function SiteFooter() {
   return (
     <footer className="border-t border-site-hairline">
@@ -1129,12 +1271,23 @@ export function SiteFooter() {
           <Logo size={16} />
           <span className="text-site-body-medium text-site-ink">Panelo UI</span>
         </Link>
-        <p>
-          © 2026{" "}
-          <a href="https://raycanvas.ai" className={TEXT_LINK}>
+        <p className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+          © 2026
+          <a href="https://raycanvas.ai" className={cx(TEXT_LINK, "inline-flex items-center gap-1")}>
+            {/* The mark as a mask in ink, so it matches the Shadcn Labs logo in both themes. */}
+            <span
+              aria-hidden
+              className="inline-block size-4 bg-site-ink"
+              style={{ maskImage: "url(/brand/raycanvas-mark.svg)", maskSize: "contain", maskRepeat: "no-repeat", maskPosition: "center" }}
+            />
             Raycanvas AI
           </a>
-          . All rights reserved.
+          <span>· All rights reserved · Backed by</span>
+          <a href="https://x.com/shadcnlabs" className={cx(TEXT_LINK, "inline-flex items-center gap-1")}>
+            {/* eslint-disable-next-line @next/next/no-img-element -- a 16px avatar, not worth next/image */}
+            <img src="/brand/shadcn-labs.png" alt="" width={16} height={16} className="size-4 rounded" />
+            Shadcn Labs
+          </a>
         </p>
         <p>React 19 · Next.js 16 · Tailwind CSS v4 · Vercel UI SDK</p>
       </div>
@@ -1154,6 +1307,7 @@ export function LandingPage() {
         <TemplatesSection />
         <PricingSection />
         <FaqSection />
+        <CtaSection />
       </main>
       <SiteFooter />
     </div>
