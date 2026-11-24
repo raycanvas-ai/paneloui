@@ -3,7 +3,7 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { RiAddLine, RiArrowRightLine, RiCheckLine, RiCloseLine, RiDeleteBinLine, RiFileCopyLine, RiLoader4Line, RiSparkling2Line } from "@remixicon/react";
+import { RiAddLine, RiArrowRightLine, RiCheckLine, RiCloseLine, RiDeleteBinLine, RiFileCopyLine, RiLoader4Line, RiSparkling2Line, RiVercelFill } from "@remixicon/react";
 import { createAgent, type AgentComponent } from "@ui-sdk/react/agent";
 import { elementOf } from "@ui-sdk/react/observe";
 import { Tabs, TabsIndicator, TabsList, TabsPanel, TabsTab } from "@ui-sdk/react/tabs";
@@ -522,6 +522,15 @@ function Showcase() {
   );
 }
 
+/** shadcn/ui's mark: two parallel strokes, in the current text colour. */
+function ShadcnMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 256 256" aria-hidden className={className}>
+      <path d="M208 128 128 208M192 40 40 192" fill="none" stroke="currentColor" strokeWidth="32" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function Hero() {
   return (
     <section className="pt-16 sm:pt-24">
@@ -530,7 +539,19 @@ function Hero() {
         <h1 className="mt-6 max-w-[920px] text-site-display-sm text-balance sm:text-site-display lg:text-[4.75rem] lg:leading-[1.02] lg:tracking-[-0.045em]">
           <span className="text-site-ink">Dashboards AI agents can operate.</span> <span className="text-site-muted">Your users click. Agents act.</span>
         </h1>
-        <p className="mt-6 max-w-[520px] text-site-lead text-pretty text-site-muted">React components, charts and full pages on Vercel&apos;s UI SDK.</p>
+        <p className="mt-6 max-w-[720px] text-site-lead text-pretty text-site-muted">
+          React components, charts and full pages on{" "}
+          <span className="whitespace-nowrap text-site-ink">
+            <RiVercelFill aria-hidden className="me-1 inline size-[0.85em] align-[-0.05em]" />
+            Vercel&apos;s UI SDK
+          </span>{" "}
+          and{" "}
+          <span className="whitespace-nowrap text-site-ink">
+            <ShadcnMark className="me-1 inline size-[0.9em] align-[-0.1em]" />
+            shadcn/ui
+          </span>
+          .
+        </p>
         <div className="mt-9 flex w-full flex-col justify-center gap-2 sm:w-auto sm:flex-row">
           <Link href="/components" className={pill("primary", "lg")}>
             Browse components
@@ -539,6 +560,19 @@ function Hero() {
             Try the agent demo
           </Link>
         </div>
+        <p className="mt-6 text-site-body text-site-faint">
+          Built by{" "}
+          <a href="https://raycanvas.ai" className={cx(TEXT_LINK, "inline-flex items-center gap-1 align-bottom text-site-ink")}>
+            {/* The mark as a mask, so it takes the link's colour in both themes. */}
+            <span
+              aria-hidden
+              className="inline-block size-3.5 bg-current"
+              style={{ maskImage: "url(/brand/raycanvas-mark.svg)", maskSize: "contain", maskRepeat: "no-repeat", maskPosition: "center" }}
+            />
+            Raycanvas
+          </a>{" "}
+          · in partnership with <span className="text-site-ink">shadcn labs</span>
+        </p>
       </div>
       <Showcase />
       <p className={cx(CONTAINER, "mt-6 text-center text-site-body text-site-faint")}>
