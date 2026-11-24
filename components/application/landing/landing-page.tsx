@@ -1066,6 +1066,23 @@ export function SiteFooter() {
             <span className="text-site-body-medium text-site-ink">Panelo UI</span>
           </Link>
           <p className="max-w-[260px] text-site-body text-site-muted">Agent-ready React dashboards, built on Vercel&apos;s UI SDK.</p>
+          <p className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-site-body text-site-faint">
+            From the creators of
+            <a href="https://ruixen.com" className={cx(TEXT_LINK, "inline-flex items-center gap-1 text-site-ink")}>
+              {/* eslint-disable-next-line @next/next/no-img-element -- a 16px logo, not worth next/image */}
+              <img src="/brand/ruixen-ui.png" alt="" width={16} height={16} className="size-4 rounded" />
+              Ruixen UI
+            </a>
+            and
+            <a href="https://snapcn.dev" className={cx(TEXT_LINK, "inline-flex items-center gap-1 text-site-ink")}>
+              <span
+                aria-hidden
+                className="inline-block size-4 bg-current"
+                style={{ maskImage: "url(/brand/snapcn-mark.svg)", maskSize: "contain", maskRepeat: "no-repeat", maskPosition: "center" }}
+              />
+              snapcn
+            </a>
+          </p>
         </div>
         <nav aria-label="Footer" className="grid grid-cols-2 gap-x-16 gap-y-10 sm:grid-cols-4">
           {FOOTER_COLUMNS.map((column) => (
