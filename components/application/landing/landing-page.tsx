@@ -14,8 +14,8 @@ import { FAQ } from "@/components/application/site/faq";
 import { LAUNCH_OFF, PLANS } from "@/components/application/site/pricing";
 import { ScreenFrame } from "@/components/application/docs/preview-frames";
 import { AuthButton } from "@/components/application/site/auth-button";
-import { GitHubStars } from "@/components/application/site/github-stars";
 import { CONTAINER, FOCUS, SECTION, TEXT_LINK } from "@/components/application/site/layout-classes";
+import { GitHubLink } from "@/components/application/site/github-link";
 import { pill } from "@/components/application/site/site-ui";
 import { ThemeToggle } from "@/components/application/theme/theme-toggle";
 import { Logo } from "@/components/foundations/brand/logo";
@@ -197,7 +197,7 @@ export function SiteHeader() {
           </nav>
         </div>
         <div className="flex items-center gap-2">
-          <GitHubStars className="hidden lg:inline-flex" />
+          <GitHubLink className="hidden lg:inline-flex" />
           {/* A short reveal: the page behind it is heavy (live wall, iframes), and the browser freezes it
               for the whole transition, so the default 820ms read as stuck. */}
           <ThemeToggle appearance="segmented" size="small" transitionDuration={280} className="hidden sm:inline-flex" />
