@@ -10,9 +10,9 @@ import { SITE } from "@/components/application/site/templates";
 export const BRAND = "Panelo UI";
 export const shippedEntries = ALL_ENTRIES.filter((e) => e.status === "shipped");
 
-// The site-wide share card (app/opengraph-image.tsx). Named here because a page that sets its own
+// The site-wide share card (app/opengraph-image.png). Named here because a page that sets its own
 // openGraph replaces the inherited one, image included; a route's own opengraph-image file still wins.
-const SHARE_IMAGE = "/opengraph-image";
+const SHARE_IMAGE = { url: "/opengraph-image.png", width: 1200, height: 630, alt: "Panelo UI: React dashboard components AI agents can operate" };
 
 /** A page's canonical URL and matching Open Graph fields, so shares and search agree on the address. */
 export function pageMeta(path: string, title: string, description: string, extra: Metadata = {}): Metadata {
