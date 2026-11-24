@@ -25,7 +25,7 @@ export default async function LegalPage({ params }: { params: Promise<{ doc: str
       <SiteHeader />
       <main className="mx-auto w-full max-w-[1152px] flex-1 px-6 py-16 sm:py-24">
         <div className="grid gap-12 lg:grid-cols-[200px_1fr]">
-          <nav aria-label="Legal" className="flex gap-1 lg:flex-col">
+          <nav aria-label="Legal" className="flex flex-wrap gap-1 lg:flex-col">
             {LEGAL.map((d) => (
               <Link
                 key={d.slug}
