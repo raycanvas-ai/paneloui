@@ -73,12 +73,12 @@ export function LookPlayer({ className }: { className?: string }) {
 
   if (!current) {
     return (
-      <button type="button" onClick={start} className={cx(shell, "group cursor-pointer gap-2.5 ps-2 pe-1.5 transition-shadow duration-150 hover:ring-site-ring", ring, className)}>
+      <button type="button" onClick={start} className={cx(shell, "group cursor-pointer gap-2.5 px-1.5 transition-shadow duration-150 hover:ring-site-ring", ring, className)}>
         {/* A little palette: four of the themes' accents, fanning out on hover. */}
         <span aria-hidden className="flex">
           {["dark", "sand", "ocean", "forest"].map((id, i) => {
             const l = LOOKS.find((x) => x.id === id)!;
-            return <span key={id} className={cx("size-[18px] rounded-full ring-2 ring-site-surface transition-[margin] duration-200 ease-out", i > 0 && "-ms-1.5 group-hover:-ms-0.5")} style={{ background: id === "dark" ? l.swatch[0] : l.swatch[2] }} />;
+            return <span key={id} className={cx("size-6 rounded-full ring-2 ring-site-surface transition-[margin] duration-200 ease-out", i > 0 && "-ms-2 group-hover:-ms-1")} style={{ background: id === "dark" ? l.swatch[0] : l.swatch[2] }} />;
           })}
         </span>
         <span className="text-site-body-medium text-site-ink">Preview themes</span>
