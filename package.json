@@ -17,6 +17,7 @@
     "@auth/core": "^0.41.2",
     "@auth/drizzle-adapter": "^1.11.2",
     "@internationalized/date": "^3.12.1",
+    "@keyline-icons/react": "^2.9.0",
     "@radix-ui/react-slot": "^1.5.0",
     "@remixicon/react": "^4.9.0",
     "@tanstack/react-table": "^8.21.3",
