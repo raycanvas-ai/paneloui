@@ -589,7 +589,11 @@ function Hero() {
   return (
     <section className="pt-16 sm:pt-24">
       <div className={cx(CONTAINER, "flex flex-col items-center text-center")}>
-        <ArrowLink href={AGENT_DEMO}>New: watch an AI agent run a live dashboard</ArrowLink>
+        <Link href="/#pricing" className={cx("group inline-flex items-center gap-2 rounded-full bg-site-pro py-1 ps-1 pe-3 text-site-body-medium text-site-pro-text shadow-site-pro transition-[filter] duration-150 hover:brightness-[0.97]", FOCUS)}>
+          <span className="rounded-full bg-site-pro px-2 py-0.5 text-site-chip shadow-site-pro">${LAUNCH_OFF} OFF</span>
+          Early-bird launch deal
+          <RiArrowRightLine className="size-4 transition-transform duration-150 group-hover:translate-x-0.5 motion-reduce:transition-none" aria-hidden />
+        </Link>
         <h1 className="mt-6 max-w-[920px] text-site-display-sm text-balance sm:text-site-display lg:text-[4.75rem] lg:leading-[1.02] lg:tracking-[-0.045em]">
           <span className="text-site-ink">Dashboards AI agents can operate.</span> <span className="text-site-muted">Your users click. Agents act.</span>
         </h1>
@@ -1023,29 +1027,18 @@ function FaqSection() {
   );
 }
 
-const FOOTER_COLUMNS = [
-  {
-    title: "Product",
-    links: [
-      { label: "Templates", href: "/templates" },
-      { label: "Agent demo", href: AGENT_DEMO },
-      { label: "Pricing", href: "/#pricing" },
-      { label: "Blog", href: "/blog" },
-    ],
-  },
-  {
-    title: "Legal",
-    links: [
-      { label: "Licence", href: "/legal/licence" },
-      { label: "Terms", href: "/legal/terms" },
-      { label: "Privacy", href: "/legal/privacy" },
-      { label: "Refunds", href: "/legal/refunds" },
-    ],
-  },
-];
+type FooterLink = { label: string; href: string };
+type FooterGroup = { title: string; href?: string; links: FooterLink[]; more?: FooterLink };
+
+const shipped = (id: string): FooterLink[] =>
+  sectionOf(id)
+    .filter((e) => e.status === "shipped")
+    .map((e) => ({ label: e.name, href: e.href }));
+
+const group = (id: string, title: string): FooterGroup => ({ title, href: `/components#${id}`, links: shipped(id) });
 
 // The guides linked from every page: the pillar posts and the comparisons buyers search for.
-const FOOTER_GUIDES = [
+const FOOTER_GUIDES: FooterLink[] = [
   { label: "Vercel's UI SDK explained", href: "/blog/vercel-ui-sdk-explained" },
   { label: "What is agent-ready UI?", href: "/blog/what-is-agent-ready-ui" },
   { label: "shadcn heatmap chart", href: "/blog/shadcn-heatmap-chart" },
@@ -1056,91 +1049,92 @@ const FOOTER_GUIDES = [
   { label: "Design tokens in Tailwind CSS v4", href: "/blog/design-tokens-tailwind-v4" },
 ];
 
+// Five columns, each a stack of groups, so short lists sit under each other instead of leaving holes.
+// Every component and the key guides get one link each: a way in from any page, for people and crawlers.
+const FOOTER_COLUMNS: FooterGroup[][] = [
+  [{ ...group("dashboard-pages", "Dashboard pages"), more: { label: "All components", href: "/components" } }],
+  [group("charts", "Charts"), group("elements", "Elements")],
+  [group("login-pages", "Login pages"), group("profile-pages", "Profile pages"), group("sidebars", "Sidebars"), group("calendars", "Calendars")],
+  [{ title: "Guides", href: "/blog", links: FOOTER_GUIDES, more: { label: "All guides", href: "/blog" } }],
+  [
+    {
+      title: "Product",
+      links: [
+        { label: "Components", href: "/components" },
+        { label: "Templates", href: "/templates" },
+        { label: "Agent demo", href: AGENT_DEMO },
+        { label: "Pricing", href: "/#pricing" },
+        { label: "Blog", href: "/blog" },
+      ],
+    },
+    {
+      title: "Legal",
+      links: [
+        { label: "Licence", href: "/legal/licence" },
+        { label: "Terms", href: "/legal/terms" },
+        { label: "Privacy", href: "/legal/privacy" },
+        { label: "Refunds", href: "/legal/refunds" },
+      ],
+    },
+    {
+      title: "Our network",
+      links: [
+        { label: "Raycanvas", href: "https://raycanvas.ai" },
+        { label: "Shadcn Labs", href: "https://x.com/shadcnlabs" },
+        { label: "Ruixen UI", href: "https://ruixen.com" },
+        { label: "snapcn", href: "https://snapcn.dev" },
+      ],
+    },
+  ],
+];
+
+const FOOTER_HEADING = "w-fit text-site-body-medium text-site-ink";
+
 export function SiteFooter() {
   return (
     <footer className="border-t border-site-hairline">
-      <div className={cx(CONTAINER, "flex flex-col gap-12 pt-16 pb-10 md:flex-row md:justify-between")}>
-        <div className="flex flex-col gap-3">
-          <Link href="/" className={cx("flex w-fit items-center gap-2 rounded-md", FOCUS)}>
-            <Logo size={16} />
-            <span className="text-site-body-medium text-site-ink">Panelo UI</span>
-          </Link>
-          <p className="max-w-[260px] text-site-body text-site-muted">Agent-ready React dashboards, built on Vercel&apos;s UI SDK.</p>
-          <p className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-site-body text-site-faint">
-            From the creators of
-            <a href="https://ruixen.com" className={cx(TEXT_LINK, "inline-flex items-center gap-1 text-site-ink")}>
-              {/* eslint-disable-next-line @next/next/no-img-element -- a 16px logo, not worth next/image */}
-              <img src="/brand/ruixen-ui.png" alt="" width={16} height={16} className="size-4 rounded" />
-              Ruixen UI
-            </a>
-            and
-            <a href="https://snapcn.dev" className={cx(TEXT_LINK, "inline-flex items-center gap-1 text-site-ink")}>
-              <span
-                aria-hidden
-                className="inline-block size-4 bg-current"
-                style={{ maskImage: "url(/brand/snapcn-mark.svg)", maskSize: "contain", maskRepeat: "no-repeat", maskPosition: "center" }}
-              />
-              snapcn
-            </a>
-          </p>
-        </div>
-        <nav aria-label="Footer" className="grid grid-cols-2 gap-x-16 gap-y-10">
-          {FOOTER_COLUMNS.map((column) => (
-            <div key={column.title} className="flex flex-col gap-2.5">
-              <span className="text-site-body-medium text-site-ink">{column.title}</span>
-              {column.links.map((link) => (
-                <Link key={link.label} href={link.href} className={cx(TEXT_LINK, "w-fit text-site-body")}>
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          ))}
-        </nav>
-      </div>
-      {/* Every component and the key guides, one link each: a way in from any page, for people and crawlers. */}
-      <div className={CONTAINER}>
-        <nav aria-label="All components" className="grid grid-cols-2 gap-x-8 gap-y-10 border-t border-site-hairline py-12 sm:grid-cols-3 lg:grid-cols-4">
-          {COMPONENT_SECTIONS.map((section) => {
-            const entries = section.entries.filter((e) => e.status === "shipped");
-            return entries.length ? (
-              <div key={section.id} className="flex flex-col gap-2.5">
-                <Link href={`/components#${section.id}`} className={cx(TEXT_LINK, "w-fit text-site-body-medium text-site-ink")}>
-                  {section.title}
-                </Link>
-                {entries.map((entry) => (
-                  <Link key={entry.href} href={entry.href} className={cx(TEXT_LINK, "w-fit text-site-body")}>
-                    {entry.name}
-                    {entry.tier === "pro" && <span className="ms-1.5 text-site-faint">Pro</span>}
+      <nav aria-label="Footer" className={cx(CONTAINER, "grid grid-cols-2 gap-x-8 gap-y-12 pt-16 pb-14 sm:grid-cols-3 lg:grid-cols-5")}>
+        {FOOTER_COLUMNS.map((column, i) => (
+          <div key={i} className="flex flex-col gap-12">
+            {column.map((g) => (
+              <div key={g.title} className="flex flex-col gap-3">
+                {g.href ? (
+                  <Link href={g.href} className={cx(FOCUS, "rounded-sm", FOOTER_HEADING)}>
+                    {g.title}
                   </Link>
-                ))}
+                ) : (
+                  <span className={FOOTER_HEADING}>{g.title}</span>
+                )}
+                <ul className="flex flex-col gap-2.5">
+                  {g.links.map((link) => (
+                    <li key={link.href}>
+                      <Link href={link.href} className={cx(TEXT_LINK, "text-site-body")}>
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+                {g.more && (
+                  <ArrowLink href={g.more.href} className="w-fit text-site-ink">
+                    {g.more.label}
+                  </ArrowLink>
+                )}
               </div>
-            ) : null;
-          })}
-          <div className="flex flex-col gap-2.5">
-            <Link href="/blog" className={cx(TEXT_LINK, "w-fit text-site-body-medium text-site-ink")}>
-              Guides
-            </Link>
-            {FOOTER_GUIDES.map((guide) => (
-              <Link key={guide.href} href={guide.href} className={cx(TEXT_LINK, "w-fit text-site-body")}>
-                {guide.label}
-              </Link>
             ))}
-            <Link href="/blog" className={cx(TEXT_LINK, "w-fit text-site-body text-site-ink")}>
-              All guides
-            </Link>
           </div>
-        </nav>
-      </div>
-      <div className={cx(CONTAINER, "flex flex-wrap justify-between gap-x-6 gap-y-2 pb-12 text-site-body text-site-faint")}>
+        ))}
+      </nav>
+      <div className={cx(CONTAINER, "flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-t border-site-hairline py-8 text-site-body text-site-faint")}>
+        <Link href="/" className={cx("flex items-center gap-2 rounded-md", FOCUS)}>
+          <Logo size={16} />
+          <span className="text-site-body-medium text-site-ink">Panelo UI</span>
+        </Link>
         <p>
-          © 2026 Panelo UI · Built by{" "}
+          © 2026{" "}
           <a href="https://raycanvas.ai" className={TEXT_LINK}>
-            Raycanvas
-          </a>{" "}
-          · Backed by{" "}
-          <a href="https://x.com/shadcnlabs" className={TEXT_LINK}>
-            Shadcn Labs
+            Raycanvas AI
           </a>
+          . All rights reserved.
         </p>
         <p>React 19 · Next.js 16 · Tailwind CSS v4 · Vercel UI SDK</p>
       </div>
