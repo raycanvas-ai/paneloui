@@ -21,7 +21,7 @@ export function GET() {
     "",
     "## About",
     "",
-    `- Built by [${MAKER.name}](${MAKER.url}), in partnership with [${PARTNER.name}](${PARTNER.url}). From the creators of ${SIBLINGS.map((s) => `[${s.name}](${s.url})`).join(" and ")}.`,
+    `- Built by [${MAKER.name}](${MAKER.url}), backed by [${PARTNER.name}](${PARTNER.url}). From the creators of ${SIBLINGS.map((s) => `[${s.name}](${s.url})`).join(" and ")}.`,
     `- Built on [Vercel's UI SDK](${UI_SDK_URL}): every control exposes itself to agents, which read the page as named controls and act through the same component API a click uses.`,
     "- Works in any shadcn/ui project: items install with the shadcn CLI into components/panelo-ui, next to components/ui.",
     "- Stack: React 19, Next.js 16, Tailwind CSS v4. Light and dark themes on every item.",

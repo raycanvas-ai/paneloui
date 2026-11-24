@@ -6,7 +6,7 @@
 
 [Website](https://www.paneloui.com) · [Components](https://www.paneloui.com/components) · [Agent demo](https://www.paneloui.com/agent-demo) · [Pricing](https://www.paneloui.com/#pricing) · [llms.txt](https://www.paneloui.com/llms.txt)
 
-Built by [Raycanvas](https://raycanvas.ai) in partnership with [Shadcn Labs](https://x.com/shadcnlabs). From the creators of [Ruixen UI](https://ruixen.com) and [snapcn](https://snapcn.dev).
+Built by [Raycanvas](https://raycanvas.ai). Backed by [Shadcn Labs](https://x.com/shadcnlabs). From the creators of [Ruixen UI](https://ruixen.com) and [snapcn](https://snapcn.dev).
 
 ## At a glance
 
@@ -18,7 +18,7 @@ Built by [Raycanvas](https://raycanvas.ai) in partnership with [Shadcn Labs](htt
 | **Stack** | React 19, Next.js 16, Tailwind CSS v4, light and dark themes |
 | **Install** | `npx shadcn@latest add @panelo/<item>` |
 | **License** | Free components: MIT. Pro: one-time purchase, no subscription |
-| **Built by** | Raycanvas, in partnership with Shadcn Labs |
+| **Built by** | Raycanvas, backed by Shadcn Labs |
 
 ## Install a component
 
@@ -66,7 +66,7 @@ Pro is a one-time payment with no subscription; current plans and prices are on 
 A React and Tailwind CSS library of dashboard components, charts and pages for shadcn/ui, built on Vercel's UI SDK so AI agents can operate them.
 
 **Who builds Panelo UI?**
-[Raycanvas](https://raycanvas.ai), in partnership with [Shadcn Labs](https://x.com/shadcnlabs). The same team created [Ruixen UI](https://ruixen.com) and [snapcn](https://snapcn.dev).
+[Raycanvas](https://raycanvas.ai), backed by [Shadcn Labs](https://x.com/shadcnlabs). The same team created [Ruixen UI](https://ruixen.com) and [snapcn](https://snapcn.dev).
 
 **Is Panelo UI free?**
 The components in this repository are free and MIT-licensed, for personal and commercial projects. Panelo Pro adds full dashboard pages, calendars and templates for a one-time price.
@@ -109,7 +109,7 @@ Pro source lives in `components/panelo/pro/` (gitignored) in checkouts that have
 ## Credits
 
 - [Raycanvas](https://raycanvas.ai): builds and maintains Panelo UI.
-- [Shadcn Labs](https://x.com/shadcnlabs): partner.
+- [Shadcn Labs](https://x.com/shadcnlabs): backs Panelo UI.
 - [Vercel's UI SDK](https://ui-sdk.dev): the agent-ready parts every block is built from.
 - [shadcn/ui](https://ui.shadcn.com): the registry and CLI Panelo installs through.
 - [Remix Icon](https://remixicon.com): icons.
