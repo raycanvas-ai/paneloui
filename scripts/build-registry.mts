@@ -138,7 +138,12 @@ for (const dir of [FREE_OUT, PRO_OUT, FREE_TEMPLATES_OUT]) {
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir, { recursive: true });
 }
-const write = (dir: string, data: { name: string }) => writeFileSync(join(dir, `${data.name}.json`), JSON.stringify(data, null, 2));
+type Written = { name: string; type: string; title: string; description: string };
+const index: Written[] = [];
+const write = (dir: string, data: Written) => {
+  writeFileSync(join(dir, `${data.name}.json`), JSON.stringify(data, null, 2));
+  if (dir === FREE_OUT) index.push({ name: data.name, type: data.type, title: data.title, description: data.description });
+};
 
 write(FREE_OUT, theme());
 write(
@@ -164,6 +169,9 @@ for (const e of catalogue) {
   else free++;
 }
 if (missing.length) throw new Error(`Free catalogue items with no preview entry: ${missing.join(", ")}`);
+// The index shadcn's registry directory and `shadcn search @panelo` read. Free items only, and no file
+// contents: those stay in each item's own JSON.
+writeFileSync(join(FREE_OUT, "registry.json"), JSON.stringify({ $schema: "https://ui.shadcn.com/schema/registry.json", name: "panelo", homepage: SITE, items: index }, null, 2));
 console.log(`Registry: ${free} free items + panelo-theme + agent-kit in public/r, ${pro} Pro items in registry-pro (private).`);
 
 // --- Templates: one tarball each, its folder at the top, so `tar -xz` makes ./<slug>. --------------------
