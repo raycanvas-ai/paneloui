@@ -58,21 +58,17 @@ export function Scaled({ width, children }: { width: number; children: ReactNode
 }
 
 /**
- * A whole screen centred and scaled into a preview: a 1280×855 desktop canvas, or a
- * 390×844 phone below `sm` so the screen lays itself out as a phone.
+ * A whole screen scaled into a preview: always the 1280×855 desktop canvas, so a phone sees the complete
+ * page in miniature (as on the component page), not the screen reflowed into a cramped phone layout.
  */
 export function TemplateFrame({ children }: { children: ReactNode }) {
-  const { ref, scale } = useMeasuredScale((available, sm) => (sm ? (available - 24) / 1280 : Math.min(available - 24, 300) / 390));
+  const { ref, scale } = useMeasuredScale((available) => (available - 24) / 1280);
 
   return (
     <div ref={ref} className="absolute inset-0 flex items-center justify-center overflow-hidden">
       <div
-        className={
-          "shrink-0 overflow-hidden rounded-[34px] border-[3px] border-border-button-default " +
-          "h-[844px] w-[390px] [--tpl-w:390px] [--tpl-fit:min(calc(100cqw_-_24px),300px)] [--template-preview-height:844px] " +
-          "sm:h-[855px] sm:w-[1280px] sm:[--tpl-w:1280px] sm:[--tpl-fit:calc(100cqw_-_24px)] sm:[--template-preview-height:855px]"
-        }
-        style={{ transform: scale === null ? "scale(calc(tan(atan2(var(--tpl-fit), var(--tpl-w)))))" : `scale(${scale})` }}
+        className="h-[855px] w-[1280px] shrink-0 overflow-hidden rounded-[34px] border-[3px] border-border-button-default [--template-preview-height:855px]"
+        style={{ transform: scale === null ? "scale(calc(tan(atan2(calc(100cqw - 24px), 1280px))))" : `scale(${scale})` }}
       >
         {children}
       </div>
@@ -99,6 +95,5 @@ export function ScreenFrame({ width = 1280, height = 855, children }: { width?: 
 /** Card sizing for screen previews: the preview area is exactly the scaled canvas plus 12px around it. */
 export const TEMPLATE_CARD = {
   className: "h-auto xl:h-auto",
-  previewClassName:
-    "h-[calc(min(100cqw-24px,300px)*844/390+24px)] sm:h-[calc((100cqw-24px)*855/1280+24px)] xl:h-[calc((100cqw-24px)*855/1280+24px)]",
+  previewClassName: "h-[calc((100cqw-24px)*855/1280+24px)]",
 };
