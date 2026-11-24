@@ -3,7 +3,7 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { RiAddLine, RiArrowRightLine, RiCheckLine, RiCloseLine, RiDeleteBinLine, RiFileCopyLine, RiLoader4Line, RiSparkling2Line, RiVercelFill } from "@remixicon/react";
+import { RiAddLine, RiArrowRightLine, RiCheckLine, RiCloseLine, RiDeleteBinLine, RiFileCopyLine, RiLoader4Line, RiMenuLine, RiSparkling2Line, RiVercelFill } from "@remixicon/react";
 import { createAgent, type AgentComponent } from "@ui-sdk/react/agent";
 import { elementOf } from "@ui-sdk/react/observe";
 import { Tabs, TabsIndicator, TabsList, TabsPanel, TabsTab } from "@ui-sdk/react/tabs";
@@ -19,6 +19,7 @@ import { GitHubLink } from "@/components/application/site/github-link";
 import { pill } from "@/components/application/site/site-ui";
 import { ThemeToggle } from "@/components/application/theme/theme-toggle";
 import { Logo } from "@/components/foundations/brand/logo";
+import { Sheet, SheetContent, SheetTitle } from "@/components/panelo/ui/sheet";
 import { ActivityHeatmap } from "@/components/panelo/blocks/charts/activity-heatmap";
 import { BalanceChart } from "@/components/panelo/blocks/charts/balance-chart";
 import { ContributionChart } from "@/components/panelo/blocks/charts/contribution-chart";
@@ -157,6 +158,7 @@ export function ScreenWindow({ children }: { children: ReactNode }) {
 export function SiteHeader() {
   const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -182,13 +184,13 @@ export function SiteHeader() {
         scrolled ? "border-site-hairline" : "border-transparent",
       )}
     >
-      <div className={cx(CONTAINER, "flex h-14 items-center justify-between gap-6")}>
+      <div className={cx(CONTAINER, "flex h-14 items-center justify-between gap-2 sm:gap-6")}>
         <div className="flex items-center gap-10">
           <Link href="/" className={cx("flex items-center gap-2 rounded-md", FOCUS)}>
             <Logo size={18} />
             <span className="text-site-body-medium text-site-ink">Panelo UI</span>
           </Link>
-          <nav aria-label="Main" className="hidden items-center gap-7 md:flex">
+          <nav aria-label="Main" className="hidden items-center gap-7 lg:flex">
             {NAV.map((item) => (
               <Link key={item.label} href={item.href} className={cx(TEXT_LINK, "text-site-body")}>
                 {item.label}
@@ -205,8 +207,38 @@ export function SiteHeader() {
           <Link href="/components" className={pill("primary")}>
             Browse components
           </Link>
+          <button type="button" aria-label="Open menu" onClick={() => setMenuOpen(true)} className={pill("ghost", "sm", "w-7 px-0 lg:hidden")}>
+            <RiMenuLine aria-hidden />
+          </button>
         </div>
       </div>
+      {/* Below lg the links move into a drawer: it slides, traps focus, closes on Escape or a swipe. */}
+      <Sheet side="right" open={menuOpen} onOpenChange={setMenuOpen}>
+        <SheetContent className="w-72 max-w-[85vw] gap-0 rounded-none border-0 bg-site-page p-0 lg:hidden" overlayClassName="lg:hidden">
+          <SheetTitle className="sr-only">Menu</SheetTitle>
+          <div className="flex h-14 items-center justify-between px-5">
+            <Link href="/" onClick={() => setMenuOpen(false)} className={cx("flex items-center gap-2 rounded-md", FOCUS)}>
+              <Logo size={18} />
+              <span className="text-site-body-medium text-site-ink">Panelo UI</span>
+            </Link>
+            <button type="button" aria-label="Close menu" onClick={() => setMenuOpen(false)} className={pill("ghost", "sm", "w-7 px-0")}>
+              <RiCloseLine aria-hidden />
+            </button>
+          </div>
+          <nav aria-label="Menu" className="flex flex-col border-t border-site-hairline px-5 py-3">
+            {NAV.map((item) => (
+              <Link key={item.label} href={item.href} onClick={() => setMenuOpen(false)} className={cx(TEXT_LINK, "py-3 text-site-question text-site-ink")}>
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+          <div className="mt-auto flex items-center gap-2 border-t border-site-hairline px-5 py-4">
+            <ThemeToggle appearance="segmented" size="small" transitionDuration={280} />
+            <AuthButton />
+            <GitHubLink className="ms-auto" />
+          </div>
+        </SheetContent>
+      </Sheet>
     </header>
   );
 }
