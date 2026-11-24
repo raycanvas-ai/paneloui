@@ -614,32 +614,6 @@ function Hero() {
             Try the agent demo
           </Link>
         </div>
-        {/* Two phrases that wrap as wholes: one line on wide screens, one phrase per line on a phone. */}
-        <p className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-site-body text-site-faint">
-          <span className="inline-flex items-center gap-2">
-            Built by
-            <a href="https://raycanvas.ai" className={cx(TEXT_LINK, "inline-flex items-center gap-1.5 text-site-lead text-site-ink")}>
-              {/* The mark as a mask, so it takes the link's colour in both themes. */}
-              <span
-                aria-hidden
-                className="inline-block size-5 bg-current"
-                style={{ maskImage: "url(/brand/raycanvas-mark.svg)", maskSize: "contain", maskRepeat: "no-repeat", maskPosition: "center" }}
-              />
-              Raycanvas
-            </a>
-          </span>
-          <span aria-hidden className="max-sm:hidden">
-            ·
-          </span>
-          <span className="inline-flex items-center gap-2">
-            Backed by
-            <a href="https://x.com/shadcnlabs" className={cx(TEXT_LINK, "inline-flex items-center gap-1.5 text-site-lead text-site-ink")}>
-              {/* eslint-disable-next-line @next/next/no-img-element -- a 20px avatar, not worth next/image */}
-              <img src="/brand/shadcn-labs.png" alt="" width={20} height={20} className="size-5 rounded-md" />
-              Shadcn Labs
-            </a>
-          </span>
-        </p>
       </div>
       {/* A whole free page in front of the carousel, from its top edge: the cards drift behind it and past its sides. */}
       <div className="relative">
