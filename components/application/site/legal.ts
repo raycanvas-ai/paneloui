@@ -86,14 +86,16 @@ export const LEGAL: LegalDoc[] = [
         body: [
           "Your account: name, email address and avatar from GitHub or Google, and the id of that sign-in account. We don't keep their access tokens.",
           "Your licences: the Dodo payment id, plan, email paid with, and a one-way fingerprint of your key. The key itself is never stored.",
-          "A session cookie while you're signed in. Your light or dark choice lives in your browser's storage. There are no analytics or advertising trackers.",
+          "A session cookie while you're signed in. Your light or dark choice lives in your browser's storage.",
+          "Analytics, through PostHog: the pages you visit, what you click, where you came from, page speed, errors, and recordings of your visit with everything typed into fields hidden. Licence keys are never recorded. PostHog sets a cookie to recognise a returning browser. There are no advertising trackers.",
+          "What you ask the agent demo, to learn what people want an agent to do.",
         ],
       },
       {
         heading: "What we don't",
         body: [
           "Card details: they go to Dodo Payments and never reach us.",
-          "Access logs: we don't keep them. Your IP address is held in memory for up to 10 minutes, to rate-limit checkout and the registry.",
+          "Access logs: we don't keep them. Your IP address is held in memory for up to 10 minutes, to rate-limit checkout and the registry. PostHog receives and keeps it with your visit, to work out your approximate location.",
         ],
       },
       {
@@ -103,7 +105,7 @@ export const LEGAL: LegalDoc[] = [
       {
         heading: "Who handles it",
         body: [
-          "Hetzner (our server, Germany), Supabase (our database, Frankfurt), Dodo Payments (payments and invoices), GitHub and Google (sign-in), Groq (the demo assistant) and Cloudflare (DNS). Each only gets what its job needs.",
+          "Hetzner (our server, Germany), Supabase (our database, Frankfurt), Dodo Payments (payments and invoices), GitHub and Google (sign-in), Groq (the demo assistant), PostHog (analytics, United States) and Cloudflare (DNS). Each only gets what its job needs.",
         ],
       },
       {
