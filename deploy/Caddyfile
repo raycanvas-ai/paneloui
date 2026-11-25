@@ -1,10 +1,30 @@
 # www is canonical; the bare domain only redirects.
 www.paneloui.com {
 	encode zstd gzip
-	reverse_proxy app:3000 {
-		# The app rate-limits by client IP. There's no Cloudflare in front, so a client-sent
-		# Cf-Connecting-Ip is a forgery: drop it. Caddy sets X-Forwarded-For itself.
-		header_up -Cf-Connecting-Ip
+
+	# PostHog analytics, first-party (lib/analytics.ts posts to /ingest) so ad blockers don't drop it.
+	# Cookies are stripped: the browser would otherwise hand PostHog this site's session cookie.
+	# X-Forwarded-For carries the visitor's IP, which PostHog turns into country and city.
+	handle_path /ingest/static/* {
+		rewrite * /static{path}
+		reverse_proxy https://us-assets.i.posthog.com {
+			header_up Host {upstream_hostport}
+			header_up -Cookie
+		}
+	}
+	handle_path /ingest/* {
+		reverse_proxy https://us.i.posthog.com {
+			header_up Host {upstream_hostport}
+			header_up -Cookie
+		}
+	}
+
+	handle {
+		reverse_proxy app:3000 {
+			# The app rate-limits by client IP. There's no Cloudflare in front, so a client-sent
+			# Cf-Connecting-Ip is a forgery: drop it. Caddy sets X-Forwarded-For itself.
+			header_up -Cf-Connecting-Ip
+		}
 	}
 }
 

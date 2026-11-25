@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { captureError } from "@/lib/analytics";
+
 // After a deploy, a tab opened on the previous build can ask for a JavaScript chunk the new build no
 // longer has. That isn't a bug in the page: the right answer is to load the current build. So a failed
 // chunk reloads once by itself; anything else (or a second failure within a minute) shows the message.
@@ -11,7 +13,10 @@ const KEY = "panelo:reloaded-for-chunk";
 export function useReloadOnStaleChunk(error: Error) {
   const [reloading, setReloading] = useState(false);
   useEffect(() => {
-    if (!CHUNK_FAILURE.test(`${error.name} ${error.message}`)) return;
+    // Both error boundaries come through here, and React swallows what they catch, so report it from here.
+    const stale = CHUNK_FAILURE.test(`${error.name} ${error.message}`);
+    captureError(error, { boundary: true, stale_chunk: stale });
+    if (!stale) return;
     try {
       const last = Number(sessionStorage.getItem(KEY) ?? 0);
       if (Date.now() - last < 60_000) return;
