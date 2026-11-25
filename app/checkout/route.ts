@@ -1,5 +1,6 @@
 import { after } from "next/server";
 
+import { dealExtra, dealFrom } from "@/components/application/site/pricing";
 import { capture, visitorId } from "@/lib/server/analytics";
 import { getUser } from "@/lib/server/auth";
 import { dodo, limited, mode, PRODUCTS, siteOrigin } from "@/lib/server/dodo";
@@ -47,14 +48,24 @@ export async function POST(request: Request) {
       }),
     });
 
-  // If Dodo refuses the code (expired, or not created in this mode), sell at list price rather than fail.
-  const discounted = await create([LAUNCH_CODE]);
-  const session = discounted ?? (await create());
+  // A partner deal from /deal/<code> replaces the launch code (Dodo takes one code, and each deal already
+  // includes the launch discount). If Dodo refuses a code (expired, or not in this mode), try the next:
+  // the deal, then the launch code, then list price rather than fail.
+  // Only for the plans the deal lists (Dodo restricts the code to the same products).
+  const deal = dealFrom(request.headers.get("cookie"));
+  const dealCode = deal && dealExtra(deal, plan as keyof (typeof PRODUCTS)["test_mode"]) > 0 ? deal.code : null;
+  let code: string | null = null;
+  let session: { checkout_url?: string } | null = null;
+  for (const candidate of [...(dealCode ? [dealCode] : []), LAUNCH_CODE, null]) {
+    session = await create(candidate ? [candidate] : undefined);
+    code = candidate ?? null;
+    if (session) break;
+  }
   // Redirect only to Dodo's own checkout, whatever the response holds.
   const target = URL.canParse(session?.checkout_url ?? "") ? new URL(session!.checkout_url!) : null;
   const opened = Boolean(target && target.protocol === "https:" && /(^|\.)dodopayments\.com$/.test(target.hostname));
   after(() =>
-    capture(opened ? "checkout_started" : "checkout_failed", user?.id ?? visitor, { plan, signed_in: Boolean(user), launch_code: discounted ? LAUNCH_CODE : null, $current_url: request.headers.get("referer") }, { request }),
+    capture(opened ? "checkout_started" : "checkout_failed", user?.id ?? visitor, { plan, signed_in: Boolean(user), discount_code: code, $current_url: request.headers.get("referer") }, { request }),
   );
   if (!opened) {
     return new Response("Checkout is unavailable right now. Please try again in a minute.", { status: 502 });

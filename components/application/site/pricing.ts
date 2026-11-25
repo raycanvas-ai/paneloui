@@ -11,6 +11,27 @@ export const LAUNCH_OFF = 50;
 // When the early-bird offer ends (end of November, IST). The launch bar counts down to it and hides after.
 // Keep in step with the code's expiry in Dodo.
 export const LAUNCH_ENDS = new Date("2026-11-30T23:59:59+05:30").getTime();
+
+// Partner deals: dollars off on top of the launch price, for the listed plans. Each is a flat Dodo code of
+// LAUNCH_OFF + extra, restricted in Dodo to the same plans' products. /deal/<code> stores it in DEAL_COOKIE,
+// /checkout applies it in place of the launch code, and the pricing cards show the deal price. Only codes
+// listed here are honoured.
+type PaidPlan = NonNullable<Plan["plan"]>;
+export const DEALS: Record<string, { extra: number; partner: string; plans: PaidPlan[] }> = {
+  // Shadcn Labs' audience: Lifetime for $149 ($80 off the $229 list price).
+  SHADCNLABS20: { extra: 30, partner: "Shadcn Labs", plans: ["lifetime"] },
+};
+export const DEAL_COOKIE = "panelo_deal";
+
+/** The deal a Cookie header (or document.cookie) carries, if it names one listed in DEALS. */
+export function dealFrom(cookies: string | null | undefined) {
+  const code = cookies?.match(new RegExp(`(?:^|;\\s*)${DEAL_COOKIE}=([A-Z0-9]+)`))?.[1];
+  return code && Object.hasOwn(DEALS, code) ? { code, ...DEALS[code] } : null;
+}
+export type Deal = NonNullable<ReturnType<typeof dealFrom>>;
+
+/** The extra a deal takes off this plan: its `extra` for the plans it lists, nothing for the rest. */
+export const dealExtra = (deal: Deal | null, plan: Plan["plan"]) => (deal && plan && deal.plans.includes(plan) ? deal.extra : 0);
 const SHARED = ["Use it in unlimited projects", "Keep the code forever"];
 const PRO = ["Every Pro dashboard page", "Every Pro calendar", "Pro app templates, from Dec 1", "Agent-ready UI SDK parts", "Light and dark themes"];
 
