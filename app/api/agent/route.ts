@@ -1,9 +1,6 @@
 import { groq } from '@ai-sdk/groq'
 import { agentTools } from '@ui-sdk/core/agent'
 import { APICallError, generateText, jsonSchema, LoadAPIKeyError, tool, type JSONSchema7, type ModelMessage } from 'ai'
-import { after } from 'next/server'
-
-import { capture, visitorId } from '@/lib/server/analytics'
 
 // The model plans; the browser runs each snapshot/act/query call against the real components
 // (see `useAgentChat`) and posts the results back here as the next request. No `execute` on the
@@ -86,15 +83,6 @@ export async function POST(request: Request) {
     }
     if (!Array.isArray(messages) || messages.length === 0 || messages.length > 60) return Response.json({ error: 'Invalid request.' }, { status: 400 })
 
-    // One event per thing a person typed; the browser's follow-up requests carrying tool results aren't prompts.
-    // The text is kept (privacy page says so) to learn what people ask an agent-operated dashboard.
-    const last = messages[messages.length - 1]
-    const visitor = visitorId(request)
-    const report = (event: string, properties: Record<string, unknown>) => after(() => capture(event, visitor, properties, { request }))
-    if (last?.role === 'user' && typeof last.content === 'string') {
-        report('agent_demo_prompt', { prompt: last.content.slice(0, 500), turn: messages.filter((m) => m.role === 'user' && typeof m.content === 'string').length })
-    }
-
     try {
         const result = await generateText({
             model: groq(MODEL),
@@ -113,7 +101,6 @@ export async function POST(request: Request) {
         if (content.length === 0) content.push({ type: 'text', text: "I can't help with that one." })
         return Response.json({ content })
     } catch (error) {
-        report('agent_demo_error', { status: APICallError.isInstance(error) ? error.statusCode : null, message: String((error as Error)?.message ?? error).slice(0, 200) })
         if (LoadAPIKeyError.isInstance(error)) return Response.json({ error: NOT_CONFIGURED }, { status: 503 })
         if (APICallError.isInstance(error)) {
             if (error.statusCode === 429) return Response.json({ error: 'The free model is at its limit right now. Try a suggestion, or again in a minute.' }, { status: 429 })
