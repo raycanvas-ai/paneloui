@@ -11,7 +11,8 @@ import { Tabs, TabsIndicator, TabsList, TabsPanel, TabsTab } from "@ui-sdk/react
 import { ALL_ENTRIES, COMPONENT_SECTIONS, installCommand } from "@/components/application/docs/components-index";
 import { AGENT_DEMO } from "@/components/application/docs/docs-shell";
 import { FAQ } from "@/components/application/site/faq";
-import { LAUNCH_OFF, PLANS } from "@/components/application/site/pricing";
+import { dealExtra, LAUNCH_OFF, PLANS } from "@/components/application/site/pricing";
+import { useDeal } from "@/components/application/site/use-deal";
 import { ScreenFrame } from "@/components/application/docs/preview-frames";
 import { AuthButton } from "@/components/application/site/auth-button";
 import { CONTAINER, FOCUS, SECTION, TEXT_LINK } from "@/components/application/site/layout-classes";
@@ -930,68 +931,83 @@ function TemplatesSection() {
  * is lifted with a surface, ring and shadow, not colour.
  */
 function PricingSection() {
+  // A partner deal (/deal/<code>) takes more off the plans it lists; the cards show what checkout will charge.
+  const deal = useDeal();
+  const dealt = PLANS.filter((p) => p.price !== null && dealExtra(deal, p.plan) > 0);
   return (
     <section id="pricing" className={cx(CONTAINER, SECTION, "scroll-mt-14")}>
-      <Heading title="Pay once, own the code." body={`No subscription, and $${LAUNCH_OFF} off every Pro plan while the launch lasts.`} />
+      <Heading
+        title="Pay once, own the code."
+        body={
+          deal && dealt.length
+            ? `No subscription. ${dealt.map((p) => `${p.name} for $${p.price! - deal.extra}`).join(", ")} with ${deal.code} from ${deal.partner}.`
+            : `No subscription, and $${LAUNCH_OFF} off every Pro plan while the launch lasts.`
+        }
+      />
       <ul className="mt-14 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {PLANS.map((plan) => (
-          <li
-            key={plan.name}
-            className={cx(
-              "relative flex flex-col rounded-2xl p-6",
-              plan.featured ? "bg-site-surface shadow-site-raised ring-1 ring-site-ring" : "bg-site-preview ring-1 ring-site-hairline ring-inset",
-            )}
-          >
-            {/* Sits on the card's top edge, so it never shares a line with the plan name. */}
-            {plan.featured && (
-              <span className="absolute -top-[11px] left-1/2 inline-flex h-[22px] -translate-x-1/2 items-center rounded-full bg-site-ink px-2.5 text-site-chip whitespace-nowrap text-site-page">
-                Most popular
-              </span>
-            )}
-            <h3 className="text-site-plan text-site-ink">{plan.name}</h3>
-            {/* Three lines reserved, so a shorter blurb doesn't lift this card's price above its neighbours'. */}
-            <p className="mt-2 min-h-[4.125rem] text-site-body text-pretty text-site-muted">{plan.blurb}</p>
-            <p className="mt-5 flex items-baseline gap-2 tabular-nums">
-              {plan.price !== null && (
-                <span className="text-site-plan text-site-faint line-through">
-                  <span className="sr-only">Was </span>${plan.price + LAUNCH_OFF}
+        {PLANS.map((plan) => {
+          const extra = dealExtra(deal, plan.plan);
+          return (
+            <li
+              key={plan.name}
+              className={cx(
+                "relative flex flex-col rounded-2xl p-6",
+                plan.featured ? "bg-site-surface shadow-site-raised ring-1 ring-site-ring" : "bg-site-preview ring-1 ring-site-hairline ring-inset",
+              )}
+            >
+              {/* Sits on the card's top edge, so it never shares a line with the plan name. */}
+              {plan.featured && (
+                <span className="absolute -top-[11px] left-1/2 inline-flex h-[22px] -translate-x-1/2 items-center rounded-full bg-site-ink px-2.5 text-site-chip whitespace-nowrap text-site-page">
+                  Most popular
                 </span>
               )}
-              <span className="text-site-price text-site-ink">{plan.price === null ? "Free" : `$${plan.price}`}</span>
-            </p>
-            <p className="mt-1 text-site-body text-site-muted">{plan.price === null ? "No card required" : "Paid once, all in Pro"}</p>
-            {/* Buying is a POST, so crawlers and link prefetching never open checkout sessions. */}
-            {plan.plan ? (
-              <form method="post" action="/checkout" className="mt-6">
-                <input type="hidden" name="plan" value={plan.plan} />
-                {/* Autocapture adds the plan to the click, so pricing clicks split by plan before checkout opens. */}
-                <button type="submit" data-ph-capture-attribute-plan={plan.plan} className={pill(plan.featured ? "primary" : "secondary", "lg", "w-full")}>
+              <h3 className="text-site-plan text-site-ink">{plan.name}</h3>
+              {/* Three lines reserved, so a shorter blurb doesn't lift this card's price above its neighbours'. */}
+              <p className="mt-2 min-h-[4.125rem] text-site-body text-pretty text-site-muted">{plan.blurb}</p>
+              <p className="mt-5 flex items-baseline gap-2 tabular-nums">
+                {plan.price !== null && (
+                  <span className="text-site-plan text-site-faint line-through">
+                    <span className="sr-only">Was </span>${plan.price + LAUNCH_OFF}
+                  </span>
+                )}
+                <span className="text-site-price text-site-ink">{plan.price === null ? "Free" : `$${plan.price - extra}`}</span>
+              </p>
+              <p className="mt-1 text-site-body text-site-muted">{plan.price === null ? "No card required" : "Paid once, all in Pro"}</p>
+              {/* Buying is a POST, so crawlers and link prefetching never open checkout sessions. */}
+              {plan.plan ? (
+                <form method="post" action="/checkout" className="mt-6">
+                  <input type="hidden" name="plan" value={plan.plan} />
+                  {/* Autocapture adds the plan to the click, so pricing clicks split by plan before checkout opens. */}
+                  <button type="submit" data-ph-capture-attribute-plan={plan.plan} className={pill(plan.featured ? "primary" : "secondary", "lg", "w-full")}>
+                    {plan.cta}
+                  </button>
+                </form>
+              ) : (
+                <Link href="/components" className={pill("secondary", "lg", "mt-6 w-full")}>
                   {plan.cta}
-                </button>
-              </form>
-            ) : (
-              <Link href="/components" className={pill("secondary", "lg", "mt-6 w-full")}>
-                {plan.cta}
-              </Link>
-            )}
-            {/* The code is already on the checkout when it opens; this says so before the click. */}
-            <p className="mt-3 flex h-5 items-center justify-center gap-1.5 text-site-chip text-site-muted">
-              {plan.price !== null && (
-                <>
-                  <RiCheckLine className="size-3.5 text-site-faint" aria-hidden />${LAUNCH_OFF} off, applied at checkout
-                </>
+                </Link>
               )}
-            </p>
-            <ul className="mt-5 flex flex-col gap-2.5 border-t border-site-hairline pt-6">
-              {plan.features.map((feature) => (
-                <li key={feature} className="flex items-start gap-2.5 text-site-body text-site-ink">
-                  <RiCheckLine className="mt-0.5 size-4 shrink-0 text-site-faint" aria-hidden />
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
+              {/* The code is already on the checkout when it opens; this says so before the click. */}
+              <p className="mt-3 flex h-5 items-center justify-center gap-1.5 text-site-chip text-site-muted">
+                {plan.price !== null && (
+                  <>
+                    <RiCheckLine className="size-3.5 text-site-faint" aria-hidden />
+                    {/* One line: the row is fixed-height so every card's features start level. */}
+                    {extra ? `$${LAUNCH_OFF + extra} off with ${deal!.code}` : `$${LAUNCH_OFF} off, applied at checkout`}
+                  </>
+                )}
+              </p>
+              <ul className="mt-5 flex flex-col gap-2.5 border-t border-site-hairline pt-6">
+                {plan.features.map((feature) => (
+                  <li key={feature} className="flex items-start gap-2.5 text-site-body text-site-ink">
+                    <RiCheckLine className="mt-0.5 size-4 shrink-0 text-site-faint" aria-hidden />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          );
+        })}
       </ul>
       <p className="mt-8 text-center text-site-body text-pretty text-site-muted">
         One-time payment through Dodo Payments, our merchant of record.{" "}

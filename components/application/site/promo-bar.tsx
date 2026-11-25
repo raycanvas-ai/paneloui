@@ -6,7 +6,8 @@ import { usePathname } from "next/navigation";
 import { Gift } from "@keyline-icons/react/duotone";
 import { RiArrowRightLine, RiCloseLine } from "@remixicon/react";
 
-import { LAUNCH_ENDS, LAUNCH_OFF } from "@/components/application/site/pricing";
+import { dealExtra, LAUNCH_ENDS, LAUNCH_OFF, PLANS } from "@/components/application/site/pricing";
+import { useDeal } from "@/components/application/site/use-deal";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
@@ -22,6 +23,7 @@ export function PromoBar() {
   const [open, setOpen] = useState(true);
   // Set after mount so the server and first client render agree; ticks once a second.
   const [now, setNow] = useState<number | null>(null);
+  const deal = useDeal();
   useEffect(() => {
     setNow(Date.now());
     const id = setInterval(() => setNow(Date.now()), 1000);
@@ -44,7 +46,11 @@ export function PromoBar() {
           <Gift className="size-4 shrink-0" aria-hidden />
           <span className="truncate">
             <span className="font-semibold">
-              Early bird – ${LAUNCH_OFF} off Pro
+              {deal
+                ? `${deal.code} – ${PLANS.filter((p) => p.price !== null && dealExtra(deal, p.plan) > 0)
+                    .map((p) => `${p.name} for $${p.price! - deal.extra}`)
+                    .join(", ")}`
+                : `Early bird – $${LAUNCH_OFF} off Pro`}
             </span>
             {now !== null && (
               <span className="tabular-nums">
