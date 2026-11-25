@@ -23,7 +23,7 @@ type ToggleGroupProps = Omit<React.ComponentProps<typeof ToggleGroupPrimitive>, 
 
 const list = (v: string | string[] | undefined) => (v === undefined ? undefined : Array.isArray(v) ? v : v ? [v] : [])
 
-// shadcn's `type="single"` takes and reports one string; ui-sdk always uses an array of pressed toggles.
+// `type="single"` takes and reports one string; the primitive always uses an array of pressed toggles.
 function ToggleGroup({ className, variant, size, children, type = 'single', value, defaultValue, onValueChange, ...props }: ToggleGroupProps) {
     return (
         <ToggleGroupPrimitive

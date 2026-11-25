@@ -25,7 +25,7 @@ function Dialog({ persistentElements = ['[data-agent-approval]'], ...props }: Re
     )
 }
 
-// ui-sdk dialogs need no portal; kept so shadcn call sites still compile.
+// These dialogs need no portal; kept so existing call sites still compile.
 function DialogPortal({ children }: { children?: React.ReactNode }) {
     return <>{children}</>
 }

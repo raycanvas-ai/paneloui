@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { cn } from '@/components/panelo/lib/utils'
 
-// shadcn's Table, unchanged except `containerClassName`: inside a ScrollArea pass `overflow-visible`, so
+// A plain table, with one addition, `containerClassName`: inside a ScrollArea pass `overflow-visible`, so
 // the ScrollArea stays the scroll container and sticky headers and footers stick to it.
 function Table({ className, containerClassName, ...props }: React.ComponentProps<'table'> & { containerClassName?: string }) {
     return (

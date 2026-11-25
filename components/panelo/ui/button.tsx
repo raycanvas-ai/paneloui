@@ -1,5 +1,5 @@
 'use client'
-// Client-only on purpose: imported by server layouts, a bare ui-sdk import there renders as undefined.
+// Client-only on purpose: imported by server layouts, a bare primitive import there renders as undefined.
 
 import * as React from 'react'
 import { Button as ButtonPrimitive, type ButtonActionDetails } from '@ui-sdk/react/button'
@@ -31,7 +31,7 @@ const buttonVariants = cva('cursor-pointer inline-flex items-center justify-cent
     },
 })
 
-// `onClick` keeps shadcn's HTMLButtonElement event so existing handlers type-check; ui-sdk adds `details` (who pressed it).
+// `onClick` keeps the plain HTMLButtonElement event so existing handlers type-check; the primitive adds `details` (who pressed it).
 type ButtonProps = Omit<React.ComponentProps<typeof ButtonPrimitive>, 'onClick'> &
     VariantProps<typeof buttonVariants> & {
         asChild?: boolean

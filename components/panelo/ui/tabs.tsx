@@ -7,7 +7,7 @@ import { cn } from '@/components/panelo/lib/utils'
 
 type TabsProps = Omit<React.ComponentProps<typeof TabsPrimitive>, 'onValueChange'> & { onValueChange?: (value: string) => void }
 
-// shadcn's `onValueChange` reports a string; ui-sdk can report `null` for "nothing selected", which these tabs never allow.
+// `onValueChange` reports a string; the primitive can report `null` for "nothing selected", which these tabs never allow.
 function Tabs({ className, onValueChange, ...props }: TabsProps) {
     return (
         <TabsPrimitive

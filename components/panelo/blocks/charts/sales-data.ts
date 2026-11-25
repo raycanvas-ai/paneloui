@@ -88,7 +88,7 @@ export interface PixelColumn {
 /**
  * Expand a series into per-column pixel heights. Each point becomes
  * `colsPerGroup` columns whose heights follow a soft bell so every group reads
- * as a little mountain with valleys between groups — matching the reference.
+ * as a little mountain with valleys between groups.
  */
 export function buildColumns(series: SeriesPoint[], colsPerGroup: number): PixelColumn[] {
     const columns: PixelColumn[] = []
