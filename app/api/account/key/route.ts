@@ -1,3 +1,6 @@
+import { after } from "next/server";
+
+import { capture } from "@/lib/server/analytics";
 import { getUser } from "@/lib/server/auth";
 import { limited } from "@/lib/server/dodo";
 import { rotateKey } from "@/lib/server/licenses";
@@ -14,5 +17,6 @@ export async function POST(request: Request) {
   const { licenseId } = (await request.json().catch(() => ({}))) as { licenseId?: unknown };
   // Licence ids are UUIDs; anything else would only make the database throw.
   const key = typeof licenseId === "string" && /^[0-9a-f-]{36}$/i.test(licenseId) ? await rotateKey(user.id, licenseId) : null;
+  if (key) after(() => capture("licence_key_generated", user.id, {}, { request }));
   return key ? Response.json({ key }) : Response.json({ error: "No such licence on this account." }, { status: 404 });
 }
