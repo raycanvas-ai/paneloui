@@ -20,6 +20,8 @@ const nextConfig: NextConfig = {
   // Version skew: each deploy gets its own id (the git commit, passed in by compose), so a tab still running
   // the previous build reloads on its next navigation instead of asking for files that are gone.
   deploymentId: process.env.NEXT_DEPLOYMENT_ID || undefined,
+  // The same id on every analytics event (lib/analytics.ts), to compare conversion across releases.
+  env: { NEXT_PUBLIC_DEPLOY_ID: process.env.NEXT_DEPLOYMENT_ID || "dev" },
   // Pin the workspace root to this project so Turbopack never walks up the
   // filesystem looking for a lockfile.
   turbopack: {
