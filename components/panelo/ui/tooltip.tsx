@@ -6,7 +6,7 @@ import { Tooltip as TooltipPrimitive, TooltipContent as TooltipContentPrimitive,
 import { cn } from '@/components/panelo/lib/utils'
 import { slot } from '@/components/panelo/lib/slot'
 
-// ui-sdk needs no provider; this only carries shadcn's `delayDuration` default down to each tooltip.
+// No provider is needed; this only carries the `delayDuration` default down to each tooltip.
 const DelayContext = React.createContext(0)
 
 function TooltipProvider({ delayDuration = 0, children }: { delayDuration?: number; children?: React.ReactNode }) {
@@ -33,7 +33,7 @@ function TooltipTrigger({ asChild, children, ...props }: React.ComponentProps<ty
 }
 
 function TooltipContent({ className, sideOffset = 4, hidden, ...props }: React.ComponentProps<typeof TooltipContentPrimitive> & { hidden?: boolean }) {
-    // shadcn's sidebar passes `hidden` to suppress the tooltip; ui-sdk owns `hidden`, so drop the content instead.
+    // A sidebar may pass `hidden` to suppress the tooltip; the primitive owns `hidden`, so drop the content instead.
     if (hidden) return null
     return (
         <TooltipContentPrimitive

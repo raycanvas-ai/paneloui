@@ -6,7 +6,7 @@ import { Check, Minus } from 'lucide-react'
 
 import { cn } from '@/components/panelo/lib/utils'
 
-// shadcn's Checkbox on ui-sdk's: inside a ui-sdk `CheckboxGroup`, pass `value` per row and `parent` on a
+// Checkbox on the headless primitive: inside a `CheckboxGroup`, pass `value` per row and `parent` on a
 // select-all box, and the group keeps checked / indeterminate in sync.
 function Checkbox({ className, ...props }: Omit<React.ComponentProps<typeof CheckboxPrimitive>, 'children'>) {
     return (

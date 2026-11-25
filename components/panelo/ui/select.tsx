@@ -34,7 +34,7 @@ function SelectTrigger({ className, children, ...props }: WithNodeChildren<React
     )
 }
 
-// shadcn's `position="item-aligned"` is ui-sdk's `alignItemWithTrigger`.
+// `position="item-aligned"` maps to the primitive's `alignItemWithTrigger`.
 function SelectContent({ className, position, ...props }: React.ComponentProps<typeof SelectContentPrimitive> & { position?: 'item-aligned' | 'popper' }) {
     return (
         <SelectContentPrimitive
@@ -46,7 +46,7 @@ function SelectContent({ className, position, ...props }: React.ComponentProps<t
     )
 }
 
-// Radix's SelectLabel heads a group; ui-sdk's SelectLabel names the trigger, so this maps to the group label.
+// SelectLabel heads a group here; the primitive's own SelectLabel names the trigger, so this maps to the group label.
 function SelectLabel({ className, ...props }: React.ComponentProps<typeof SelectGroupLabel>) {
     return (
         <SelectGroupLabel

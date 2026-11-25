@@ -14,8 +14,8 @@ import {
 import { cn } from '@/components/panelo/lib/utils'
 import { slot } from '@/components/panelo/lib/slot'
 
-// shadcn's Sheet on ui-sdk's drawer: focus trap, Escape, swipe-to-close and scroll lock come built in.
-// Unlike shadcn, `side` goes on the root, because the drawer positions and slides itself from there.
+// A sheet on the primitive's drawer: focus trap, Escape, swipe-to-close and scroll lock come built in.
+// `side` goes on the root, because the drawer positions and slides itself from there.
 function Sheet({ side = 'right', persistentElements = ['[data-agent-approval]'], ...props }: React.ComponentProps<typeof Drawer>) {
     return (
         <Drawer

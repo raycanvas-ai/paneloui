@@ -44,7 +44,7 @@ export function humanize(message: string) {
 }
 
 /**
- * Chat with an agent that operates the page through ui-sdk's bridge. The model runs on the server
+ * Chat with an agent that operates the page through the agent bridge. The model runs on the server
  * (`endpoint`); its snapshot, act and query calls run here, against the components on screen.
  */
 export function useAgentChat({ endpoint = '/api/agent', onRun }: { endpoint?: string; onRun?: () => void } = {}) {

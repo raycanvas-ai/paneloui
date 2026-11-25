@@ -5,7 +5,7 @@ import { Input as InputPrimitive } from '@ui-sdk/react/input'
 
 import { cn } from '@/components/panelo/lib/utils'
 
-// shadcn inputs take numbers for `type="number"`; ui-sdk's Input value is text.
+// Callers may pass numbers for `type="number"`; the primitive's Input value is text.
 function Input({ className, value, defaultValue, ...props }: Omit<React.ComponentProps<typeof InputPrimitive>, 'value' | 'defaultValue'> & { value?: string | number; defaultValue?: string | number }) {
     return (
         <InputPrimitive
