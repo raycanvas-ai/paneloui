@@ -5,8 +5,8 @@ import { ALL_ENTRIES } from "@/components/application/docs/components-index";
 
 const freeCount = ALL_ENTRIES.filter((e) => e.tier === "free").length;
 
-// Paid plans charge list price minus the launch code, which /checkout applies before the buyer
-// arrives (app/checkout/route.ts). Keep LAUNCH_OFF in step with that code in Dodo.
+// Paid plans sell at `price`: Dodo's products are priced there, with the launch discount already taken
+// off, so checkout keeps its code box free for partner codes. Keep LAUNCH_OFF in step with those prices.
 export const LAUNCH_OFF = 50;
 // When the early-bird offer ends (end of November, IST). The launch bar counts down to it and hides after.
 // Keep in step with the code's expiry in Dodo.
@@ -52,5 +52,5 @@ export const PLANS: Plan[] = [
   },
 ];
 
-/** List price before the launch code: what Dodo's product is priced at. */
+/** List price before the launch discount, shown struck through. */
 export const listPrice = (plan: Plan) => (plan.price === null ? null : plan.price + LAUNCH_OFF);
