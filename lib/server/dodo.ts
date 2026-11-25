@@ -44,6 +44,10 @@ export type DodoPayment = {
   refund_status?: string | null;
   dispute_status?: string | null;
   customer: { email: string };
+  /** In the smallest unit; checkout is always USD, so cents. */
+  total_amount: number;
+  currency: string;
+  discount_id?: string | null;
   product_cart: { product_id: string; quantity: number }[] | null;
   metadata: Record<string, string>;
   created_at: string;

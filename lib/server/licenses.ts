@@ -1,6 +1,7 @@
 import { createHash, randomBytes } from "node:crypto";
 import { and, eq, isNull } from "drizzle-orm";
 
+import { capture } from "@/lib/server/analytics";
 import { getDb } from "@/lib/server/db";
 import { dodo, planFor, SEATS, type DodoPayment } from "@/lib/server/dodo";
 import { licenses, users, type License } from "@/lib/server/schema";
@@ -22,11 +23,19 @@ export async function syncPayment(paymentId: string): Promise<License | null> {
 
   const db = getDb();
   const lost = payment.refund_status === "succeeded" || ["dispute_lost", "dispute_opened"].includes(payment.dispute_status ?? "");
+  // Who to credit in analytics: the account, else the browser that opened checkout, else the buyer's email.
+  const person = payment.metadata?.panelo_user_id || payment.metadata?.panelo_ph_id || payment.customer.email.toLowerCase();
+  const facts = { plan, payment_id: paymentId, revenue: payment.total_amount / 100, currency: payment.currency };
   if (lost) {
-    await db.update(licenses).set({ revokedAt: new Date() }).where(and(eq(licenses.paymentId, paymentId), isNull(licenses.revokedAt)));
+    const revoked = await db.update(licenses).set({ revokedAt: new Date() }).where(and(eq(licenses.paymentId, paymentId), isNull(licenses.revokedAt))).returning({ id: licenses.id });
+    const reason = payment.refund_status === "succeeded" ? "refund" : payment.dispute_status;
+    if (revoked.length) await capture("licence_revoked", person, { ...facts, reason });
     return null;
   }
-  if (payment.status !== "succeeded") return null;
+  if (payment.status !== "succeeded") {
+    if (payment.status === "failed") await capture("payment_failed", person, facts, { dedupe: paymentId, timestamp: payment.created_at });
+    return null;
+  }
 
   // The user id travels in checkout metadata only when the buyer was signed in; check it still exists.
   const signedIn = payment.metadata?.panelo_user_id;
@@ -44,6 +53,15 @@ export async function syncPayment(paymentId: string): Promise<License | null> {
     })
     .onConflictDoNothing({ target: licenses.paymentId })
     .returning();
+  // Only the first sync of a payment inserts, so the return page and the webhook count a sale once.
+  if (row) {
+    await capture(
+      "purchase_completed",
+      person,
+      { ...facts, seats: SEATS[plan], discount_id: payment.discount_id ?? null, $set: { email: row.email, customer: true, plan }, $set_once: { first_purchase_at: payment.created_at } },
+      { timestamp: payment.created_at },
+    );
+  }
   return row ?? (await db.query.licenses.findFirst({ where: eq(licenses.paymentId, paymentId) })) ?? null;
 }
 

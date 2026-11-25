@@ -1,3 +1,6 @@
+import { after } from "next/server";
+
+import { capture, visitorId } from "@/lib/server/analytics";
 import { getUser } from "@/lib/server/auth";
 import { dodo, limited, mode, PRODUCTS, siteOrigin } from "@/lib/server/dodo";
 
@@ -25,6 +28,8 @@ export async function POST(request: Request) {
   // Signed in: prefill the email and tie the licence to this account. Signed out: the licence is
   // claimed later by whoever signs in with the email used at checkout.
   const user = await getUser(request).catch(() => null);
+  // The browser's PostHog id rides along in the metadata, so the webhook's purchase joins this visitor's journey.
+  const visitor = visitorId(request);
   const create = (discount_codes?: string[]) =>
     dodo<{ checkout_url?: string }>("/checkouts", {
       method: "POST",
@@ -37,17 +42,22 @@ export async function POST(request: Request) {
         ...(user?.email && { customer: { email: user.email, name: user.name ?? user.email } }),
         // Namespaced: this Dodo business also runs snapcn, whose webhook acts on `user_id` and `product`.
         // Panelo's keys never collide with those, so snapcn ignores Panelo's payments at its first check.
-        ...(user && { metadata: { panelo_user_id: user.id } }),
+        metadata: { ...(user && { panelo_user_id: user.id }), ...(visitor && { panelo_ph_id: visitor }) },
         ...(discount_codes && { discount_codes }),
       }),
     });
 
   // If Dodo refuses the code (expired, or not created in this mode), sell at list price rather than fail.
-  const session = (await create([LAUNCH_CODE])) ?? (await create());
+  const discounted = await create([LAUNCH_CODE]);
+  const session = discounted ?? (await create());
   // Redirect only to Dodo's own checkout, whatever the response holds.
   const target = URL.canParse(session?.checkout_url ?? "") ? new URL(session!.checkout_url!) : null;
-  if (!target || target.protocol !== "https:" || !/(^|\.)dodopayments\.com$/.test(target.hostname)) {
+  const opened = Boolean(target && target.protocol === "https:" && /(^|\.)dodopayments\.com$/.test(target.hostname));
+  after(() =>
+    capture(opened ? "checkout_started" : "checkout_failed", user?.id ?? visitor, { plan, signed_in: Boolean(user), launch_code: discounted ? LAUNCH_CODE : null, $current_url: request.headers.get("referer") }, { request }),
+  );
+  if (!opened) {
     return new Response("Checkout is unavailable right now. Please try again in a minute.", { status: 502 });
   }
-  return Response.redirect(target.href, 303);
+  return Response.redirect(target!.href, 303);
 }
