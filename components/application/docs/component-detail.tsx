@@ -2,56 +2,53 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
-import { RiArrowRightSFill, RiCheckLine, RiFileCopyLine, RiFullscreenLine } from "@remixicon/react";
+import { RiArrowRightSFill, RiFullscreenLine } from "@remixicon/react";
 
-import { installCommand, sectionOf, type Entry } from "@/components/application/docs/components-index";
+import {
+  sectionOf,
+  type Entry,
+} from "@/components/application/docs/components-index";
+import {
+  DeviceStage,
+  DeviceSwitcher,
+  usePreviewDevice,
+} from "@/components/application/docs/device-preview";
+import {
+  CopyInstall,
+  DemoCode,
+  Installation,
+} from "@/components/application/docs/install";
 import { LookPlayer } from "@/components/application/docs/look-player";
-import { useLook, useLookFrame } from "@/components/application/docs/looks";
-import { PaneloChart, slugOf } from "@/components/application/docs/panelo-catalog";
-import { ScreenFrame } from "@/components/application/docs/preview-frames";
-import { pill, ProTag } from "@/components/application/site/site-ui";
-import { track } from "@/lib/analytics";
-import { cx } from "@/utils/cx";
+import { useLook } from "@/components/application/docs/looks";
+import {
+  PaneloChart,
+  slugOf,
+} from "@/components/application/docs/panelo-catalog";
+import {
+  pill,
+  ProTag,
+  SiteTabPanel,
+  SiteTabs,
+} from "@/components/application/site/site-ui";
 
-function InstallCommand({ command }: { command: string }) {
-  const [copied, setCopied] = useState(false);
-  return (
-    <div className="flex w-fit max-w-full items-center gap-2 rounded-lg bg-site-pill py-1 ps-3 pe-1">
-      <code className="min-w-0 truncate font-mono text-site-body text-site-ink">
-        <span className="text-site-faint select-none">$ </span>
-        {command}
-      </code>
-      <button
-        type="button"
-        aria-label="Copy install command"
-        onClick={async () => {
-          await navigator.clipboard.writeText(command);
-          track("install_command_copied", { command, surface: "component_page" });
-          setCopied(true);
-          window.setTimeout(() => setCopied(false), 1500);
-        }}
-        className="grid size-7 shrink-0 cursor-pointer place-items-center rounded-md text-site-muted transition-colors outline-none hover:bg-site-pill-hover hover:text-site-ink focus-visible:ring-2 focus-visible:ring-border-focus-ring"
-      >
-        {copied ? <RiCheckLine className="size-3.5" aria-hidden /> : <RiFileCopyLine className="size-3.5" aria-hidden />}
-      </button>
-    </div>
-  );
-}
-
-/** One catalogue item on its own page: breadcrumb, title, install command and a full-size live preview. */
+/** One catalogue item on its own page. The demo leads: a short header, then Preview / Code at once, so the live
+ *  component is in the first screen; installation follows below it. */
 export function ComponentDetail({ entry }: { entry: Entry }) {
   const section = sectionOf(entry.href)!;
-  const install = installCommand(entry.href);
   const slug = slugOf(entry.href);
-  const screen = section.kind === "screen";
   const preview = `/preview/${slug}${slug === "dashboard-pages-11" ? "?assistant" : ""}`;
   const look = useLook();
-  const frame = useRef<HTMLIFrameElement>(null);
-  useLookFrame(frame);
-  const fullScreen = look ? `${preview}${preview.includes("?") ? "&" : "?"}look=${look}` : preview;
+  const [device, setDevice] = usePreviewDevice();
+  const fullScreen = look
+    ? `${preview}${preview.includes("?") ? "&" : "?"}look=${look}`
+    : preview;
+  const [view, setView] = useState("preview");
+  // The Code tab takes the preview's height, so switching tabs doesn't make the page jump.
+  const stage = useRef<HTMLDivElement>(null);
+  const [stageHeight, setStageHeight] = useState<number>();
 
   return (
-    <div className="mx-auto flex w-full max-w-[894px] flex-col pt-6 pb-10 sm:pt-9">
+    <div className="mx-auto flex w-full max-w-[894px] flex-col pt-5 pb-10 sm:pt-7">
       <nav aria-label="Breadcrumb">
         <ol className="flex flex-wrap items-center gap-1.5 text-site-body text-site-muted">
           <li>
@@ -59,69 +56,108 @@ export function ComponentDetail({ entry }: { entry: Entry }) {
               Components
             </Link>
           </li>
-          {(
+          {
             <li className="flex items-center gap-1.5">
-              <RiArrowRightSFill className="size-3.5 text-site-faint" aria-hidden />
-              <Link href={`/components#${section.id}`} className="hover:text-site-ink">
+              <RiArrowRightSFill
+                className="size-3.5 text-site-faint"
+                aria-hidden
+              />
+              <Link
+                href={`/components#${section.id}`}
+                className="hover:text-site-ink"
+              >
                 {section.title}
               </Link>
             </li>
-          )}
-          <li aria-current="page" className="flex items-center gap-1.5 text-site-ink">
-            <RiArrowRightSFill className="size-3.5 text-site-faint" aria-hidden />
+          }
+          <li
+            aria-current="page"
+            className="flex items-center gap-1.5 text-site-ink"
+          >
+            <RiArrowRightSFill
+              className="size-3.5 text-site-faint"
+              aria-hidden
+            />
             {entry.name}
           </li>
         </ol>
       </nav>
 
-      <div className="mt-4 flex flex-wrap items-center gap-3">
+      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2">
         <h1 className="text-site-title text-site-ink">{entry.name}</h1>
         {entry.tier === "pro" && <ProTag />}
+        <span className="ms-auto">
+          <CopyInstall entry={entry} />
+        </span>
       </div>
-      <p className="mt-3 max-w-[760px] text-site-lead text-pretty text-site-muted">{entry.description}</p>
-      {install && (
-        <div className="mt-5 flex flex-col gap-2">
-          <InstallCommand command={install} />
-          {entry.tier === "pro" && (
-            <p className="text-site-body text-site-muted">
-              Needs a Pro licence key: your{" "}
-              <Link href="/account" className="rounded-sm text-site-ink underline underline-offset-4 outline-none focus-visible:ring-2 focus-visible:ring-border-focus-ring">
-                account page
-              </Link>{" "}
-              has the key and the two lines for components.json.
-            </p>
-          )}
-        </div>
-      )}
+      <p className="mt-2 line-clamp-3 max-w-[760px] text-site-body text-pretty text-site-muted sm:line-clamp-none">
+        {entry.description}
+      </p>
 
-      <div className="mt-8 flex flex-wrap items-center justify-between gap-2">
-        <LookPlayer />
-        {(screen || section.kind === "chart") && (
-          <a href={fullScreen} target="_blank" rel="noreferrer" className={pill("secondary")}>
-            <RiFullscreenLine aria-hidden />
-            Open full screen
-          </a>
-        )}
-      </div>
-      <div
-        className={cx(
-          "mt-3",
-          "w-full overflow-hidden rounded-2xl border border-site-hairline bg-site-surface",
-          // Screens render on a desktop canvas and scale down, so the page shows its full-screen layout, not its tablet one.
-          // Charts sit at the top, so a chart that changes height (a morph, a hidden panel) never shifts its own controls.
-          screen ? "relative aspect-[1440/900]" : "flex min-h-[420px] justify-center p-8",
-        )}
+      <SiteTabs
+        label="View"
+        value={view}
+        onValueChange={(v) => {
+          if (stage.current?.offsetHeight)
+            setStageHeight(stage.current.offsetHeight);
+          setView(v);
+        }}
+        items={[
+          { value: "preview", label: "Preview" },
+          { value: "code", label: "Code" },
+        ]}
+        className="mt-4"
+        trailing={
+          view === "preview" ? (
+            <div className="flex items-center gap-2">
+              <LookPlayer className="hidden md:inline-flex" />
+              {/* Device sizes need room to show a phone beside a tablet; on a phone the page already is one. */}
+              <DeviceSwitcher
+                device={device}
+                onChange={setDevice}
+                className="hidden sm:flex"
+              />
+              <a
+                href={fullScreen}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Open full screen"
+                title="Open full screen"
+                className="grid size-7 place-items-center rounded-full bg-site-pill text-site-muted transition-colors outline-none hover:bg-site-pill-hover hover:text-site-ink focus-visible:ring-2 focus-visible:ring-border-focus-ring"
+              >
+                <RiFullscreenLine className="size-3.5" aria-hidden />
+              </a>
+            </div>
+          ) : null
+        }
       >
-        {section.kind === "chart" ? (
-          <div className="w-full max-w-4xl">
-            <PaneloChart slug={slug} />
+        {/* The preview stays mounted, so coming back from Code doesn't reload the live demo. */}
+        <SiteTabPanel
+          value="preview"
+          keepMounted
+          className="pt-3 data-hidden:hidden"
+        >
+          {/* Charts render in place on desktop, at the top so a chart that changes height never shifts its own controls;
+              screens, and charts at tablet or phone size, run in a real viewport of the device's width. */}
+          <div ref={stage}>
+            {section.kind === "chart" && device === "desktop" ? (
+              <div className="flex min-h-[420px] w-full justify-center overflow-hidden rounded-2xl border border-site-hairline bg-site-surface p-8">
+                <div className="w-full max-w-4xl">
+                  <PaneloChart slug={slug} />
+                </div>
+              </div>
+            ) : (
+              <DeviceStage device={device} src={preview} title={entry.name} />
+            )}
           </div>
-        ) : (
-          <ScreenFrame width={1440} height={900}>
-            <iframe ref={frame} src={preview} title={`${entry.name} preview`} className="size-full border-0" />
-          </ScreenFrame>
-        )}
-      </div>
+        </SiteTabPanel>
+        <SiteTabPanel value="code" className="pt-3">
+          {view === "code" ? (
+            <DemoCode entry={entry} slug={slug} height={stageHeight} />
+          ) : null}
+        </SiteTabPanel>
+      </SiteTabs>
+      <Installation entry={entry} slug={slug} />
     </div>
   );
 }

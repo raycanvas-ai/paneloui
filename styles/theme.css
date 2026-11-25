@@ -447,6 +447,14 @@
   --color-site-banner-via:   #1d6bff;
   --color-site-banner-to:    #155dfc;
   --color-site-on-banner:    var(--color-white);
+  /* Code: calm, low-chroma syntax colours for install commands and source on component pages. */
+  --color-site-code-keyword: #8a3ffc;
+  --color-site-code-string:  #0f7b4f;
+  --color-site-code-number:  #b25e09;
+  --color-site-code-tag:     #1f5fd1;
+  --color-site-code-attr:    #9a5b00;
+  --color-site-code-fn:      #6b3fb5;
+  --color-site-code-comment: rgb(0 0 0 / 0.42);
   --shadow-site-panel:  0 1px 0 0 rgb(0 0 0 / 0.04), 0 2px 1px -1px rgb(0 0 0 / 0.05);
   --shadow-site-cta:    0 0 0 1px #0d0d0d, 0 2px 4px 0 rgb(0 0 0 / 0.1);
   --shadow-site-field:  0 0 0 1px rgb(10 10 10 / 0.055), 0 1px 1.5px 0 rgb(0 0 0 / 0.04);
@@ -686,6 +694,13 @@
   --color-site-pro-ring:     rgb(43 127 255 / 0.35);
   --color-site-pro-text:     #8fb8ff;
   --color-site-pro-icon:     #5b9bff;
+  --color-site-code-keyword: #c4a5ff;
+  --color-site-code-string:  #8bdcb0;
+  --color-site-code-number:  #f2b872;
+  --color-site-code-tag:     #8db8ff;
+  --color-site-code-attr:    #e8c47c;
+  --color-site-code-fn:      #d0b8ff;
+  --color-site-code-comment: rgb(255 255 255 / 0.4);
   --shadow-site-panel:  0 1px 0 0 rgb(0 0 0 / 0.45), 0 2px 1px -1px rgb(0 0 0 / 0.5);
   --shadow-site-cta:    0 0 0 1px var(--color-white), 0 2px 4px 0 rgb(0 0 0 / 0.3);
   --shadow-site-field:  0 0 0 1px rgb(255 255 255 / 0.06), 0 1px 1.5px 0 rgb(0 0 0 / 0.3);
@@ -919,6 +934,13 @@
   --color-site-banner-via: var(--color-site-banner-via);
   --color-site-banner-to: var(--color-site-banner-to);
   --color-site-on-banner: var(--color-site-on-banner);
+  --color-site-code-keyword: var(--color-site-code-keyword);
+  --color-site-code-string: var(--color-site-code-string);
+  --color-site-code-number: var(--color-site-code-number);
+  --color-site-code-tag: var(--color-site-code-tag);
+  --color-site-code-attr: var(--color-site-code-attr);
+  --color-site-code-fn: var(--color-site-code-fn);
+  --color-site-code-comment: var(--color-site-code-comment);
   --shadow-site-panel: var(--shadow-site-panel);
   --shadow-site-cta: var(--shadow-site-cta);
   --shadow-site-field: var(--shadow-site-field);

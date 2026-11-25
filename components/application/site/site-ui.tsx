@@ -120,9 +120,9 @@ export function SiteTabs({
   );
 }
 
-export function SiteTabPanel({ value, className, children }: { value: string; className?: string; children: ReactNode }) {
+export function SiteTabPanel({ value, keepMounted, className, children }: { value: string; keepMounted?: boolean; className?: string; children: ReactNode }) {
   return (
-    <TabsPanel value={value} className={cx("outline-none", className)}>
+    <TabsPanel value={value} keepMounted={keepMounted} className={cx("outline-none", className)}>
       {children}
     </TabsPanel>
   );
