@@ -7,7 +7,8 @@ export async function GET(request: Request) {
   if (!user) return Response.json({ error: "Sign in first." }, { status: 401 });
   const rows = await licensesFor(user.id, user.email);
   return Response.json({
-    user: { name: user.name, email: user.email, image: user.image },
+    // The id lets the page tie analytics to this account (lib/analytics.ts identify).
+    user: { id: user.id, name: user.name, email: user.email, image: user.image },
     licenses: rows.map((l) => ({
       id: l.id,
       plan: l.plan,

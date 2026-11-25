@@ -29,6 +29,7 @@ import { TrendsChart } from "@/components/panelo/blocks/charts/trends-chart";
 import { Button } from "@/components/panelo/ui/button";
 import { Progress, ProgressLabel } from "@/components/panelo/ui/progress";
 import { Switch } from "@/components/panelo/ui/switch";
+import { track } from "@/lib/analytics";
 import { cx } from "@/utils/cx";
 import { PRO_PARTS } from "@pro";
 
@@ -752,6 +753,7 @@ export function CopyCommand({ command }: { command: string }) {
         aria-label={copied ? "Copied" : "Copy the install command"}
         onClick={async () => {
           await navigator.clipboard.writeText(command);
+          track("install_command_copied", { command, surface: "landing" });
           setCopied(true);
           window.setTimeout(() => setCopied(false), 1500);
         }}
@@ -962,7 +964,8 @@ function PricingSection() {
             {plan.plan ? (
               <form method="post" action="/checkout" className="mt-6">
                 <input type="hidden" name="plan" value={plan.plan} />
-                <button type="submit" className={pill(plan.featured ? "primary" : "secondary", "lg", "w-full")}>
+                {/* Autocapture adds the plan to the click, so pricing clicks split by plan before checkout opens. */}
+                <button type="submit" data-ph-capture-attribute-plan={plan.plan} className={pill(plan.featured ? "primary" : "secondary", "lg", "w-full")}>
                   {plan.cta}
                 </button>
               </form>

@@ -9,6 +9,7 @@ import { ALL_ENTRIES, COMPONENT_SECTIONS, installCommand, sectionOf, type Entry 
 import { LookPlayer } from "@/components/application/docs/look-player";
 import { PANELO_PREVIEWS } from "@/components/application/docs/panelo-catalog";
 import { Chip, ProTag, SiteTabPanel, SiteTabs } from "@/components/application/site/site-ui";
+import { track } from "@/lib/analytics";
 import { cx } from "@/utils/cx";
 
 export type CatalogTier = "all" | "free" | "pro";
@@ -128,6 +129,7 @@ function CopyInstall({ command, name }: { command: string; name: string }) {
       aria-label={`Copy the install command for ${name}`}
       onClick={async () => {
         await navigator.clipboard.writeText(command);
+        track("install_command_copied", { command, component: name, surface: "catalog" });
         setCopied(true);
         window.setTimeout(() => setCopied(false), 1500);
       }}

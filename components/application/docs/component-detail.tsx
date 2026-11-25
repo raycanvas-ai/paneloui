@@ -10,6 +10,7 @@ import { useLook, useLookFrame } from "@/components/application/docs/looks";
 import { PaneloChart, slugOf } from "@/components/application/docs/panelo-catalog";
 import { ScreenFrame } from "@/components/application/docs/preview-frames";
 import { pill, ProTag } from "@/components/application/site/site-ui";
+import { track } from "@/lib/analytics";
 import { cx } from "@/utils/cx";
 
 function InstallCommand({ command }: { command: string }) {
@@ -25,6 +26,7 @@ function InstallCommand({ command }: { command: string }) {
         aria-label="Copy install command"
         onClick={async () => {
           await navigator.clipboard.writeText(command);
+          track("install_command_copied", { command, surface: "component_page" });
           setCopied(true);
           window.setTimeout(() => setCopied(false), 1500);
         }}

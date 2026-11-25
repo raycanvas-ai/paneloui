@@ -9,10 +9,11 @@ import { SignInButtons } from "@/components/application/site/auth-button";
 import { TEMPLATES_LAUNCH } from "@/components/application/site/templates";
 import { pill } from "@/components/application/site/site-ui";
 import { Logo } from "@/components/foundations/brand/logo";
+import { identify, resetAnalytics, track } from "@/lib/analytics";
 import { cx } from "@/utils/cx";
 
 type License = { id: string; plan: "year" | "lifetime" | "startups"; seats: number; keyHint: string | null; updatesUntil: string | null; revoked: boolean; createdAt: string };
-type Account = { user: { name: string | null; email: string | null; image: string | null }; licenses: License[] };
+type Account = { user: { id: string; name: string | null; email: string | null; image: string | null }; licenses: License[] };
 
 const PLAN_NAMES: Record<License["plan"], string> = { year: "1 Year of Updates", lifetime: "Lifetime Access", startups: "Unlimited for Startups" };
 
@@ -34,6 +35,8 @@ function CopyBlock({ text, label }: { text: string; label: string }) {
         aria-label={copied ? "Copied" : label}
         onClick={async () => {
           await navigator.clipboard.writeText(text);
+          // The label, never the text: it holds the licence key.
+          track("account_snippet_copied", { snippet: label });
           setCopied(true);
           window.setTimeout(() => setCopied(false), 1500);
         }}
@@ -88,7 +91,8 @@ function LicenseCard({ license }: { license: License }) {
       )}
       {error && <p className="mt-4 text-site-body text-text-error-primary">{error}</p>}
       {key && (
-        <div className="mt-5 flex flex-col gap-3">
+        // ph-no-capture: the key never appears in session replays or autocaptured clicks.
+        <div className="ph-no-capture mt-5 flex flex-col gap-3">
           <p className="text-site-body text-site-ink">Your key. Copy it now: it is shown once, and only its fingerprint is stored.</p>
           <CopyBlock label="Copy the key" text={`PANELO_LICENSE_KEY=${key}`} />
           <p className="text-site-body text-site-muted">
@@ -123,7 +127,12 @@ export default function AccountPage() {
 
   const load = useCallback(async () => {
     const response = await fetch("/api/account");
-    setAccount(response.ok ? ((await response.json()) as Account) : "out");
+    const data = response.ok ? ((await response.json()) as Account) : "out";
+    if (data !== "out") {
+      const live = data.licenses.filter((l) => !l.revoked);
+      identify(data.user, { customer: live.length > 0, plans: live.map((l) => l.plan) });
+    }
+    setAccount(data);
   }, []);
 
   useEffect(() => {
@@ -147,7 +156,14 @@ export default function AccountPage() {
             <span className="text-site-body-medium text-site-ink">Panelo UI</span>
           </Link>
           {account && account !== "out" && (
-            <button type="button" onClick={() => authPost("signout", { callbackUrl: "/" })} className={pill("ghost")}>
+            <button
+              type="button"
+              onClick={() => {
+                resetAnalytics();
+                authPost("signout", { callbackUrl: "/" });
+              }}
+              className={pill("ghost")}
+            >
               Sign out
             </button>
           )}
@@ -168,7 +184,7 @@ export default function AccountPage() {
         {account && account !== "out" && (
           <>
             <h1 className="text-site-heading text-site-ink">{account.user.name ?? "Your account"}</h1>
-            <p className="mt-1 text-site-body text-site-muted">{account.user.email}</p>
+            <p className="ph-no-capture mt-1 text-site-body text-site-muted">{account.user.email}</p>
             <h2 className="mt-12 text-site-body-medium text-site-muted">Licences</h2>
             {account.licenses.length === 0 ? (
               <p className={cx("mt-4 text-site-body text-site-muted")}>
