@@ -3,6 +3,8 @@
  * block categories of the Panelo registry. Plain data, shared by the
  * landing, the docs sidebar, the /components index and each item's page.
  */
+import { SITE } from "@/components/application/site/templates";
+
 export type Entry = {
   name: string;
   href: string;
@@ -81,6 +83,7 @@ export const COMPONENT_SECTIONS: Section[] = [
     entries: [
       pro("App Sidebar", "sidebars-1", "Icon rail and panel in five layouts: rail with panel, panel alone, rail with icons, rail alone and icons alone, with a command menu, collapsible sections and projects."),
       pro("Sidebar Collection", "sidebars-2", "Five product sidebars from one kit: workspace, enterprise, chat, HR and assistant. Folding trees and sections, section search, inline create, chat filters, command search, trial and upgrade cards."),
+      free("Resource Sidebar", "sidebars-3", "Icon rail beside a resource panel: pages with a More flyout, a scrolling list of emoji collections and a pinned import action. Four layouts, every list a prop, Keyline icons."),
     ],
   },
   {
@@ -110,6 +113,29 @@ export const COMPONENT_SECTIONS: Section[] = [
     ],
   },
   {
+    id: "stats",
+    title: "Stats",
+    blurb: "Stat and KPI cards, alone or as a full overview.",
+    kind: "screen",
+    wide: true,
+    entries: [
+      free("Social Overview", "stats-1", "Social media KPI page: a stat card per channel with week-on-week change, a revenue area chart with hover and keyboard readout, audience by location, age and gender, a posting week with post cards, and per-post insights. Date range, CSV export, Keyline icons."),
+      free("Dashboard Overview", "stats-2", "Social dashboard: a goal gauge with a segment per channel, channel cards, follower share and a year of engagement with a split readout, a day-by-hour activity heatmap with channel filters and a named peak, audience by age and a dot-matrix world map by country."),
+      free("Crypto Portfolio", "stats-3", "Crypto portfolio page: tickers, market leaders by volume, a portfolio line with a scrubber and readout, a markets table with search, filters, sort, trend window and CSV export, a live balance with deposit, withdraw, swap and transfer, top assets and a gainers watchlist."),
+    ],
+  },
+  {
+    id: "tables",
+    title: "Tables",
+    blurb: "Data tables with sorting, filtering and pagination.",
+    kind: "screen",
+    wide: true,
+    entries: [
+      free("Records Table", "tables-2", "Database-style records table for any row type: saved views, column filters, header sort, search, row selection, drag to reorder, pages, CSV export and live presence. Pinned first column on small screens, Keyline icons."),
+      free("Task Table", "tables-1", "Project task table with search, filters, sort and per-group pages: an Overview of grouped project panels, a List and a classic Table view with sortable columns. Container-responsive, Keyline icons."),
+    ],
+  },
+  {
     id: "calendars",
     title: "Calendars",
     blurb: "Calendars, schedules and agenda views.",
@@ -118,6 +144,8 @@ export const COMPONENT_SECTIONS: Section[] = [
     entries: [
       pro("Time Tracking Calendar", "calendars-1", "Time-tracking week: log entries from a top bar, drag to move or resize, click or drag to add, labels, favourites, search, and a Customize panel that remembers your layout."),
       pro("Issue Calendar", "calendars-2", "Month and week calendar of issues: multi-day spans, drag to reschedule or stretch, a category panel you can drag from, tick-off sync, filters, search and a phone agenda."),
+      free("Planner Calendar", "calendars-3", "Week planner with a to-do sidebar: day, week and month views, a live now-line and next-up card, event cards with members, join link and replies, click-to-add events and a month picker. Sidebar folds to a drawer, Keyline icons."),
+      free("Appointment Calendar", "calendars-4", "Booking calendar for studios, salons and clinics: day, week, month and staff views, status and staff filters, stat cards with week-on-week trends, click-a-slot booking, appointment cards with status, a waitlist with auto-fill and undo. Keyline icons."),
     ],
   },
 ];
@@ -129,8 +157,18 @@ export const sectionOf = (href: string) => COMPONENT_SECTIONS.find((section) => 
 const slugOf = (href: string) => href.replace("/components/", "");
 
 /** Each catalogue entry is its own registry item; its UI SDK parts come along as dependencies. */
-export function installCommand(href: string): string {
-  // Pro items come from the keyed registry (@panelo-pro, set up from the account page); free ones from @panelo.
+export type PackageManager = "pnpm" | "npm" | "yarn" | "bun";
+export const PACKAGE_MANAGERS: PackageManager[] = ["pnpm", "npm", "yarn", "bun"];
+/** How each package manager runs a one-off CLI, and adds packages. */
+export const RUNNER: Record<PackageManager, string> = { pnpm: "pnpm dlx", npm: "npx", yarn: "yarn", bun: "bunx --bun" };
+export const ADD: Record<PackageManager, string> = { pnpm: "pnpm add", npm: "npm install", yarn: "yarn add", bun: "bun add" };
+
+/** The free registry's address for an item: the same JSON the CLI and the manual steps read. */
+export const registryUrl = (href: string) => `${SITE}/r/${slugOf(href)}.json`;
+
+export function installCommand(href: string, pm: PackageManager = "npm"): string {
+  // Free items install by URL, which works in any project with no setup. Pro items come from the keyed
+  // registry (@panelo-pro), which the account page sets up with the licence key.
   const pro = ALL_ENTRIES.find((e) => e.href === href)?.tier === "pro";
-  return `npx shadcn@latest add @panelo${pro ? "-pro" : ""}/${slugOf(href)}`;
+  return `${RUNNER[pm]} shadcn@latest add ${pro ? `@panelo-pro/${slugOf(href)}` : registryUrl(href)}`;
 }

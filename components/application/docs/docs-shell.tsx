@@ -22,6 +22,8 @@ import {
   RiSearchLine,
   RiSparkling2Line,
   RiStackLine,
+  RiTableLine,
+  RiNumbersLine,
 } from "@remixicon/react";
 
 import { COMPONENT_SECTIONS } from "@/components/application/docs/components-index";
@@ -50,6 +52,8 @@ const SECTION_ICONS: Record<string, Icon> = {
   elements: RiStackLine,
   charts: RiBarChartBoxLine,
   calendars: RiCalendarLine,
+  tables: RiTableLine,
+  stats: RiNumbersLine,
 };
 
 const row = (current: boolean) =>
