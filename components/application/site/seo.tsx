@@ -45,6 +45,8 @@ const KIND: Record<string, string> = {
   elements: "React Component",
   charts: "React Chart",
   calendars: "React Calendar",
+  tables: "React Data Table",
+  stats: "React Stat Cards",
 };
 
 export const sectionIdOf = (entry: Entry) => COMPONENT_SECTIONS.find((s) => s.entries.includes(entry))?.id ?? "elements";

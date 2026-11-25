@@ -737,7 +737,7 @@ function PermissionsCard() {
   );
 }
 
-const AGENT_KIT = "npx shadcn@latest add @panelo/agent-kit";
+const AGENT_KIT = "npx shadcn@latest add https://www.paneloui.com/r/agent-kit.json";
 const KIT_PARTS = ["agent bridge, on UI SDK", "approval prompts", "chat hook", "/api/agent route, on Groq's free tier"];
 
 export function CopyCommand({ command }: { command: string }) {
@@ -974,11 +974,11 @@ function PricingSection() {
                 {plan.cta}
               </Link>
             )}
-            {/* The code is already on the checkout when it opens; this says so before the click. */}
+            {/* The launch discount is built into the Dodo price, so checkout opens at this price with its code box free. */}
             <p className="mt-3 flex h-5 items-center justify-center gap-1.5 text-site-chip text-site-muted">
               {plan.price !== null && (
                 <>
-                  <RiCheckLine className="size-3.5 text-site-faint" aria-hidden />${LAUNCH_OFF} off, applied at checkout
+                  <RiCheckLine className="size-3.5 text-site-faint" aria-hidden />${LAUNCH_OFF} launch discount included
                 </>
               )}
             </p>
@@ -1056,8 +1056,8 @@ const FOOTER_GUIDES: FooterLink[] = [
 // Every component and the key guides get one link each: a way in from any page, for people and crawlers.
 const FOOTER_COLUMNS: FooterGroup[][] = [
   [{ ...group("dashboard-pages", "Dashboard pages"), more: { label: "All components", href: "/components" } }],
-  [group("charts", "Charts"), group("elements", "Elements")],
-  [group("login-pages", "Login pages"), group("profile-pages", "Profile pages"), group("sidebars", "Sidebars"), group("calendars", "Calendars")],
+  [group("charts", "Charts"), group("stats", "Stats"), group("elements", "Elements")],
+  [group("login-pages", "Login pages"), group("profile-pages", "Profile pages"), group("sidebars", "Sidebars"), group("calendars", "Calendars"), group("tables", "Tables")],
   [{ title: "Guides", href: "/blog", links: FOOTER_GUIDES, more: { label: "All guides", href: "/blog" } }],
   [
     {
