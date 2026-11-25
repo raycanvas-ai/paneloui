@@ -83,7 +83,7 @@ export function LookPlayer({ className }: { className?: string }) {
         </span>
         <span className="text-site-body-medium text-site-ink">Preview themes</span>
         <span aria-hidden className="grid size-6 place-items-center rounded-full bg-site-ink text-site-surface transition-transform duration-150 group-hover:scale-105">
-          <RiPlayFill className="size-3 translate-x-px" />
+          <RiPlayFill className="size-3" />
         </span>
       </button>
     );
@@ -97,7 +97,7 @@ export function LookPlayer({ className }: { className?: string }) {
         </button>
       ) : (
         <button type="button" aria-label="Preview all themes again" title="Play again" onClick={start} className={round}>
-          <RiPlayFill className="size-3 translate-x-px" aria-hidden />
+          <RiPlayFill className="size-3" aria-hidden />
         </button>
       )}
 

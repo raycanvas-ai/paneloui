@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { AgentProbe } from "@/components/panelo/agent-probe";
+import { EmbeddedFrame } from "@/components/application/docs/embedded-frame";
 import { LookReceiver } from "@/components/application/docs/look-receiver";
 import { PANELO_LOADERS } from "@/components/application/docs/panelo-previews";
 
@@ -33,6 +34,7 @@ export default async function PreviewPage({ params }: { params: Promise<{ slug: 
       )}
       <AgentProbe />
       <LookReceiver />
+      <EmbeddedFrame />
     </div>
   );
 }
