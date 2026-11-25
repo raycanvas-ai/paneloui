@@ -59,6 +59,46 @@ function resolveFile(base: string): string {
 
 const packageName = (spec: string) => (spec.startsWith("@") ? spec.split("/").slice(0, 2).join("/") : spec.split("/")[0]);
 
+/** A file's local imports (resolved) and npm packages. */
+function importsOf(file: string) {
+  const local: string[] = [];
+  const packages: string[] = [];
+  for (const [, spec] of read(file).matchAll(/(?:from\s+|import\s*\(\s*|^import\s+)["']([^"']+)["']/gm)) {
+    if (spec.startsWith("@/")) local.push(resolveFile(spec.slice(2)));
+    else if (spec.startsWith(".")) local.push(resolveFile(relative(ROOT, resolve(join(ROOT, dirname(file)), spec))));
+    else if (!spec.startsWith("node:") && !PROVIDED.has(packageName(spec))) packages.push(packageName(spec));
+  }
+  return { local, packages };
+}
+
+// Free items are split the way a component library's registry is: a component carries only its own
+// files, and each shared primitive (ui/, lib/, hooks/, logos/) is its own item that components depend on.
+const SHARED = /^components\/panelo\/(ui|lib|hooks|logos)\//;
+const sharedName = (file: string) => file.replace(/^components\/panelo\//, "").replace(/\.tsx?$/, "").replace(/\//g, "-");
+const sharedUrl = (file: string) => `${SITE}/r/${sharedName(file)}.json`;
+
+/** An entry's own files (stopping at shared primitives), the primitives it imports, and its packages. */
+function split(entry: string[], allowed: (file: string) => boolean) {
+  const roots = entry.map(resolveFile);
+  const own = new Set<string>();
+  const shared = new Set<string>();
+  const packages = new Set<string>();
+  const queue = [...roots];
+  while (queue.length) {
+    const file = queue.pop()!;
+    if (own.has(file)) continue;
+    if (!allowed(file)) throw new Error(`${entry[0]} imports ${file}, outside the component library`);
+    own.add(file);
+    const deps = importsOf(file);
+    deps.packages.forEach((p) => packages.add(p));
+    for (const dep of deps.local) {
+      if (SHARED.test(dep) && !roots.includes(dep)) shared.add(dep);
+      else queue.push(dep);
+    }
+  }
+  return { roots, own: [...own].sort(), shared: [...shared].sort(), packages: [...packages].sort() };
+}
+
 /** The files an entry needs and the packages they import. Throws if it reaches outside the library. */
 function collect(entry: string, allowed: (file: string) => boolean) {
   const files = new Set<string>();
@@ -86,6 +126,13 @@ const rewrite = (source: string) =>
     .replace(/(["'])@\/components\/panelo\//g, "$1@/components/panelo-ui/")
     .replace(/(["'`])\/(avatars|ai-chat|brand|carousel|templates)\//g, `$1${SITE}/$2/`);
 
+// Every item carries Panelo's name: as its author, and as the line the CLI prints once it has installed.
+const AUTHOR = `Panelo UI <${SITE}>`;
+const BRAND = (name: string, title: string) => ({
+  author: AUTHOR,
+  docs: name === "agent-kit" ? `Panelo UI · ${title}. Docs: ${SITE}` : `Panelo UI · ${title}. Docs and live preview: ${SITE}/components/${name}`,
+});
+
 function version(name: string) {
   const range = pkg.dependencies[name];
   if (!range) throw new Error(`${name} is imported but not in package.json dependencies`);
@@ -97,14 +144,81 @@ function item(name: string, title: string, description: string, entryFiles: stri
   const files = [...new Set(graph.flatMap((g) => g.files))].sort();
   const packages = [...new Set(graph.flatMap((g) => g.packages))].sort();
   return {
-    $schema: "https://ui.shadcn.com/schema/registry-item.json",
     name,
     type: "registry:block",
     title,
     description,
+    ...BRAND(name, title),
     dependencies: packages.map(version),
     registryDependencies: [`${SITE}/r/panelo-theme.json`],
     files: files.map((file) => ({ path: extraTargets[file] ?? target(file), type: "registry:file", target: extraTargets[file] ?? target(file), content: rewrite(read(file)) })),
+  };
+}
+
+const pascal = (slug: string) => slug.replace(/(^|-)(\w)/g, (_, __, c: string) => c.toUpperCase());
+const file = (path: string, content: string) => ({ path, type: "registry:file", target: path, content });
+
+/** A free component: its own files, the primitives it builds on as dependencies, and the copy order for the
+ *  manual steps (`meta.copy`): the component first, the demo-only index left out, data last. */
+function freeItem(name: string, title: string, description: string, entry: string[], allowed: (f: string) => boolean, extraTargets: Record<string, string> = {}) {
+  const { roots, own, shared, packages } = split(entry, allowed);
+  const root = roots[0];
+  const sheet = isSheet(root);
+  // A sheet's index is a demo plus re-exports; the component is what its default export renders.
+  const main = sheet ? resolveFile(relative(ROOT, resolve(join(ROOT, dirname(root)), [...read(root).matchAll(/^import \{[^}]*\} from ["'](\.[^"']+)["']/gm)][0][1]))) : root;
+  const copy = [main, ...own.filter((f) => f !== main && !(sheet && f === root)).sort((a, b) => Number(/data\.ts$/.test(a)) - Number(/data\.ts$/.test(b)) || a.localeCompare(b))];
+  const path = (f: string) => extraTargets[f] ?? target(f);
+  return {
+    name,
+    type: "registry:block",
+    title,
+    description,
+    ...BRAND(name, title),
+    dependencies: packages.map(version),
+    registryDependencies: [`${SITE}/r/panelo-theme.json`, ...shared.map(sharedUrl)],
+    files: own.map((f) => file(path(f), rewrite(read(f)))),
+    meta: { copy: copy.map(path) },
+    demo: demo(name, root, sheet),
+    _shared: shared,
+  };
+}
+
+/** An index that re-exports its siblings and renders them in a default export is a demo sheet. */
+const isSheet = (root: string) => root.endsWith("/index.tsx") && (read(root).match(/^(?:export \{[^}]*\}|\}) from ["']\.\//gm)?.length ?? 0) >= 2;
+
+/** The demo a component page shows under Code: what renders the preview, importing from installed paths. */
+function demo(name: string, root: string, sheet: boolean) {
+  const dir = target(dirname(root)).replace(/^components\//, "@/components/");
+  if (sheet)
+    return rewrite(read(root))
+      .replace(/^export (?:type )?\{[^}]*\} from ["']\.[^"']*["'];?\n/gm, "")
+      .replace(/^\/\* -{10,} \*\/\n(?:\/\*.*\*\/\n)*?\/\* -{10,} \*\/\n/gm, "")
+      .replace(/(from\s+["'])\.\/([^"']+)(["'])/g, `$1${dir}/$2$3`)
+      .replace(/\n{3,}/g, "\n\n");
+  const source = read(root);
+  const at = target(root).replace(/^components\//, "@/components/").replace(/(\/index)?\.tsx?$/, "");
+  const fallback = source.match(/^export default function (\w+)/m)?.[1];
+  if (fallback) return `import ${fallback} from "${at}";\n\nexport default function ${fallback}Demo() {\n  return <${fallback} />;\n}\n`;
+  const names = [...source.matchAll(/^export (?:function|const) ([A-Z]\w*)/gm)].map((m) => m[1]);
+  const pick = names.find((n) => n === pascal(name)) ?? names.find((n) => n.startsWith(pascal(name).replace(/Chart$/, ""))) ?? names[0];
+  return `import { ${pick} } from "${at}";\n\nexport default function ${pick}Demo() {\n  return <${pick} />;\n}\n`;
+}
+
+/** A shared primitive as its own item, depending on the primitives it imports in turn. */
+function primitiveItem(path: string) {
+  const { own, shared, packages } = split([path], inLibrary);
+  const kind = path.split("/")[2];
+  const title = path.split("/").pop()!.replace(/\.tsx?$/, "").replace(/-/g, " ");
+  return {
+    name: sharedName(path),
+    type: kind === "ui" ? "registry:ui" : kind === "hooks" ? "registry:hook" : "registry:lib",
+    title: title[0].toUpperCase() + title.slice(1),
+    description: `Panelo ${kind === "ui" ? "primitive" : kind === "hooks" ? "hook" : kind === "logos" ? "logo" : "helper"}: ${title}.`,
+    author: AUTHOR,
+    dependencies: packages.map(version),
+    registryDependencies: [`${SITE}/r/panelo-theme.json`, ...shared.map(sharedUrl)],
+    files: own.map((f) => file(target(f), rewrite(read(f)))),
+    _shared: shared,
   };
 }
 
@@ -124,11 +238,11 @@ function theme() {
   const dark = values(block(".dark"));
   if (!Object.keys(light).length) throw new Error("No Panelo tokens found in styles/globals.css");
   return {
-    $schema: "https://ui.shadcn.com/schema/registry-item.json",
     name: "panelo-theme",
     type: "registry:theme",
     title: "Panelo theme",
-    description: "The tokens Panelo components use beyond stock shadcn/ui: status colours (success, warning, info) and tonal pills.",
+    description: "The tokens Panelo components read: status colours (success, warning, info) and tonal pills.",
+    author: AUTHOR,
     cssVars: { theme: Object.fromEntries(names.filter((n) => n in light).map((n) => [`color-${n}`, `var(--${n})`])), light, dark },
   };
 }
@@ -140,15 +254,37 @@ for (const dir of [FREE_OUT, PRO_OUT, FREE_TEMPLATES_OUT]) {
 }
 type Written = { name: string; type: string; title: string; description: string };
 const index: Written[] = [];
-const write = (dir: string, data: Written) => {
+const write = (dir: string, data: Written, listed = true) => {
   writeFileSync(join(dir, `${data.name}.json`), JSON.stringify(data, null, 2));
-  if (dir === FREE_OUT) index.push({ name: data.name, type: data.type, title: data.title, description: data.description });
+  if (dir === FREE_OUT && listed) index.push({ name: data.name, type: data.type, title: data.title, description: data.description });
 };
+// Every primitive a free item reaches, built once each (they can depend on one another).
+const primitives = new Set<string>();
+const needs = (files: string[]) => files.forEach((f) => primitives.add(f));
+/** A free item, its demo item and its primitives queued; `demo` and `copy` are page data, not CLI fields. */
+function writeFree(built: ReturnType<typeof freeItem>, name: string, title: string) {
+  const { demo: code, _shared, ...data } = built;
+  needs(_shared);
+  write(FREE_OUT, data);
+  write(
+    FREE_OUT,
+    {
+      name: `${name}-demo`,
+      type: "registry:example",
+      title: `${title} demo`,
+      description: `A demo of ${title}.`,
+      ...BRAND(name, title),
+      registryDependencies: [`${SITE}/r/${name}.json`],
+      files: [file(`components/panelo-ui/demos/${name}-demo.tsx`, code)],
+    } as Written,
+    false,
+  );
+}
 
 write(FREE_OUT, theme());
 write(
   FREE_OUT,
-  item("agent-kit", "Agent kit", "The UI SDK agent bridge, approval prompts, a chat hook and the /api/agent route (Groq's free tier).", ["components/panelo/lib/agent.ts", "components/panelo/hooks/use-agent-chat.ts", "app/api/agent/route.ts"], (f) => (inLibrary(f) && !f.startsWith("components/panelo/pro/")) || f === "app/api/agent/route.ts", { "app/api/agent/route.ts": "app/api/agent/route.ts" }),
+  item("agent-kit", "Agent kit", "The agent bridge, approval prompts, a chat hook and the /api/agent route.", ["components/panelo/lib/agent.ts", "components/panelo/hooks/use-agent-chat.ts", "app/api/agent/route.ts"], (f) => (inLibrary(f) && !f.startsWith("components/panelo/pro/")) || f === "app/api/agent/route.ts", { "app/api/agent/route.ts": "app/api/agent/route.ts" }),
 );
 
 let free = 0;
@@ -164,15 +300,25 @@ for (const e of catalogue) {
   }
   // A free item may never reach into pro/: collect() throws if one imports it, so Pro code can't ship publicly.
   const allowed = e.tier === "pro" ? inLibrary : (f: string) => inLibrary(f) && !f.startsWith("components/panelo/pro/");
-  write(e.tier === "pro" ? PRO_OUT : FREE_OUT, item(e.slug, e.name, e.description, [entry], allowed));
+  if (e.tier === "pro") write(PRO_OUT, item(e.slug, e.name, e.description, [entry], allowed));
+  else writeFree(freeItem(e.slug, e.name, e.description, [entry], allowed), e.slug, e.name);
   if (e.tier === "pro") pro++;
   else free++;
 }
 if (missing.length) throw new Error(`Free catalogue items with no preview entry: ${missing.join(", ")}`);
+// The primitives, each once, following their own dependencies.
+const done = new Set<string>();
+for (const path of primitives) {
+  if (done.has(path)) continue;
+  done.add(path);
+  const { _shared, ...data } = primitiveItem(resolveFile(path));
+  _shared.forEach((f) => primitives.add(f));
+  write(FREE_OUT, data, false);
+}
 // The index shadcn's registry directory and `shadcn search @panelo` read. Free items only, and no file
 // contents: those stay in each item's own JSON.
-writeFileSync(join(FREE_OUT, "registry.json"), JSON.stringify({ $schema: "https://ui.shadcn.com/schema/registry.json", name: "panelo", homepage: SITE, items: index }, null, 2));
-console.log(`Registry: ${free} free items + panelo-theme + agent-kit in public/r, ${pro} Pro items in registry-pro (private).`);
+writeFileSync(join(FREE_OUT, "registry.json"), JSON.stringify({ name: "panelo", homepage: SITE, items: index }, null, 2));
+console.log(`Registry: ${free} free items (+ demos), ${done.size} primitives, panelo-theme and agent-kit in public/r; ${pro} Pro items in registry-pro (private).`);
 
 // --- Templates: one tarball each, its folder at the top, so `tar -xz` makes ./<slug>. --------------------
 // Nothing is packed before launch day (TEMPLATES_LAUNCH in components/application/site/templates.ts).
