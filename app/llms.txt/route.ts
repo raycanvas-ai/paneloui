@@ -29,14 +29,14 @@ export function GET() {
     "",
     "## Install",
     "",
-    `Add \`"@panelo": "${SITE}/r/{name}.json"\` under \`registries\` in components.json, then run \`npx shadcn@latest add @panelo/<item>\`. Pro items use \`${SITE}/r/pro/{name}.json\` with a licence key header.`,
+    `Run \`npx shadcn@latest add ${SITE}/r/<item>.json\` (or pnpm dlx, yarn, bunx --bun). To use the short \`@panelo/<item>\` form, add \`"@panelo": "${SITE}/r/{name}.json"\` under \`registries\` in components.json. Pro items use \`${SITE}/r/pro/{name}.json\` with a licence key header.`,
     "",
     "## Pricing",
     "",
     ...PLANS.map((p) =>
       p.price === null
         ? `- ${p.name}: free. ${p.blurb}`
-        : `- ${p.name}: $${p.price} once (list $${listPrice(p)}, $${LAUNCH_OFF} launch discount applied at checkout). ${p.blurb}`,
+        : `- ${p.name}: $${p.price} once (list $${listPrice(p)}, $${LAUNCH_OFF} launch discount included). ${p.blurb}`,
     ),
     "- One-time payments in USD through Dodo Payments (merchant of record). No subscription.",
     "",
