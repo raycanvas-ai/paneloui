@@ -1,5 +1,7 @@
 import { readFile } from "node:fs/promises";
+import { after } from "next/server";
 
+import { capture } from "@/lib/server/analytics";
 import { TEMPLATES_LAUNCH } from "@/components/application/site/templates";
 import { limited } from "@/lib/server/dodo";
 import { licenseForKey } from "@/lib/server/licenses";
@@ -12,9 +14,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ name
   if (!TEMPLATES_LAUNCH.open) return Response.json({ error: `Templates launch ${TEMPLATES_LAUNCH.date}.` }, { status: 404 });
   if (limited("templates", request, 30)) return Response.json({ error: "Too many requests." }, { status: 429 });
   const key = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
-  if (!(await licenseForKey(key))) return Response.json({ error: "A valid Panelo Pro licence key is required." }, { status: 401 });
+  const license = await licenseForKey(key);
   // Slugs only; anything else (dots, slashes) never reaches the filesystem.
   const name = (await params).name.replace(/\.tgz$/, "");
+  after(() => capture("registry_fetch", license?.userId ?? license?.email, { item: name.slice(0, 80), kind: "template", tier: "pro", authorized: Boolean(license), plan: license?.plan }, { request }));
+  if (!license) return Response.json({ error: "A valid Panelo Pro licence key is required." }, { status: 401 });
   if (!/^[a-z0-9-]+$/.test(name)) return Response.json({ error: "Not found." }, { status: 404 });
   const body = await readFile(`${process.cwd()}/registry-pro/templates/${name}.tgz`).catch(() => null);
   return body

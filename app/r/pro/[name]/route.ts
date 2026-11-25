@@ -1,5 +1,7 @@
 import { readFile } from "node:fs/promises";
+import { after } from "next/server";
 
+import { capture } from "@/lib/server/analytics";
 import { limited } from "@/lib/server/dodo";
 import { licenseForKey } from "@/lib/server/licenses";
 
@@ -13,9 +15,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ name
   if (limited("registry", request, 120)) return Response.json({ error: "Too many requests." }, { status: 429 });
   const key = request.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
   const license = await licenseForKey(key);
-  if (!license) return Response.json({ error: "A valid Panelo Pro licence key is required." }, { status: 401 });
   // Item names are slugs; anything else (dots, slashes) never reaches the filesystem.
   const name = (await params).name.replace(/\.json$/, "");
+  // Refused fetches count too: someone trying Pro items without a key is a buyer in waiting.
+  after(() => capture("registry_fetch", license?.userId ?? license?.email, { item: name.slice(0, 80), kind: "component", tier: "pro", authorized: Boolean(license), plan: license?.plan }, { request }));
+  if (!license) return Response.json({ error: "A valid Panelo Pro licence key is required." }, { status: 401 });
   if (!/^[a-z0-9-]+$/.test(name)) return Response.json({ error: "Not found." }, { status: 404 });
   // Built into registry-pro/ by scripts/build-registry.mts, inside the image and never in public/.
   const body = await readFile(`${process.cwd()}/registry-pro/${name}.json`, "utf8").catch(() => null);
