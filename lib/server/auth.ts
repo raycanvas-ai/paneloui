@@ -3,6 +3,7 @@ import GitHub from "@auth/core/providers/github";
 import Google from "@auth/core/providers/google";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 
+import { capture, visitorId } from "@/lib/server/analytics";
 import { getDb } from "@/lib/server/db";
 import { siteOrigin } from "@/lib/server/dodo";
 import { accounts, sessions, users, verificationTokens } from "@/lib/server/schema";
@@ -14,7 +15,7 @@ export type SessionUser = { id: string; name?: string | null; email?: string | n
  * Cloudflare Worker, so auth has to run as a plain Request -> Response handler in both `next dev`
  * and the Worker. Database sessions, so signing out (or deleting a session row) ends access at once.
  */
-export function authConfig(): AuthConfig {
+export function authConfig(request?: Request): AuthConfig {
   const adapter = DrizzleAdapter(getDb(), { usersTable: users, accountsTable: accounts, sessionsTable: sessions, verificationTokensTable: verificationTokens });
   return {
     basePath: "/api/auth",
@@ -60,6 +61,17 @@ export function authConfig(): AuthConfig {
       // Return only what the page needs; the session row itself carries the cookie's token.
       session: ({ session, user }) => ({ user: { id: user.id, name: user.name, email: user.email, image: user.image }, expires: session.expires }),
     },
+    events: {
+      // $identify with the browser's anonymous PostHog id merges everything it did before signing in
+      // (landing, pricing, checkout) into the account, even if PostHog never loads on the next page.
+      signIn: async ({ user, account, isNewUser }) => {
+        if (!user.id) return;
+        const anonymous = request && visitorId(request);
+        const person = { $set: { email: user.email, name: user.name }, $set_once: { signed_up_with: account?.provider } };
+        if (anonymous && anonymous !== user.id) await capture("$identify", user.id, { $anon_distinct_id: anonymous, ...person }, { request });
+        await capture(isNewUser ? "user_signed_up" : "user_signed_in", user.id, { provider: account?.provider, ...person }, { request });
+      },
+    },
   };
 }
 
@@ -74,7 +86,7 @@ async function atPublicOrigin(request: Request) {
 }
 
 export async function handleAuth(request: Request) {
-  return Auth(await atPublicOrigin(request), authConfig());
+  return Auth(await atPublicOrigin(request), authConfig(request));
 }
 
 /** The signed-in user for a request, or null. */
