@@ -21,9 +21,11 @@ export const UI_SDK_URL = "https://ui-sdk.dev";
 export const shippedEntries = ALL_ENTRIES.filter((e) => e.status === "shipped");
 
 // The site-wide share card (app/opengraph-image.png). Named here because a page that sets its own
-// openGraph replaces the inherited one, image included; a route's own opengraph-image file still wins.
-// The ?v= busts X's card cache, which keys on the image URL; bump it whenever the image changes.
-const SHARE_IMAGE = { url: "/opengraph-image.png?v=2", width: 1200, height: 630, alt: "Panelo UI: React dashboard components AI agents can operate" };
+// openGraph replaces the inherited one, image included.
+// The ?v= busts X's card cache, which keys on the image URL (a failed fetch sticks too); bump it
+// whenever the image changes. Every page, component pages included, shares this card.
+const OG_V = "?v=2";
+const SHARE_IMAGE = { url: `/opengraph-image.png${OG_V}`, width: 1200, height: 630, alt: "Panelo UI: React dashboard components AI agents can operate" };
 
 /** A page's canonical URL and matching Open Graph fields, so shares and search agree on the address. */
 export function pageMeta(path: string, title: string, description: string, extra: Metadata = {}): Metadata {
@@ -63,10 +65,8 @@ export function entryMeta(entry: Entry): Metadata {
   const title = nouns.some((n) => entry.name.includes(n)) ? `${entry.name} for React` : `${entry.name}: ${kindOf(entry)}`;
   const terms = entry.tier === "free" ? "Free and MIT-licensed" : "Panelo Pro";
   const description = `${entry.description} ${terms}; installs with the shadcn CLI.`;
-  // Its own card (app/components/[slug]/opengraph-image.tsx), named explicitly so the site-wide one doesn't win.
-  const image = `${entry.href}/opengraph-image`;
-  const meta = pageMeta(entry.href, title, description);
-  return { ...meta, openGraph: { ...meta.openGraph, images: [image] }, twitter: { ...meta.twitter, images: [image] } };
+  // Shares the site-wide card (SHARE_IMAGE) via pageMeta.
+  return pageMeta(entry.href, title, description);
 }
 
 /** JSON-LD as a script tag. `<` is escaped so data can never close the tag early. */
