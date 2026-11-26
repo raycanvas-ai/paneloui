@@ -211,7 +211,7 @@ function ProSteps({ entry }: { entry: Entry }) {
       <Step title="Add the Pro registry to components.json">
         <CodeBlock code={registry} lang="css" header={path("components.json")} fold={0} />
       </Step>
-      <Step title="Install" last>
+      <Step title="Install" last={!entry.style}>
         <CodeBlock
           code={command}
           lang="bash"
@@ -221,6 +221,21 @@ function ProSteps({ entry }: { entry: Entry }) {
           onCopy={() => track("install_command_copied", { command, pm, surface: "component_page_installation" })}
         />
       </Step>
+      {entry.style ? (
+        <Step title="Get this style for your agent" last>
+          <p>
+            Adds a skill (in <code className="font-mono text-site-ink">.claude/skills</code> and <code className="font-mono text-site-ink">.agents/skills</code>) that teaches Claude Code, Codex or Cursor to build your other pages in this style, from this page&rsquo;s parts.
+          </p>
+          <CodeBlock
+            code={`${RUNNER[pm]} shadcn@latest add @panelo-pro/${entry.style}`}
+            lang="bash"
+            prompt
+            fold={0}
+            header={<ManagerTabs value={pm} onChange={setPm} />}
+            onCopy={() => track("install_command_copied", { command: `@panelo-pro/${entry.style}`, pm, surface: "component_page_style" })}
+          />
+        </Step>
+      ) : null}
     </ol>
   );
 }

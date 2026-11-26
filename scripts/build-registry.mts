@@ -26,9 +26,9 @@ const pkg = JSON.parse(read("package.json")) as { dependencies: Record<string, s
 const PROVIDED = new Set(["react", "react-dom", "next"]);
 
 // --- The catalogue: names, slugs, descriptions and tiers, from the site's own index. ---------------
-type Entry = { name: string; slug: string; description: string; tier: "free" | "pro" };
-const catalogue: Entry[] = [...read("components/application/docs/components-index.ts").matchAll(/\b(free|pro)\(\s*"([^"]+)",\s*"([^"]+)",\s*"([^"]*)"\s*\)/g)].map(
-  ([, tier, name, slug, description]) => ({ tier: tier as Entry["tier"], name, slug, description }),
+type Entry = { name: string; slug: string; description: string; tier: "free" | "pro"; style?: string };
+const catalogue: Entry[] = [...read("components/application/docs/components-index.ts").matchAll(/\b(free|pro)\(\s*"([^"]+)",\s*"([^"]+)",\s*"([^"]*)"(?:,\s*"([^"]+)")?\s*\)/g)].map(
+  ([, tier, name, slug, description, style]) => ({ tier: tier as Entry["tier"], name, slug, description, style }),
 );
 
 // --- Entry files: the same modules /preview/[slug] renders. -------------------------------------------
@@ -306,6 +306,26 @@ for (const e of catalogue) {
   else free++;
 }
 if (missing.length) throw new Error(`Free catalogue items with no preview entry: ${missing.join(", ")}`);
+// Style skills, Pro only: a Pro page's skill/ folder (in the private pro repo) becomes an item in registry-pro,
+// never public/r. It installs the skill (.claude/skills for Claude Code, .agents/skills for Codex and Cursor) and the page
+// itself, whose parts the skill builds from.
+let styles = 0;
+for (const e of catalogue) {
+  const entry = entries.get(e.slug);
+  if (e.tier !== "pro" || !e.style || !entry) continue;
+  const skill = `panelo-${e.style}`;
+  const body = read(`${dirname(resolveFile(entry))}/skill/SKILL.md`);
+  write(PRO_OUT, {
+    name: e.style,
+    type: "registry:item",
+    title: `${e.name} style`,
+    description: `A skill that teaches your coding agent to build new pages in the ${e.name} style, from the page's own parts.`,
+    ...BRAND(e.slug, `${e.name} style`),
+    registryDependencies: [`@panelo-pro/${e.slug}`],
+    files: [".claude", ".agents"].map((root) => file(`${root}/skills/${skill}/SKILL.md`, body)),
+  } as Written);
+  styles++;
+}
 // The primitives, each once, following their own dependencies.
 const done = new Set<string>();
 for (const path of primitives) {
@@ -318,7 +338,7 @@ for (const path of primitives) {
 // The index shadcn's registry directory and `shadcn search @panelo` read. Free items only, and no file
 // contents: those stay in each item's own JSON.
 writeFileSync(join(FREE_OUT, "registry.json"), JSON.stringify({ name: "panelo", homepage: SITE, items: index }, null, 2));
-console.log(`Registry: ${free} free items (+ demos), ${done.size} primitives, panelo-theme and agent-kit in public/r; ${pro} Pro items in registry-pro (private).`);
+console.log(`Registry: ${free} free items (+ demos), ${done.size} primitives, panelo-theme and agent-kit in public/r; ${pro} Pro items and ${styles} style skills in registry-pro (private).`);
 
 // --- Templates: one tarball each, its folder at the top, so `tar -xz` makes ./<slug>. --------------------
 // Nothing is packed before launch day (TEMPLATES_LAUNCH in components/application/site/templates.ts).

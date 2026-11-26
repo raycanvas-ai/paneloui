@@ -12,7 +12,7 @@ export const LAUNCH_OFF = 50;
 // Keep in step with the code's expiry in Dodo.
 export const LAUNCH_ENDS = new Date("2026-11-30T23:59:59+05:30").getTime();
 const SHARED = ["Use it in unlimited projects", "Keep the code forever"];
-const PRO = ["Every Pro dashboard page", "Every Pro calendar", "Pro app templates, from Dec 1", "Agent-ready UI SDK parts", "Light and dark themes"];
+const PRO = ["Every Pro dashboard page", "Every Pro calendar", "Pro app templates, from Dec 1", "Style skills: your coding agent builds new pages in a Pro page's style", "Agent-ready UI SDK parts", "Light and dark themes"];
 
 // `plan` names the product /checkout sells; the free plan links to the catalogue instead.
 export type Plan = { name: string; blurb: string; price: number | null; cta: string; plan?: "year" | "lifetime" | "startups"; featured?: boolean; features: string[] };

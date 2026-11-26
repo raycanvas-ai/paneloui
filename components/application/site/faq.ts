@@ -35,6 +35,10 @@ export const FAQ: { q: string; a: string }[] = [
     a: "December 1: three whole-app templates, one free and two in Pro. Every Pro plan includes the Pro ones, plans bought before launch too. 30+ more are in the works, with no dates yet: each ships when it's ready.",
   },
   {
+    q: "What is a style skill?",
+    a: "A Pro extra for pages like the Issue Tracker. One command installs a skill that teaches Claude Code, Codex or Cursor to build the rest of your app in that page's style, from its own parts, so one page you like becomes a whole look. Pro only: it installs with your licence key.",
+  },
+  {
     q: "Can I get a refund?",
     a: "No. All sales are final: Pro is source code, yours the moment you pay. Try the free components, previews and live agent demo first. See the refund policy.",
   },
