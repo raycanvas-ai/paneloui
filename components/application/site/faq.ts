@@ -16,7 +16,7 @@ export const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "How do I install a component?",
-    a: "Copy the command on its page, for example npx shadcn@latest add https://www.paneloui.com/r/stats-3.json, in npm, pnpm, yarn or bun. Or install by hand: the Manual tab lists the packages, the tokens and every file. Pro items install from @panelo-pro with your licence key; your account page has the exact lines. Either way the source lands in your project.",
+    a: "Copy the command on its page, for example npx shadcn@latest add @panelo/stats-3, in npm, pnpm, yarn or bun. @panelo is built into the shadcn CLI, so there is nothing to configure. Or install by hand: the Manual tab lists the packages, the tokens and every file. Pro items install from @panelo-pro with your licence key; your account page has the exact lines. Either way the source lands in your project.",
   },
   {
     q: "Does it work in my shadcn/ui project?",

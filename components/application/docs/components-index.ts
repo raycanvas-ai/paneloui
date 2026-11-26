@@ -3,7 +3,6 @@
  * block categories of the Panelo registry. Plain data, shared by the
  * landing, the docs sidebar, the /components index and each item's page.
  */
-import { SITE } from "@/components/application/site/templates";
 
 export type Entry = {
   name: string;
@@ -181,12 +180,9 @@ export const PACKAGE_MANAGERS: PackageManager[] = ["pnpm", "npm", "yarn", "bun"]
 export const RUNNER: Record<PackageManager, string> = { pnpm: "pnpm dlx", npm: "npx", yarn: "yarn", bun: "bunx --bun" };
 export const ADD: Record<PackageManager, string> = { pnpm: "pnpm add", npm: "npm install", yarn: "yarn add", bun: "bun add" };
 
-/** The free registry's address for an item: the same JSON the CLI and the manual steps read. */
-export const registryUrl = (href: string) => `${SITE}/r/${slugOf(href)}.json`;
-
 export function installCommand(href: string, pm: PackageManager = "npm"): string {
-  // Free items install by URL, which works in any project with no setup. Pro items come from the keyed
-  // registry (@panelo-pro), which the account page sets up with the licence key.
+  // @panelo is in the shadcn CLI's built-in registry index (shadcn-ui/ui#12850), so free items need no
+  // components.json setup. Pro items come from the keyed registry (@panelo-pro), set up on the account page.
   const pro = ALL_ENTRIES.find((e) => e.href === href)?.tier === "pro";
-  return `${RUNNER[pm]} shadcn@latest add ${pro ? `@panelo-pro/${slugOf(href)}` : registryUrl(href)}`;
+  return `${RUNNER[pm]} shadcn@latest add ${pro ? `@panelo-pro/${slugOf(href)}` : `@panelo/${slugOf(href)}`}`;
 }

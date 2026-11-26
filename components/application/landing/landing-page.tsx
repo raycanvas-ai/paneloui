@@ -737,7 +737,7 @@ function PermissionsCard() {
   );
 }
 
-const AGENT_KIT = "npx shadcn@latest add https://www.paneloui.com/r/agent-kit.json";
+const AGENT_KIT = "npx shadcn@latest add @panelo/agent-kit";
 const KIT_PARTS = ["agent bridge, on UI SDK", "approval prompts", "chat hook", "/api/agent route, on Groq's free tier"];
 
 export function CopyCommand({ command }: { command: string }) {
