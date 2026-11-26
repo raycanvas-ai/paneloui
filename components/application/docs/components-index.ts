@@ -107,6 +107,16 @@ export const COMPONENT_SECTIONS: Section[] = [
     ],
   },
   {
+    id: "settings",
+    title: "Settings",
+    blurb: "Settings pages that drop into any app.",
+    kind: "screen",
+    wide: true,
+    entries: [
+      free("Appearance Settings", "settings-1", "Appearance settings page with no app shell: company logo upload, brand colour swatches with a custom hex that tints the page live, theme and table-density picture cards, a sidebar switch and select, and Save and Cancel."),
+    ],
+  },
+  {
     id: "profile-pages",
     title: "Profiles",
     blurb: "Profile pages for people, creators and teams.",

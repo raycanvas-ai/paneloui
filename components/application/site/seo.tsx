@@ -42,6 +42,7 @@ const KIND: Record<string, string> = {
   workflows: "React Workflow Builder",
   projects: "React Project Page",
   inbox: "React Inbox",
+  settings: "React Settings Page",
   "profile-pages": "React Profile Page",
   "login-pages": "React Login Page",
   sidebars: "React Sidebar",
