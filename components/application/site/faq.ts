@@ -20,7 +20,7 @@ export const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Does it work in my shadcn/ui project?",
-    a: "Yes. Panelo installs with the shadcn CLI into components/panelo-ui, next to your components/ui, so nothing collides.",
+    a: "Yes, whether it runs on Base UI or Radix. Panelo brings its own UI SDK parts and installs them into components/panelo-ui, next to your components/ui, and its theme only adds tokens, so nothing collides.",
   },
   {
     q: "Do I own the code?",

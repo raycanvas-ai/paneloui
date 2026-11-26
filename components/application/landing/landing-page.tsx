@@ -603,13 +603,13 @@ function Hero() {
           <span className="whitespace-nowrap text-site-ink">
             <RiVercelFill aria-hidden className="me-1 inline size-[0.85em] align-[-0.05em]" />
             Vercel&apos;s UI SDK
-          </span>{" "}
-          and{" "}
+          </span>
+          . One{" "}
           <span className="whitespace-nowrap text-site-ink">
             <ShadcnMark className="me-1 inline size-[0.9em] align-[-0.1em]" />
-            shadcn/ui
-          </span>
-          .
+            shadcn
+          </span>{" "}
+          command into any project, Base UI or Radix.
         </p>
         <div className="mt-9 flex w-full flex-col justify-center gap-2 sm:w-auto sm:flex-row">
           <Link href="/components" className={pill("primary", "lg")}>
