@@ -10,6 +10,8 @@ export type Entry = {
   description: string;
   tier: "free" | "pro";
   status: "shipped" | "planned";
+  /** Pro only: the registry item of a skill that teaches the buyer's agent this page's style (its `skill/` folder). */
+  style?: string;
 };
 
 /** How a section previews its entries: a live demo, a scaled chart, or a whole screen from /preview/[slug]. */
@@ -27,7 +29,7 @@ export type Section = {
 };
 
 const free = (name: string, slug: string, description: string): Entry => ({ name, href: `/components/${slug}`, description, tier: "free", status: "shipped" });
-const pro = (name: string, slug: string, description: string): Entry => ({ name, href: `/components/${slug}`, description, tier: "pro", status: "shipped" });
+const pro = (name: string, slug: string, description: string, style?: string): Entry => ({ name, href: `/components/${slug}`, description, tier: "pro", status: "shipped", style });
 
 export const COMPONENT_SECTIONS: Section[] = [
   {
@@ -38,8 +40,7 @@ export const COMPONENT_SECTIONS: Section[] = [
     wide: true,
     entries: [
       pro("Overview Analytics Dashboard", "dashboard-pages-3", "Overview dashboard with revenue, orders and new-customer stat cards, bar sparklines, and an interactive pixel-mosaic sales-trend chart."),
-      pro("Marketing Analytics Dashboard", "dashboard-pages-12", "Marketing analytics dashboard with a KPI strip, a three-series trend chart, a tabbed lead inbox with AI score, and channel panels."),
-      pro("Custom Finance Dashboard", "dashboard-pages-8", "Finance dashboard with a stacked monthly balance chart, payment card and Quick Send, client news, suggestions, plans, weekly limits, budget split and recent transactions."),
+      pro("Marketing Analytics Dashboard", "dashboard-pages-12", "Marketing report: a headline that says what changed, four KPIs that redraw a dot-matrix chart against the previous period with campaign markers, a ranked channel ledger, a dot-matrix pipeline and a lead inbox with AI scores. One range drives every number."),
       free("Social Overview", "stats-1", "Social media KPI page: a stat card per channel with week-on-week change, a revenue area chart with hover and keyboard readout, audience by location, age and gender, a posting week with post cards, and per-post insights. Date range, CSV export, Keyline icons."),
       free("Dashboard Overview", "stats-2", "Social dashboard: a goal gauge with a segment per channel, channel cards, follower share and a year of engagement with a split readout, a day-by-hour activity heatmap with channel filters and a named peak, audience by age and a dot-matrix world map by country."),
       free("Crypto Portfolio", "stats-3", "Crypto portfolio page: tickers, market leaders by volume, a portfolio line with a scrubber and readout, a markets table with search, filters, sort, trend window and CSV export, a live balance with deposit, withdraw, swap and transfer, top assets and a gainers watchlist."),
@@ -52,7 +53,6 @@ export const COMPONENT_SECTIONS: Section[] = [
     kind: "screen",
     wide: true,
     entries: [
-      pro("Companies CRM Table", "dashboard-pages-1", "CRM companies table with a resizable sidebar, saved views, sort and filter menus, column visibility, row selection, footer calculations, and CSV export."),
       pro("Business Partner CRM", "dashboard-pages-4", "CRM dashboard with a navigation sidebar and a dense data table plus selection, filter and sort toolbar."),
       free("Records Table", "tables-2", "Database-style records table for any row type: saved views, column filters, header sort, search, row selection, drag to reorder, pages, CSV export and live presence. Pinned first column on small screens, Keyline icons."),
       free("Task Table", "tables-1", "Project task table with search, filters, sort and per-group pages: an Overview of grouped project panels, a List and a classic Table view with sortable columns. Container-responsive, Keyline icons."),
@@ -79,6 +79,7 @@ export const COMPONENT_SECTIONS: Section[] = [
     entries: [
       pro("Project Overview Dashboard", "dashboard-pages-5", "Project dashboard with a collapsible sidebar, breadcrumb bar, project hero, section tabs and a two-column overview."),
       pro("Fintech Project Page", "dashboard-pages-6", "Project page with a workspace sidebar, project document, properties panel and a filterable timeline."),
+      pro("Issue Tracker", "dashboard-pages-14", "A team's issues grouped by status in an inset panel: filters as editable chips with a menu per field, a quick filter by person, status, priority and assignee changed in place, sub-issues that fold under their parent, blocking relations and a hover card per issue.", "issue-tracker-style"),
       pro("Task Board Dashboard", "dashboard-pages-9", "Task overview with a greeting, AI announcement, four stat cards, board view tabs and a drag-and-drop kanban with keyboard moves."),
     ],
   },

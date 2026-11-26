@@ -1,4 +1,4 @@
-/* Finance demo data for the balance chart (shared with dashboard-pages-8). */
+/* Finance demo data for the balance chart. */
 
 /** Card surface shared by every widget. */
 export const card = 'rounded-lg border border-border/70 bg-card shadow-xs'
