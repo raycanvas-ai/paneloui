@@ -1056,7 +1056,7 @@ const FOOTER_GUIDES: FooterLink[] = [
 // Every component and the key guides get one link each: a way in from any page, for people and crawlers.
 const FOOTER_COLUMNS: FooterGroup[][] = [
   [group("analytics", "Analytics"), group("tables", "Tables"), { ...group("workflows", "Workflows"), more: { label: "All components", href: "/components" } }],
-  [group("charts", "Charts"), group("projects", "Projects"), group("inbox", "Inbox")],
+  [group("charts", "Charts"), group("projects", "Projects"), group("inbox", "Inbox"), group("settings", "Settings")],
   [group("calendars", "Calendars"), group("login-pages", "Logins"), group("profile-pages", "Profiles"), group("sidebars", "Sidebars"), group("elements", "Elements")],
   [{ title: "Guides", href: "/blog", links: FOOTER_GUIDES, more: { label: "All guides", href: "/blog" } }],
   [
