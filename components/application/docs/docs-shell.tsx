@@ -23,7 +23,9 @@ import {
   RiSparkling2Line,
   RiStackLine,
   RiTableLine,
-  RiNumbersLine,
+  RiFlowChart,
+  RiInboxLine,
+  RiKanbanView,
 } from "@remixicon/react";
 
 import { COMPONENT_SECTIONS } from "@/components/application/docs/components-index";
@@ -45,7 +47,10 @@ const NAV: { name: string; href: string; icon: Icon }[] = [
 ];
 
 const SECTION_ICONS: Record<string, Icon> = {
-  "dashboard-pages": RiDashboardLine,
+  analytics: RiDashboardLine,
+  workflows: RiFlowChart,
+  projects: RiKanbanView,
+  inbox: RiInboxLine,
   "login-pages": RiLoginBoxLine,
   "profile-pages": RiProfileLine,
   sidebars: RiLayoutLeftLine,
@@ -53,7 +58,6 @@ const SECTION_ICONS: Record<string, Icon> = {
   charts: RiBarChartBoxLine,
   calendars: RiCalendarLine,
   tables: RiTableLine,
-  stats: RiNumbersLine,
 };
 
 const row = (current: boolean) =>

@@ -38,7 +38,10 @@ export function pageMeta(path: string, title: string, description: string, extra
 
 // What each catalogue section is, in the words people search with.
 const KIND: Record<string, string> = {
-  "dashboard-pages": "React Dashboard Page",
+  analytics: "React Analytics Dashboard",
+  workflows: "React Workflow Builder",
+  projects: "React Project Page",
+  inbox: "React Inbox",
   "profile-pages": "React Profile Page",
   "login-pages": "React Login Page",
   sidebars: "React Sidebar",
@@ -46,7 +49,6 @@ const KIND: Record<string, string> = {
   charts: "React Chart",
   calendars: "React Calendar",
   tables: "React Data Table",
-  stats: "React Stat Cards",
 };
 
 export const sectionIdOf = (entry: Entry) => COMPONENT_SECTIONS.find((s) => s.entries.includes(entry))?.id ?? "elements";
