@@ -877,7 +877,7 @@ function ComponentsSection() {
 
 const TEMPLATE_TABS = [
   { value: "dashboard-pages-10", label: "Workflow builder" },
-  { value: "dashboard-pages-8", label: "Finance" },
+  { value: "dashboard-pages-14", label: "Issue tracker" },
   { value: "dashboard-pages-12", label: "Marketing" },
   { value: "dashboard-pages-7", label: "Team inbox" },
   { value: "dashboard-pages-9", label: "Task board" },

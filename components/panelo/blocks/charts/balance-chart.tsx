@@ -9,7 +9,7 @@ import { cn } from '@/components/panelo/lib/utils'
 import { CHART_MAX, CHART_STEP, card, cardTitle, categories, focusRing, money, months, total } from './finance-data'
 
 /* -------------------------------------------------------------------------- */
-/*  Current Balance (dashboard-pages/eight). Stacked monthly bars: the active   */
+/*  Current Balance. Stacked monthly bars: the active   */
 /*  month takes its category colours and a breakdown; the rest stay neutral so  */
 /*  one month reads at a time. Hover previews, click or arrow keys pin. The     */
 /*  table view is the same data for anyone who'd rather read than point.        */
