@@ -888,7 +888,7 @@ function TemplatesSection() {
   const [tab, setTab] = useState(TEMPLATE_TABS[0].value);
   return (
     <section id="pages" className={cx(CONTAINER, SECTION, "scroll-mt-14")}>
-      <Heading title="Complete pages, not just parts." body={`${sectionOf("dashboard-pages").length} dashboard pages in Pro, from $129 once.`} />
+      <Heading title="Complete pages, not just parts." body={`${ALL_ENTRIES.filter((e) => e.href.startsWith("/components/dashboard-pages-")).length} dashboard pages in Pro, from $129 once.`} />
       <Tabs value={tab} onValueChange={(next: string | null) => next !== null && setTab(next)} className="mt-10">
         <div className="-mx-6 overflow-x-auto px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <TabsList aria-label="Templates" className="relative flex w-max rounded-full bg-site-pill p-1">
@@ -1055,9 +1055,9 @@ const FOOTER_GUIDES: FooterLink[] = [
 // Five columns, each a stack of groups, so short lists sit under each other instead of leaving holes.
 // Every component and the key guides get one link each: a way in from any page, for people and crawlers.
 const FOOTER_COLUMNS: FooterGroup[][] = [
-  [{ ...group("dashboard-pages", "Dashboard pages"), more: { label: "All components", href: "/components" } }],
-  [group("charts", "Charts"), group("stats", "Stats"), group("elements", "Elements")],
-  [group("login-pages", "Login pages"), group("profile-pages", "Profile pages"), group("sidebars", "Sidebars"), group("calendars", "Calendars"), group("tables", "Tables")],
+  [group("analytics", "Analytics"), group("tables", "Tables"), { ...group("workflows", "Workflows"), more: { label: "All components", href: "/components" } }],
+  [group("charts", "Charts"), group("projects", "Projects"), group("inbox", "Inbox")],
+  [group("calendars", "Calendars"), group("login-pages", "Logins"), group("profile-pages", "Profiles"), group("sidebars", "Sidebars"), group("elements", "Elements")],
   [{ title: "Guides", href: "/blog", links: FOOTER_GUIDES, more: { label: "All guides", href: "/blog" } }],
   [
     {
