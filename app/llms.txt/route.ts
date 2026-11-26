@@ -29,7 +29,7 @@ export function GET() {
     "",
     "## Install",
     "",
-    `Run \`npx shadcn@latest add ${SITE}/r/<item>.json\` (or pnpm dlx, yarn, bunx --bun). To use the short \`@panelo/<item>\` form, add \`"@panelo": "${SITE}/r/{name}.json"\` under \`registries\` in components.json. Pro items use \`${SITE}/r/pro/{name}.json\` with a licence key header.`,
+    `Run \`npx shadcn@latest add @panelo/<item>\` (or pnpm dlx, yarn, bunx --bun). \`@panelo\` is in the shadcn CLI's built-in registry index, so no components.json setup is needed; the full URL \`${SITE}/r/<item>.json\` also works. Pro items use \`${SITE}/r/pro/{name}.json\` with a licence key header.`,
     "",
     "## Pricing",
     "",
