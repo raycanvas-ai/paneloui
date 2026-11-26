@@ -23,7 +23,7 @@ export function GET() {
     "",
     `- Built by [${MAKER.name}](${MAKER.url}), backed by [${PARTNER.name}](${PARTNER.url}). From the creators of ${SIBLINGS.map((s) => `[${s.name}](${s.url})`).join(" and ")}.`,
     `- Built on [Vercel's UI SDK](${UI_SDK_URL}): every control exposes itself to agents, which read the page as named controls and act through the same component API a click uses.`,
-    "- Works in any shadcn/ui project: items install with the shadcn CLI into components/panelo-ui, next to components/ui.",
+    "- Works in any shadcn/ui project, Base UI or Radix: items bring their own UI SDK parts and install with the shadcn CLI into components/panelo-ui, next to components/ui.",
     "- Stack: React 19, Next.js 16, Tailwind CSS v4. Light and dark themes on every item.",
     `- Source: [GitHub](${REPO_URL}). Free components are MIT-licensed; Pro is a one-time purchase.`,
     "",
