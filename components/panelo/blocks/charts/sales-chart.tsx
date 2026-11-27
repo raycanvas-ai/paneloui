@@ -40,20 +40,20 @@ export function SalesChart() {
     }
 
     return (
-        <Card className="gap-0 rounded-2xl border-border/70 p-4 shadow-xs sm:p-6">
+        <Card className="@container gap-0 rounded-2xl border-border/70 p-4 shadow-xs sm:p-6">
             {/* Header: total, legend, period toggle */}
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <div className="flex items-baseline gap-2">
-                    <span className="text-sm text-muted-foreground">Total Revenue :</span>
+                    <span className="whitespace-nowrap text-sm text-muted-foreground">Total Revenue :</span>
                     <span className="font-mono text-2xl font-bold tracking-wide text-foreground">$20,320</span>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-                    <div className="flex items-center gap-5 font-mono text-xs uppercase tracking-[0.12em]">
-                        <span className="flex items-center gap-2 text-foreground">
+                    <div className="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-xs uppercase tracking-[0.12em]">
+                        <span className="flex items-center gap-2 whitespace-nowrap text-foreground">
                             <LegendDot tone="light" /> New User
                         </span>
-                        <span className="flex items-center gap-2 text-muted-foreground">
+                        <span className="flex items-center gap-2 whitespace-nowrap text-muted-foreground">
                             <LegendDot tone="dark" /> Existing User
                         </span>
                     </div>
@@ -65,13 +65,14 @@ export function SalesChart() {
                         onValueChange={(value) => {
                             if (value) changePeriod(value as Period)
                         }}
-                        className="gap-1 rounded-full bg-muted p-1">
+                        // Under 24rem of card the toggle fills the row and its items share it, instead of running past the edge.
+                        className="w-full gap-1 rounded-full bg-muted p-1 @sm:w-auto">
                         {periods.map((item) => (
                             <ToggleGroupItem
                                 key={item}
                                 value={item}
                                 aria-label={`${item} view`}
-                                className="h-auto rounded-full border-0 bg-transparent px-5 py-2 text-sm font-medium capitalize text-muted-foreground transition-all duration-200 hover:text-foreground data-pressed:bg-background data-pressed:font-semibold data-pressed:text-foreground data-pressed:shadow">
+                                className="h-auto flex-1 rounded-full border-0 bg-transparent px-3 py-2 @sm:flex-none @sm:px-5 text-sm font-medium capitalize text-muted-foreground transition-all duration-200 hover:text-foreground data-pressed:bg-background data-pressed:font-semibold data-pressed:text-foreground data-pressed:shadow">
                                 {item}
                             </ToggleGroupItem>
                         ))}

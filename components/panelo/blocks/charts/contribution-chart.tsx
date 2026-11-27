@@ -349,6 +349,8 @@ export function ContributionChart({ days: given, accent = ACCENT, className }: {
                                       key={item.label}
                                       className="pointer-events-none absolute"
                                       style={{
+                                          // Capped to its slot (the gap to the next one), so a card just past 720px wraps the range instead of overlapping.
+                                          maxWidth: `${[31, 25, 23, 21][i] - 2}%`,
                                           left: `${lerp(flat.left, cube.left, layout)}%`,
                                           top: `${lerp(flat.top, cube.top, layout)}%`,
                                           transform: `translateX(${lerp(flat.shift, cube.shift, layout)}%)`,
@@ -403,7 +405,8 @@ function Stat({ item, compact }: { item: StatItem; compact?: boolean }) {
                 <span className={cn('leading-[0.95] font-bold tracking-[-0.02em] text-[oklch(from_var(--cg)_calc(l_-_0.2)_c_h)] tabular-nums', compact ? 'text-[30px]' : 'text-[38px]')}>{item.value}</span>
                 <span className="flex flex-col pb-0.5 leading-tight">
                     <span className="text-[14px] text-foreground">{item.unit}</span>
-                    <span className="text-[12px] whitespace-nowrap text-muted-foreground">{item.detail}</span>
+                    {/* A date range ("Nov 16, 2025 — Nov 20, 2026") can be wider than its slot: it wraps rather than running under the next stat. */}
+                    <span className="text-[12px] text-pretty text-muted-foreground">{item.detail}</span>
                 </span>
             </dd>
         </div>
