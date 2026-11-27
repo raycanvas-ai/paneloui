@@ -47,7 +47,8 @@ export function BalanceChart({ className, compact = false }: { className?: strin
             </h2>
             {compact ? null : <p className="mt-3 text-[13px] leading-5 text-muted-foreground">As of {latest.name}:</p>}
 
-            <div className="mt-3 flex items-end justify-between gap-4">
+            {/* Wraps rather than squeezes: on a phone-width card the view switch drops under the stats. */}
+            <div className="mt-3 flex flex-wrap items-end justify-between gap-x-4 gap-y-3">
                 <dl className={compact ? 'flex' : 'grid grid-cols-2 gap-y-3 @lg:flex @lg:gap-y-0'}>
                     {stats.map((s, i) => (
                         <div
@@ -57,6 +58,8 @@ export function BalanceChart({ className, compact = false }: { className?: strin
                                 (compact ? i > 0 : i % 2 === 1) && 'border-l',
                                 !compact && i === 2 && 'pl-0 @lg:border-l @lg:pl-4.5',
                                 compact && i === 3 && 'hidden',
+                                // Three mono figures need ~22rem; under 24rem the compact row keeps two.
+                                compact && i === 2 && 'hidden @sm:block',
                             )}
                         >
                             <dt className="text-[11px] leading-4 text-muted-foreground">{s.label}</dt>
@@ -66,7 +69,7 @@ export function BalanceChart({ className, compact = false }: { className?: strin
                 </dl>
 
                 {compact ? null : (
-                    <div role="group" aria-label="View" className="flex shrink-0 gap-1">
+                    <div role="group" aria-label="View" className="ms-auto flex shrink-0 gap-1">
                         {(
                             [
                                 ['chart', 'Chart view', ChartArea],
@@ -121,7 +124,8 @@ export function BalanceChart({ className, compact = false }: { className?: strin
                 ) : (
                     <>
                         <div className="flex min-h-0 flex-1">
-                            <div aria-hidden="true" className="relative w-13 shrink-0 text-[10px] text-muted-foreground">
+                            {/* "180 K" is ~26px: a narrow card gives the plot the 16px a wide one spends on air. */}
+                            <div aria-hidden="true" className="relative w-9 shrink-0 text-[10px] text-muted-foreground @sm:w-13">
                                 {ticks.map((v) => (
                                     <span key={v} className="absolute left-0 -translate-y-1/2 whitespace-nowrap" style={{ top: `${(1 - v / CHART_MAX) * 100}%` }}>
                                         {tickLabel(v)}
@@ -175,7 +179,9 @@ export function BalanceChart({ className, compact = false }: { className?: strin
                                                                 // no room beside a bar, so it docks in the plot corner away from the month.
                                                                 'top-0',
                                                                 share < 0.6 && '@2xl:top-auto @2xl:bottom-0',
-                                                                i < 6 ? 'right-0' : 'left-0',
+                                                                // Under 24rem the plot can be narrower than the card, so it always docks
+                                                                // right and spills into the tick gutter instead of past the card's edge.
+                                                                i < 6 ? 'right-0' : 'right-0 @sm:right-auto @sm:left-0',
                                                                 i >= 8 ? '@2xl:left-auto @2xl:right-full @2xl:mr-2.5' : '@2xl:right-auto @2xl:left-full @2xl:ml-2.5',
                                                             )}
                                                         >
@@ -199,9 +205,13 @@ export function BalanceChart({ className, compact = false }: { className?: strin
                             </div>
                         </div>
 
-                        <div aria-hidden="true" className="mt-3 flex pl-13 text-[11px] leading-4 text-muted-foreground">
+                        <div aria-hidden="true" className="mt-3 flex pl-9 text-[11px] leading-4 text-muted-foreground @sm:pl-13">
                             {months.map((row, i) => (
-                                <span key={row.label} className={cn('min-w-0 flex-1 whitespace-nowrap text-center', i % 2 === 1 && '@max-xl:invisible')}>
+                                // Every month from 36rem, every other from 28rem, every third from 12rem (plot ≥ 156px), every sixth below (a label is ~36px).
+                                <span
+                                    key={row.label}
+                                    className={cn('min-w-0 flex-1 whitespace-nowrap text-center', i % 2 === 1 && '@md:@max-xl:invisible', i % 3 !== 0 && '@min-[12rem]:@max-md:invisible', i % 6 !== 0 && '@max-[12rem]:invisible')}
+                                >
                                     {row.label}
                                 </span>
                             ))}

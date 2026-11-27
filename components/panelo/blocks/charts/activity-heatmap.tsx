@@ -222,10 +222,11 @@ export function ActivityHeatmap({ className, accent = ACCENT }: { className?: st
                                         focusRing
                                     )}>
                                     {label}
-                                    <span aria-hidden className="text-muted-foreground">
+                                    <span aria-hidden className="text-muted-foreground @max-sm:hidden">
                                         ·
                                     </span>
-                                    <span className="tabular-nums">
+                                    {/* Phone-width cards keep the range for screen readers only; the column labels still show the days. */}
+                                    <span className="tabular-nums @max-sm:sr-only">
                                         <span className="sr-only">range </span>
                                         {/* Narrow cards get the short form, so the whole switcher still fits. */}
                                         <span className={cn(range.short && '@max-md:hidden')}>{range.label}</span>

@@ -83,7 +83,8 @@ export function RevenueChart({ days = revenueSeries.length, showPrevious = true,
     const current = line('current')
     const change = point.current / point.previous - 1
 
-    // Labels count back from today so it's always labelled; narrow plots drop every other one.
+    // Labels count back from today so it's always labelled. Narrow plots keep every other one, and phone-width
+    // ones (under 24rem, plot under ~225px) every fourth, or "10 Dec" runs into "Today".
     const step = days <= 7 ? 1 : days <= 14 ? 2 : 3
     const ticks = Array.from({ length: Math.floor(last / step) + 1 }, (_, k) => last - k * step)
 
@@ -208,7 +209,7 @@ export function RevenueChart({ days = revenueSeries.length, showPrevious = true,
                 {ticks.map((i, k) => (
                     <span
                         key={i}
-                        className={cn('absolute whitespace-nowrap', i === last ? '-translate-x-full font-medium text-foreground' : i === 0 ? '' : '-translate-x-1/2', k % 2 === 1 && 'hidden @xl:block')}
+                        className={cn('absolute whitespace-nowrap', i === last ? '-translate-x-full font-medium text-foreground' : i === 0 ? '' : '-translate-x-1/2', k % 2 === 1 && 'hidden @xl:block', k % 4 === 2 && 'hidden @sm:block')}
                         style={{ left: `${pct(i)}%` }}
                     >
                         {i === last ? 'Today' : dayFormat.format(dateOf(i))}

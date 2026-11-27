@@ -27,7 +27,7 @@ function State({ label, children, className }: { label: string; children: ReactN
 export default function ResourceSidebarSheet() {
     return (
         <div className="flex min-h-svh items-start bg-card font-sans text-foreground">
-            <div className="flex h-[min(900px,calc(100svh-48px))] min-h-[680px] w-full snap-x snap-mandatory gap-8 overflow-x-auto px-6 py-6 sm:gap-10 xl:justify-center [&>*]:snap-start">
+            <div className="flex h-[min(900px,calc(100svh-48px))] min-h-[680px] w-full snap-x snap-mandatory scroll-px-6 gap-8 overflow-x-auto px-6 py-6 sm:gap-10 xl:justify-center-safe [&>*]:snap-start">
                 <State label="Rail and panel">
                     <ResourceSidebar shortcuts resizable layout="docked" />
                 </State>

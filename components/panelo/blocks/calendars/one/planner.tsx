@@ -856,7 +856,8 @@ function MonthGrid({ focus, ctx, events, onDay }: { focus: Date; ctx: Ctx; event
                     </span>
                 ))}
             </div>
-            <div className="grid min-h-[480px] flex-1 grid-cols-7 grid-rows-6">
+            {/* Auto rows share spare height evenly but grow with a busy day, so "+2 more" never spills into the next week. */}
+            <div className="grid min-h-[480px] flex-1 grid-cols-7 grid-rows-[repeat(6,auto)]">
                 {cells.map((d) => {
                     const dayEvents = events.filter((e) => sameDay(e.start, d)).sort((a, b) => +a.start - +b.start)
                     const outside = d.getMonth() !== focus.getMonth()
@@ -878,8 +879,10 @@ function MonthGrid({ focus, ctx, events, onDay }: { focus: Date; ctx: Ctx; event
                                 </EventCard>
                             ))}
                             {dayEvents.length > 3 ? (
-                                <button type="button" onClick={() => onDay(d)} className={cn('cursor-pointer rounded-[4px] px-1.5 text-start text-[12px] text-foreground/55 hover:text-foreground', focusRing)}>
-                                    +{dayEvents.length - 3} more
+                                <button type="button" onClick={() => onDay(d)} className={cn('cursor-pointer rounded-[4px] px-1.5 text-start text-[12px] whitespace-nowrap text-foreground/55 hover:text-foreground', focusRing)}>
+                                    +{dayEvents.length - 3}
+                                    {/* A phone-width cell fits "+2", not "+2 more". */}
+                                    <span className="@max-xl:sr-only"> more</span>
                                 </button>
                             ) : null}
                         </div>
