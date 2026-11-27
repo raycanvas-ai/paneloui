@@ -12,7 +12,7 @@ export const LAUNCH_OFF = 50;
 // Keep in step with the code's expiry in Dodo.
 export const LAUNCH_ENDS = new Date("2026-11-30T23:59:59+05:30").getTime();
 const SHARED = ["Use it in unlimited projects", "Keep the code forever"];
-const PRO = ["Every Pro dashboard page", "Every Pro calendar", "Pro app templates, from Dec 1", "Style skills: your coding agent builds new pages in a Pro page's style", "Agent-ready UI SDK parts", "Light and dark themes"];
+const PRO = ["Every Pro dashboard page", "Every Pro calendar", "Pro app templates, from Dec 1", "Style skills: your coding agent builds new pages in a Pro page's style", "Base UI and agent-ready UI SDK editions", "Light and dark themes"];
 
 // `plan` names the product /checkout sells; the free plan links to the catalogue instead.
 export type Plan = { name: string; blurb: string; price: number | null; cta: string; plan?: "year" | "lifetime" | "startups"; featured?: boolean; features: string[] };
@@ -23,12 +23,12 @@ export const PLANS: Plan[] = [
     blurb: "The fundamentals of Panelo, free. Perfect for indie developers.",
     price: null,
     cta: "Browse free",
-    features: ["Free user license", ...SHARED, "Free component updates", `${freeCount} free components`, "Free app template, from Dec 1", "Agent-ready UI SDK parts", "Light and dark themes"],
+    features: ["Free user license", ...SHARED, "Free component updates", `${freeCount} free components`, "Free app template, from Dec 1", "Base UI and agent-ready UI SDK editions", "Light and dark themes"],
   },
   {
     name: "1 Year of Updates",
     blurb: "Every Panelo Pro page, calendar and block.",
-    price: 129,
+    price: 99,
     cta: "Buy now",
     plan: "year",
     features: ["Single-user license", ...SHARED, "Pro updates for 1 year", ...PRO],
@@ -36,7 +36,7 @@ export const PLANS: Plan[] = [
   {
     name: "Lifetime Access",
     blurb: "Every Panelo Pro page, calendar and block, updated forever.",
-    price: 179,
+    price: 149,
     cta: "Buy now",
     plan: "lifetime",
     featured: true,
@@ -45,7 +45,7 @@ export const PLANS: Plan[] = [
   {
     name: "Unlimited for Startups",
     blurb: "Everything in Pro, licensed for up to 5 developers.",
-    price: 299,
+    price: 199,
     cta: "Buy now",
     plan: "startups",
     features: ["5-user license", ...SHARED, "Pro updates forever", ...PRO],
@@ -54,3 +54,6 @@ export const PLANS: Plan[] = [
 
 /** List price before the launch discount, shown struck through. */
 export const listPrice = (plan: Plan) => (plan.price === null ? null : plan.price + LAUNCH_OFF);
+
+/** The cheapest paid plan, for "Pro from $X" lines. */
+export const PRO_FROM = Math.min(...PLANS.flatMap((p) => (p.price === null ? [] : [p.price])));

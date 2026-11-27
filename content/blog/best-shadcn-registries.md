@@ -102,7 +102,7 @@ The official charts cover area, bar, line, pie, radar and radial charts on Recha
 | shadcn/ui charts and blocks | `@shadcn` (default) | MIT | Free | The standard starting point; `dashboard-01` block |
 | Tremor | Copy and paste from its site (not in the directory) | Apache-2.0 | Free | Polished chart and KPI components; Vercel acquired Tremor in Jan 2025 and made Tremor Blocks free under MIT |
 | shadcnblocks Admin Kit | Part of a paid plan | Commercial | Premium plan and up | A complete admin app with many pages |
-| Panelo UI | `@panelo` (namespace config, not yet in the directory) | MIT (free items) | Free; Pro from $129 one-time | Heatmaps, contribution graphs and other chart types Recharts lacks; full dashboard pages |
+| Panelo UI | `@panelo` (namespace config, not yet in the directory) | MIT (free items) | Free; Pro from $99 one-time | Heatmaps, contribution graphs and other chart types Recharts lacks; full dashboard pages |
 
 Two honest notes. Tremor's copy-paste repo has had little activity since its last commit in October 2025, so check that it fits your React and Recharts versions. And Panelo UI is small: 32 items, 15 of them free, with charts that ship with sample data and fixed designs rather than a general charting API. What it adds is agent support: its components are built on Vercel's UI SDK, which is in beta, so an AI agent can read the dashboard as named controls and act through the same component API a click uses. See the free charts on the [components page](/components).
 

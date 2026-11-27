@@ -64,7 +64,7 @@ So the thing to replace is a copy-in, own-the-source React kit with a strong def
 | shadcnblocks | shadcn registry | 115+ free blocks; $149 to $399 list, one-time | shadcn/ui | Breadth, plus a Next.js 16 Admin Kit |
 | shadcn/studio | shadcn registry | Free tier; one-time paid tiers from $219 list (on sale now) | shadcn/ui | Blocks, templates, theme generator |
 | daisyUI | Tailwind plugin (CSS) | Free, MIT | CSS classes, any framework | Not React-specific; good for non-React stacks |
-| Panelo UI | shadcn registry | 15 free MIT items; Pro from $129 at launch, one-time | shadcn/ui, Vercel's UI SDK (beta) | Dashboards and charts only |
+| Panelo UI | shadcn registry | 15 free MIT items; Pro from $99 at launch, one-time | shadcn/ui, Vercel's UI SDK (beta) | Dashboards and charts only |
 
 ### shadcn/ui: the default answer
 

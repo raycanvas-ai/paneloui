@@ -14,7 +14,7 @@ export const mode = (): Mode => (process.env.DODO_PAYMENTS_ENVIRONMENT === "live
 
 export const API: Record<Mode, string> = { test_mode: "https://test.dodopayments.com", live_mode: "https://live.dodopayments.com" };
 
-// Product ids differ per mode. Each product is priced at its list price; the launch code takes $50 off.
+// Product ids differ per mode. Each product is priced at the site price (launch discount already off).
 export const PRODUCTS: Record<Mode, Record<Plan, string>> = {
   test_mode: { year: "pdt_0NsQEqNyo5UonT1RdmTiV", lifetime: "pdt_0NsQEqQ40NcUTGTi0cVIc", startups: "pdt_0NsQEqSiguTGJ4gLuXikF" },
   live_mode: { year: "pdt_0NsQEqXEEbJlZCxNpWZ8l", lifetime: "pdt_0NsQEqa9WtiHLyYgBhHS0", startups: "pdt_0NsQEqdNkiFjQzrDZ6LQS" },

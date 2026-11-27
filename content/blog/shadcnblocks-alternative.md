@@ -65,7 +65,7 @@ People usually have one of these reasons:
 | Magic UI | MIT component set | Pro $199 | One-time | Animated landing-page sections and templates |
 | Aceternity UI | 100+ components | $169 (1 year), $199 lifetime, Team $1,590 | One-time | Motion-heavy hero sections and effects |
 | Untitled UI React | Free core, "free to use in commercial projects for one user" | Solo $349, Studio $999 (8 users) and up | One-time ("pay once") | Full design system on React Aria and Tailwind CSS v4 |
-| Panelo UI | 15 MIT items (charts, logins, a profile, a dashboard page) | From $129 at launch | One-time | Dashboards, charts, calendars; agent-ready |
+| Panelo UI | 15 MIT items (charts, logins, a profile, a dashboard page) | From $99 at launch | One-time | Dashboards, charts, calendars; agent-ready |
 
 ## Which alternative fits which project?
 
