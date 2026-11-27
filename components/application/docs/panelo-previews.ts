@@ -14,6 +14,7 @@ export const PANELO_LOADERS: Record<string, () => Promise<ComponentType>> = {
     "tables-2": () => import("@/components/panelo/blocks/tables/two").then((m) => m.default),
     "tables-1": () => import("@/components/panelo/blocks/tables/one").then((m) => m.default),
     "sidebars-3": () => import("@/components/panelo/blocks/sidebars/one").then((m) => m.default),
+    "sidebars-4": () => import("@/components/panelo/blocks/sidebars/two").then((m) => m.default),
     "elements-1": () => import("@/components/panelo/blocks/elements/one").then((m) => m.default),
     "elements-2": () => import("@/components/panelo/blocks/elements/two").then((m) => m.default),
     "settings-1": () => import("@/components/panelo/blocks/settings/one").then((m) => m.default),
