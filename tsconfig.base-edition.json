@@ -1,0 +1,32 @@
+{
+  "//": "Type-checks the blocks as the Base UI edition installs them: each UI SDK part resolves to its Base UI adapter in components/panelo/base, falling back to UI SDK for parts that have none (the registry build refuses to ship those). Run: npx tsc --noEmit -p tsconfig.base-edition.json Dashboard pages ten (workflow canvas on UI SDK's primitive engine) and eleven (agent assistant) are UI SDK-only, so they're left out.",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "incremental": false,
+    "paths": {
+      "@ui-sdk/react/*": [
+        "./components/panelo/base/*",
+        "./node_modules/@ui-sdk/react/dist/*"
+      ],
+      "@pro": [
+        "./components/panelo/pro-fallback.ts"
+      ],
+      "@/*": [
+        "./*"
+      ]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "components/panelo/**/*.ts",
+    "components/panelo/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "templates",
+    "components/panelo/pro/templates",
+    "components/panelo/pro/dashboard-pages/ten",
+    "components/panelo/pro/dashboard-pages/eleven",
+    "components/panelo/pro/index.ts"
+  ]
+}

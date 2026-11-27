@@ -7,8 +7,12 @@ export const FAQ: { q: string; a: string }[] = [
     a: "Raycanvas builds Panelo UI, backed by Shadcn Labs. The same team created Ruixen UI and snapcn.",
   },
   {
+    q: "Base UI or UI SDK: which edition do I install?",
+    a: "Your choice, per install: every component and page comes in both, from the same source and with the same look. The Base UI edition (add -base to the item, like @panelo/stats-3-base) builds on Base UI, like shadcn's Base UI components, so your project needs no UI SDK. The UI SDK edition builds on Vercel's UI SDK, so AI agents can read and operate every control. Two Pro pages built on UI SDK's agent engine, the workflow canvas and the AI automation assistant, come in UI SDK only.",
+  },
+  {
     q: "What makes Panelo agent-ready?",
-    a: "Every control is a part from Vercel's UI SDK. An agent reads the page as a list of named controls and acts through the same component API your clicks use, so it never guesses at pixels. Destructive actions are marked, and the agent has to ask you first.",
+    a: "In the UI SDK edition, every control is a part from Vercel's UI SDK. An agent reads the page as a list of named controls and acts through the same component API your clicks use, so it never guesses at pixels. Destructive actions are marked, and the agent has to ask you first.",
   },
   {
     q: "Do I need an AI API key?",
@@ -20,7 +24,7 @@ export const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Does it work in my shadcn/ui project?",
-    a: "Yes, whether it runs on Base UI or Radix. Panelo brings its own UI SDK parts and installs them into components/panelo-ui, next to your components/ui, and its theme only adds tokens, so nothing collides.",
+    a: "Yes, whether it runs on Base UI or Radix. Panelo installs its own parts into components/panelo-ui, next to your components/ui, and its theme only adds tokens, so nothing collides. On a Base UI project, the Base UI edition reuses the @base-ui/react you already have.",
   },
   {
     q: "Do I own the code?",

@@ -3,7 +3,7 @@
 import { useState, useSyncExternalStore, type ReactNode } from "react";
 import { RiArrowDownSLine, RiCheckLine, RiFileCopyLine } from "@remixicon/react";
 
-import { PACKAGE_MANAGERS, type PackageManager } from "@/components/application/docs/components-index";
+import { EDITIONS, PACKAGE_MANAGERS, type Edition, type PackageManager } from "@/components/application/docs/components-index";
 import { cx } from "@/utils/cx";
 
 /* -------------------------------------------------------------------------- */
@@ -96,6 +96,29 @@ export function usePackageManager(): [PackageManager, (pm: PackageManager) => vo
     listeners.forEach((fn) => fn());
   };
   return [pm, set];
+}
+
+/* --------------------------------- Edition --------------------------------- */
+
+const EDITION_KEY = "panelo:edition";
+const editionListeners = new Set<() => void>();
+const readEdition = (): Edition => {
+  const v = typeof window === "undefined" ? null : window.localStorage.getItem(EDITION_KEY);
+  return v === "base" ? "base" : "sdk";
+};
+
+/** UI SDK or Base UI: remembered across visits like the package manager, so every command on the site agrees. */
+export function useEdition(): [Edition, (edition: Edition) => void] {
+  const edition = useSyncExternalStore(
+    (fn) => (editionListeners.add(fn), () => editionListeners.delete(fn)),
+    readEdition,
+    () => "sdk" as Edition,
+  );
+  const set = (next: Edition) => {
+    window.localStorage.setItem(EDITION_KEY, next);
+    editionListeners.forEach((fn) => fn());
+  };
+  return [edition, set];
 }
 
 /* ---------------------------------- Pieces ---------------------------------- */

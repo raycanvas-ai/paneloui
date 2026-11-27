@@ -78,6 +78,7 @@ It writes light, dark and RTL screenshots plus 3x crops of every switch, radio, 
 3. Click every control once and confirm state, Cancel/undo, and that nothing jumps.
 4. Run `web-design-guidelines` on the block's files and `review-animations` if it has motion. Fix or justify each finding.
 5. `npx tsc --noEmit -p .`, then `node --experimental-strip-types scripts/build-registry.mts` and confirm the item's JSON lists only the files and packages it needs.
+6. Base UI edition (every block ships on UI SDK and on Base UI, from the same source; see `components/panelo/base`): `npx tsc --noEmit -p tsconfig.base-edition.json`, start `PANELO_EDITION=base npx next dev -p 3001`, then `python -I .claude/skills/panelo-design/scripts/parity.py <slug>` and look at any block that differs or logs errors. A UI SDK part a block newly imports needs its adapter in `components/panelo/base`, or the build drops the block from the Base UI edition and fails until `SDK_ONLY` in `components-index.ts` says so.
 
 Report what was measured, not adjectives.
 

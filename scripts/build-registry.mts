@@ -9,6 +9,11 @@
 // Installed files land under components/panelo-ui/ (next to a project's components/ui), so imports
 // of `@/components/panelo/…` are rewritten to `@/components/panelo-ui/…`. Site images become
 // absolute URLs, and every item depends on `panelo-theme`, the tokens Panelo adds to stock shadcn.
+//
+// Two editions from one source. The UI SDK edition is the code as written (`@panelo/<item>`). The Base UI
+// edition (`@panelo/<item>-base`, `@panelo-pro/<item>-base`) swaps each `@ui-sdk/react/<part>` import for its
+// Base UI adapter in components/panelo/base, so the blocks are the same files and only the primitives differ.
+// An item that still needs UI SDK after the swap (the agent kit, the workflow canvas) has no Base UI edition.
 
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -20,6 +25,17 @@ const FREE_OUT = join(ROOT, "public/r");
 const PRO_OUT = join(ROOT, "registry-pro");
 const FREE_TEMPLATES_OUT = join(ROOT, "public/t");
 const read = (path: string) => readFileSync(join(ROOT, path), "utf8");
+
+// --- Editions ------------------------------------------------------------------------------------------
+type Edition = "sdk" | "base";
+let EDITION: Edition = "sdk";
+const ADAPTERS = new Set(readdirSync(join(ROOT, "components/panelo/base")).filter((f) => f.endsWith(".tsx")).map((f) => f.replace(/\.tsx$/, "")));
+const toBase = (source: string) => source.replace(/(["'])@ui-sdk\/react\/([a-z-]+)\1/g, (whole, q: string, part: string) => (ADAPTERS.has(part) ? `${q}@/components/panelo/base/${part}${q}` : whole));
+/** A library file as the current edition ships it. */
+const src = (path: string) => (EDITION === "base" && path.startsWith("components/panelo/") ? toBase(read(path)) : read(path));
+/** An item's name in the current edition: Base UI items carry `-base` (the adapters are Base UI-only already). */
+const named = (name: string) => (EDITION === "base" && !name.startsWith("base-") ? `${name}-base` : name);
+const UI_SDK = /^@ui-sdk\//;
 
 const pkg = JSON.parse(read("package.json")) as { dependencies: Record<string, string> };
 // Provided by any Next.js project the components install into.
@@ -63,7 +79,7 @@ const packageName = (spec: string) => (spec.startsWith("@") ? spec.split("/").sl
 function importsOf(file: string) {
   const local: string[] = [];
   const packages: string[] = [];
-  for (const [, spec] of read(file).matchAll(/(?:from\s+|import\s*\(\s*|^import\s+)["']([^"']+)["']/gm)) {
+  for (const [, spec] of src(file).matchAll(/(?:from\s+|import\s*\(\s*|^import\s+)["']([^"']+)["']/gm)) {
     if (spec.startsWith("@/")) local.push(resolveFile(spec.slice(2)));
     else if (spec.startsWith(".")) local.push(resolveFile(relative(ROOT, resolve(join(ROOT, dirname(file)), spec))));
     else if (!spec.startsWith("node:") && !PROVIDED.has(packageName(spec))) packages.push(packageName(spec));
@@ -73,9 +89,9 @@ function importsOf(file: string) {
 
 // Free items are split the way a component library's registry is: a component carries only its own
 // files, and each shared primitive (ui/, lib/, hooks/, logos/) is its own item that components depend on.
-const SHARED = /^components\/panelo\/(ui|lib|hooks|logos)\//;
+const SHARED = /^components\/panelo\/(ui|lib|hooks|logos|base)\//;
 const sharedName = (file: string) => file.replace(/^components\/panelo\//, "").replace(/\.tsx?$/, "").replace(/\//g, "-");
-const sharedUrl = (file: string) => `${SITE}/r/${sharedName(file)}.json`;
+const sharedUrl = (file: string) => `${SITE}/r/${named(sharedName(file))}.json`;
 
 /** An entry's own files (stopping at shared primitives), the primitives it imports, and its packages. */
 function split(entry: string[], allowed: (file: string) => boolean) {
@@ -109,7 +125,7 @@ function collect(entry: string, allowed: (file: string) => boolean) {
     if (files.has(file)) continue;
     if (!allowed(file)) throw new Error(`${entry} imports ${file}, outside the component library`);
     files.add(file);
-    for (const [, spec] of read(file).matchAll(/(?:from\s+|import\s*\(\s*|^import\s+)["']([^"']+)["']/gm)) {
+    for (const [, spec] of src(file).matchAll(/(?:from\s+|import\s*\(\s*|^import\s+)["']([^"']+)["']/gm)) {
       if (spec.startsWith("@/")) queue.push(resolveFile(spec.slice(2)));
       else if (spec.startsWith(".")) queue.push(resolveFile(relative(ROOT, resolve(join(ROOT, dirname(file)), spec))));
       else if (!spec.startsWith("node:") && !PROVIDED.has(packageName(spec))) packages.add(packageName(spec));
@@ -130,7 +146,7 @@ const rewrite = (source: string) =>
 const AUTHOR = `Panelo UI <${SITE}>`;
 const BRAND = (name: string, title: string) => ({
   author: AUTHOR,
-  docs: name === "agent-kit" ? `Panelo UI · ${title}. Docs: ${SITE}` : `Panelo UI · ${title}. Docs and live preview: ${SITE}/components/${name}`,
+  docs: name === "agent-kit" ? `Panelo UI · ${title}. Docs: ${SITE}` : `Panelo UI · ${title}. Docs and live preview: ${SITE}/components/${name.replace(/-base$/, "")}`,
 });
 
 function version(name: string) {
@@ -151,7 +167,7 @@ function item(name: string, title: string, description: string, entryFiles: stri
     ...BRAND(name, title),
     dependencies: packages.map(version),
     registryDependencies: [`${SITE}/r/panelo-theme.json`],
-    files: files.map((file) => ({ path: extraTargets[file] ?? target(file), type: "registry:file", target: extraTargets[file] ?? target(file), content: rewrite(read(file)) })),
+    files: files.map((file) => ({ path: extraTargets[file] ?? target(file), type: "registry:file", target: extraTargets[file] ?? target(file), content: rewrite(src(file)) })),
   };
 }
 
@@ -165,7 +181,7 @@ function freeItem(name: string, title: string, description: string, entry: strin
   const root = roots[0];
   const sheet = isSheet(root);
   // A sheet's index is a demo plus re-exports; the component is what its default export renders.
-  const main = sheet ? resolveFile(relative(ROOT, resolve(join(ROOT, dirname(root)), [...read(root).matchAll(/^import \{[^}]*\} from ["'](\.[^"']+)["']/gm)][0][1]))) : root;
+  const main = sheet ? resolveFile(relative(ROOT, resolve(join(ROOT, dirname(root)), [...src(root).matchAll(/^import \{[^}]*\} from ["'](\.[^"']+)["']/gm)][0][1]))) : root;
   const copy = [main, ...own.filter((f) => f !== main && !(sheet && f === root)).sort((a, b) => Number(/data\.ts$/.test(a)) - Number(/data\.ts$/.test(b)) || a.localeCompare(b))];
   const path = (f: string) => extraTargets[f] ?? target(f);
   return {
@@ -176,26 +192,26 @@ function freeItem(name: string, title: string, description: string, entry: strin
     ...BRAND(name, title),
     dependencies: packages.map(version),
     registryDependencies: [`${SITE}/r/panelo-theme.json`, ...shared.map(sharedUrl)],
-    files: own.map((f) => file(path(f), rewrite(read(f)))),
+    files: own.map((f) => file(path(f), rewrite(src(f)))),
     meta: { copy: copy.map(path) },
-    demo: demo(name, root, sheet),
+    demo: demo(name.replace(/-base$/, ""), root, sheet),
     _shared: shared,
   };
 }
 
 /** An index that re-exports its siblings and renders them in a default export is a demo sheet. */
-const isSheet = (root: string) => root.endsWith("/index.tsx") && (read(root).match(/^(?:export \{[^}]*\}|\}) from ["']\.\//gm)?.length ?? 0) >= 2;
+const isSheet = (root: string) => root.endsWith("/index.tsx") && (src(root).match(/^(?:export \{[^}]*\}|\}) from ["']\.\//gm)?.length ?? 0) >= 2;
 
 /** The demo a component page shows under Code: what renders the preview, importing from installed paths. */
 function demo(name: string, root: string, sheet: boolean) {
   const dir = target(dirname(root)).replace(/^components\//, "@/components/");
   if (sheet)
-    return rewrite(read(root))
+    return rewrite(src(root))
       .replace(/^export (?:type )?\{[^}]*\} from ["']\.[^"']*["'];?\n/gm, "")
       .replace(/^\/\* -{10,} \*\/\n(?:\/\*.*\*\/\n)*?\/\* -{10,} \*\/\n/gm, "")
       .replace(/(from\s+["'])\.\/([^"']+)(["'])/g, `$1${dir}/$2$3`)
       .replace(/\n{3,}/g, "\n\n");
-  const source = read(root);
+  const source = src(root);
   const at = target(root).replace(/^components\//, "@/components/").replace(/(\/index)?\.tsx?$/, "");
   const fallback = source.match(/^export default function (\w+)/m)?.[1];
   if (fallback) return `import ${fallback} from "${at}";\n\nexport default function ${fallback}Demo() {\n  return <${fallback} />;\n}\n`;
@@ -210,14 +226,14 @@ function primitiveItem(path: string) {
   const kind = path.split("/")[2];
   const title = path.split("/").pop()!.replace(/\.tsx?$/, "").replace(/-/g, " ");
   return {
-    name: sharedName(path),
-    type: kind === "ui" ? "registry:ui" : kind === "hooks" ? "registry:hook" : "registry:lib",
+    name: named(sharedName(path)),
+    type: kind === "ui" || kind === "base" ? "registry:ui" : kind === "hooks" ? "registry:hook" : "registry:lib",
     title: title[0].toUpperCase() + title.slice(1),
-    description: `Panelo ${kind === "ui" ? "primitive" : kind === "hooks" ? "hook" : kind === "logos" ? "logo" : "helper"}: ${title}.`,
+    description: `Panelo ${kind === "ui" ? "primitive" : kind === "hooks" ? "hook" : kind === "logos" ? "logo" : kind === "base" ? "Base UI adapter" : "helper"}: ${title}.`,
     author: AUTHOR,
     dependencies: packages.map(version),
     registryDependencies: [`${SITE}/r/panelo-theme.json`, ...shared.map(sharedUrl)],
-    files: own.map((f) => file(target(f), rewrite(read(f)))),
+    files: own.map((f) => file(target(f), rewrite(src(f)))),
     _shared: shared,
   };
 }
@@ -258,87 +274,114 @@ const write = (dir: string, data: Written, listed = true) => {
   writeFileSync(join(dir, `${data.name}.json`), JSON.stringify(data, null, 2));
   if (dir === FREE_OUT && listed) index.push({ name: data.name, type: data.type, title: data.title, description: data.description });
 };
-// Every primitive a free item reaches, built once each (they can depend on one another).
-const primitives = new Set<string>();
-const needs = (files: string[]) => files.forEach((f) => primitives.add(f));
-/** A free item, its demo item and its primitives queued; `demo` and `copy` are page data, not CLI fields. */
-function writeFree(built: ReturnType<typeof freeItem>, name: string, title: string) {
-  const { demo: code, _shared, ...data } = built;
-  needs(_shared);
-  write(FREE_OUT, data);
-  write(
-    FREE_OUT,
-    {
-      name: `${name}-demo`,
-      type: "registry:example",
-      title: `${title} demo`,
-      description: `A demo of ${title}.`,
-      ...BRAND(name, title),
-      registryDependencies: [`${SITE}/r/${name}.json`],
-      files: [file(`components/panelo-ui/demos/${name}-demo.tsx`, code)],
-    } as Written,
-    false,
+/** One edition's items: free ones (+ demos and primitives) in public/r, Pro ones and style skills in registry-pro. */
+function buildEdition(edition: Edition) {
+  EDITION = edition;
+  // Every primitive a free item reaches, built once each (they can depend on one another).
+  const primitives = new Set<string>();
+  const needs = (files: string[]) => files.forEach((f) => primitives.add(f));
+  /** A free item, its demo item and its primitives queued; `demo` and `copy` are page data, not CLI fields. */
+  function writeFree(built: ReturnType<typeof freeItem>, name: string, title: string) {
+    const { demo: code, _shared, ...data } = built;
+    needs(_shared);
+    write(FREE_OUT, data);
+    write(
+      FREE_OUT,
+      {
+        name: `${name}-demo`,
+        type: "registry:example",
+        title: `${title} demo`,
+        description: `A demo of ${title}.`,
+        ...BRAND(name, title),
+        registryDependencies: [`${SITE}/r/${name}.json`],
+        files: [file(`components/panelo-ui/demos/${name.replace(/-base$/, "")}-demo.tsx`, code)],
+      } as Written,
+      false,
+    );
+  }
+
+  if (edition === "sdk") {
+    write(FREE_OUT, theme());
+    write(
+      FREE_OUT,
+      item("agent-kit", "Agent kit", "The agent bridge, approval prompts, a chat hook and the /api/agent route.", ["components/panelo/lib/agent.ts", "components/panelo/hooks/use-agent-chat.ts", "app/api/agent/route.ts"], (f) => (inLibrary(f) && !f.startsWith("components/panelo/pro/")) || f === "app/api/agent/route.ts", { "app/api/agent/route.ts": "app/api/agent/route.ts" }),
+    );
+  }
+
+  let free = 0;
+  let pro = 0;
+  const sdkOnly: string[] = [];
+  const missing: string[] = [];
+  for (const e of catalogue) {
+    const entry = entries.get(e.slug);
+    if (!entry) {
+      // A Pro item in a checkout without components/panelo/pro: nothing to build, and nothing to leak.
+      if (e.tier === "pro") continue;
+      missing.push(e.slug);
+      continue;
+    }
+    // A free item may never reach into pro/: collect() throws if one imports it, so Pro code can't ship publicly.
+    const allowed = e.tier === "pro" ? inLibrary : (f: string) => inLibrary(f) && !f.startsWith("components/panelo/pro/");
+    // After the swap, anything still on UI SDK (the agent bridge, UI SDK's primitive engine) keeps the item out of this edition.
+    if (edition === "base" && collect(entry, allowed).packages.some((p) => UI_SDK.test(p))) {
+      sdkOnly.push(e.slug);
+      continue;
+    }
+    const title = edition === "base" ? `${e.name} (Base UI)` : e.name;
+    if (e.tier === "pro") write(PRO_OUT, item(named(e.slug), title, e.description, [entry], allowed));
+    else writeFree(freeItem(named(e.slug), title, e.description, [entry], allowed), named(e.slug), title);
+    if (e.tier === "pro") pro++;
+    else free++;
+  }
+  if (missing.length) throw new Error(`Free catalogue items with no preview entry: ${missing.join(", ")}`);
+  // The site tells readers which pages are UI SDK only (SDK_ONLY in components-index.ts); keep it true.
+  if (edition === "base") {
+    const declared = (JSON.parse(read("components/application/docs/components-index.ts").match(/SDK_ONLY = (\[[^\]]*\])/)![1]) as string[]).filter((slug) => entries.has(slug));
+    if (declared.sort().join() !== [...sdkOnly].sort().join()) throw new Error(`SDK_ONLY in components-index.ts is [${declared.join(", ")}], but the build found [${sdkOnly.join(", ")}] still on UI SDK`);
+  }
+  // Style skills, Pro only: a Pro page's skill/ folder (in the private pro repo) becomes an item in registry-pro,
+  // never public/r. It installs the skill (.claude/skills for Claude Code, .agents/skills for Codex and Cursor) and the page
+  // itself, whose parts the skill builds from. The Base UI edition's skill installs the Base UI page.
+  let styles = 0;
+  for (const e of catalogue) {
+    const entry = entries.get(e.slug);
+    if (e.tier !== "pro" || !e.style || !entry || sdkOnly.includes(e.slug)) continue;
+    const skill = `panelo-${e.style}`;
+    const body = read(`${dirname(resolveFile(entry))}/skill/SKILL.md`);
+    write(PRO_OUT, {
+      name: named(e.style),
+      type: "registry:item",
+      title: `${e.name} style${edition === "base" ? " (Base UI)" : ""}`,
+      description: `A skill that teaches your coding agent to build new pages in the ${e.name} style, from the page's own parts.`,
+      ...BRAND(e.slug, `${e.name} style`),
+      registryDependencies: [`@panelo-pro/${named(e.slug)}`],
+      files: [".claude", ".agents"].map((root) => file(`${root}/skills/${skill}/SKILL.md`, body)),
+    } as Written);
+    styles++;
+  }
+  // The primitives, each once, following their own dependencies.
+  const done = new Set<string>();
+  for (const path of primitives) {
+    if (done.has(path)) continue;
+    done.add(path);
+    const { _shared, ...data } = primitiveItem(resolveFile(path));
+    _shared.forEach((f) => primitives.add(f));
+    // A Base UI item must never install UI SDK, even through a primitive it depends on.
+    if (edition === "base" && data.dependencies.some((d) => UI_SDK.test(d))) throw new Error(`${data.name} (Base UI edition) still depends on UI SDK: ${data.dependencies.join(", ")}`);
+    write(FREE_OUT, data, false);
+  }
+  const label = edition === "base" ? "Base UI edition" : "UI SDK edition";
+  console.log(
+    `Registry, ${label}: ${free} free items (+ demos), ${done.size} primitives${edition === "sdk" ? ", panelo-theme and agent-kit" : ""} in public/r; ${pro} Pro items and ${styles} style skills in registry-pro (private).` +
+      (sdkOnly.length ? ` UI SDK only: ${sdkOnly.join(", ")}.` : ""),
   );
 }
 
-write(FREE_OUT, theme());
-write(
-  FREE_OUT,
-  item("agent-kit", "Agent kit", "The agent bridge, approval prompts, a chat hook and the /api/agent route.", ["components/panelo/lib/agent.ts", "components/panelo/hooks/use-agent-chat.ts", "app/api/agent/route.ts"], (f) => (inLibrary(f) && !f.startsWith("components/panelo/pro/")) || f === "app/api/agent/route.ts", { "app/api/agent/route.ts": "app/api/agent/route.ts" }),
-);
-
-let free = 0;
-let pro = 0;
-const missing: string[] = [];
-for (const e of catalogue) {
-  const entry = entries.get(e.slug);
-  if (!entry) {
-    // A Pro item in a checkout without components/panelo/pro: nothing to build, and nothing to leak.
-    if (e.tier === "pro") continue;
-    missing.push(e.slug);
-    continue;
-  }
-  // A free item may never reach into pro/: collect() throws if one imports it, so Pro code can't ship publicly.
-  const allowed = e.tier === "pro" ? inLibrary : (f: string) => inLibrary(f) && !f.startsWith("components/panelo/pro/");
-  if (e.tier === "pro") write(PRO_OUT, item(e.slug, e.name, e.description, [entry], allowed));
-  else writeFree(freeItem(e.slug, e.name, e.description, [entry], allowed), e.slug, e.name);
-  if (e.tier === "pro") pro++;
-  else free++;
-}
-if (missing.length) throw new Error(`Free catalogue items with no preview entry: ${missing.join(", ")}`);
-// Style skills, Pro only: a Pro page's skill/ folder (in the private pro repo) becomes an item in registry-pro,
-// never public/r. It installs the skill (.claude/skills for Claude Code, .agents/skills for Codex and Cursor) and the page
-// itself, whose parts the skill builds from.
-let styles = 0;
-for (const e of catalogue) {
-  const entry = entries.get(e.slug);
-  if (e.tier !== "pro" || !e.style || !entry) continue;
-  const skill = `panelo-${e.style}`;
-  const body = read(`${dirname(resolveFile(entry))}/skill/SKILL.md`);
-  write(PRO_OUT, {
-    name: e.style,
-    type: "registry:item",
-    title: `${e.name} style`,
-    description: `A skill that teaches your coding agent to build new pages in the ${e.name} style, from the page's own parts.`,
-    ...BRAND(e.slug, `${e.name} style`),
-    registryDependencies: [`@panelo-pro/${e.slug}`],
-    files: [".claude", ".agents"].map((root) => file(`${root}/skills/${skill}/SKILL.md`, body)),
-  } as Written);
-  styles++;
-}
-// The primitives, each once, following their own dependencies.
-const done = new Set<string>();
-for (const path of primitives) {
-  if (done.has(path)) continue;
-  done.add(path);
-  const { _shared, ...data } = primitiveItem(resolveFile(path));
-  _shared.forEach((f) => primitives.add(f));
-  write(FREE_OUT, data, false);
-}
-// The index shadcn's registry directory and `shadcn search @panelo` read. Free items only, and no file
-// contents: those stay in each item's own JSON.
+buildEdition("sdk");
+buildEdition("base");
+// The index shadcn's registry directory and `shadcn search @panelo` read. Free items only, both editions, and no
+// file contents: those stay in each item's own JSON.
 writeFileSync(join(FREE_OUT, "registry.json"), JSON.stringify({ name: "panelo", homepage: SITE, items: index }, null, 2));
-console.log(`Registry: ${free} free items (+ demos), ${done.size} primitives, panelo-theme and agent-kit in public/r; ${pro} Pro items and ${styles} style skills in registry-pro (private).`);
 
 // --- Templates: one tarball each, its folder at the top, so `tar -xz` makes ./<slug>. --------------------
 // Nothing is packed before launch day (TEMPLATES_LAUNCH in components/application/site/templates.ts).

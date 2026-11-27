@@ -108,6 +108,16 @@ export const COMPONENT_SECTIONS: Section[] = [
     ],
   },
   {
+    id: "chat",
+    title: "Chat",
+    blurb: "Team chat with channels, threads, calls and an AI catch-up.",
+    kind: "screen",
+    wide: true,
+    entries: [
+      pro("Team Chat", "dashboard-pages-15", "A team chat channel beside an icon rail and chat sidebar: messages with meeting, file and code attachments, a call event, threads that fold open, quick reactions, an AI catch-up of the day, and tabs for the channel's team, docs, meetings and projects."),
+    ],
+  },
+  {
     id: "settings",
     title: "Settings",
     blurb: "Settings pages that drop into any app.",
@@ -148,6 +158,7 @@ export const COMPONENT_SECTIONS: Section[] = [
       pro("App Sidebar", "sidebars-1", "Icon rail and panel in five layouts: rail with panel, panel alone, rail with icons, rail alone and icons alone, with a command menu, collapsible sections and projects."),
       pro("Sidebar Collection", "sidebars-2", "Five product sidebars from one kit: workspace, enterprise, chat, HR and assistant. Folding trees and sections, section search, inline create, chat filters, command search, trial and upgrade cards."),
       free("Resource Sidebar", "sidebars-3", "Icon rail beside a resource panel: pages with a More flyout, a scrolling list of emoji collections and a pinned import action. Four layouts, every list a prop, Keyline icons."),
+      free("Workspace Sidebar", "sidebars-4", "Workspace sidebar with a switcher, a search that filters every item (press / to focus), folding navigation, a tree of spaces with inline create, and an upgrade card. Every list a prop, Keyline icons."),
     ],
   },
   {
@@ -191,9 +202,25 @@ export const PACKAGE_MANAGERS: PackageManager[] = ["pnpm", "npm", "yarn", "bun"]
 export const RUNNER: Record<PackageManager, string> = { pnpm: "pnpm dlx", npm: "npx", yarn: "yarn", bun: "bunx --bun" };
 export const ADD: Record<PackageManager, string> = { pnpm: "pnpm add", npm: "npm install", yarn: "yarn add", bun: "bun add" };
 
-export function installCommand(href: string, pm: PackageManager = "npm"): string {
+/**
+ * Two editions of every item, from the same source. "sdk" is built on Vercel's UI SDK, so AI agents can
+ * operate it; "base" swaps those parts for Base UI adapters (components/panelo/base) and installs as
+ * `<item>-base`. Pages built on UI SDK's agent bridge or primitive engine have no Base UI edition:
+ * scripts/build-registry.mts fails if this list and what it finds disagree.
+ */
+export type Edition = "sdk" | "base";
+export const EDITIONS: { value: Edition; label: string }[] = [
+  { value: "base", label: "Base UI" },
+  { value: "sdk", label: "UI SDK" },
+];
+export const SDK_ONLY = ["dashboard-pages-10", "dashboard-pages-11"];
+export const hasBase = (href: string) => !SDK_ONLY.includes(slugOf(href));
+/** The registry item name for an entry in an edition (falls back to UI SDK where there's no Base UI edition). */
+export const itemName = (href: string, edition: Edition = "sdk") => (edition === "base" && hasBase(href) ? `${slugOf(href)}-base` : slugOf(href));
+
+export function installCommand(href: string, pm: PackageManager = "npm", edition: Edition = "sdk"): string {
   // @panelo is in the shadcn CLI's built-in registry index (shadcn-ui/ui#12850), so free items need no
   // components.json setup. Pro items come from the keyed registry (@panelo-pro), set up on the account page.
   const pro = ALL_ENTRIES.find((e) => e.href === href)?.tier === "pro";
-  return `${RUNNER[pm]} shadcn@latest add ${pro ? `@panelo-pro/${slugOf(href)}` : `@panelo/${slugOf(href)}`}`;
+  return `${RUNNER[pm]} shadcn@latest add ${pro ? "@panelo-pro" : "@panelo"}/${itemName(href, edition)}`;
 }

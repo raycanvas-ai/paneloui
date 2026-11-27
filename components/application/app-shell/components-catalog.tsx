@@ -5,6 +5,7 @@ import Link from "next/link";
 import { RiCheckLine, RiFileCopyLine } from "@remixicon/react";
 import { SegmentedControl, SegmentedControlItem } from "@ui-sdk/react/segmented-control";
 
+import { useEdition } from "@/components/application/docs/code";
 import { ALL_ENTRIES, COMPONENT_SECTIONS, installCommand, sectionOf, type Entry } from "@/components/application/docs/components-index";
 import { LookPlayer } from "@/components/application/docs/look-player";
 import { PANELO_PREVIEWS } from "@/components/application/docs/panelo-catalog";
@@ -143,7 +144,9 @@ function CopyInstall({ command, name }: { command: string; name: string }) {
 /** A catalogue entry as a card: its live preview in a recessed well, name and line below, the whole card a link. */
 export function PreviewCard({ entry }: { entry: Entry }) {
   const { Preview, options } = PANELO_PREVIEWS[entry.href];
-  const install = installCommand(entry.href);
+  // The edition the reader picked on any component page, so a copied command matches their project.
+  const [edition] = useEdition();
+  const install = installCommand(entry.href, "npm", edition);
   return (
     <article className="relative flex flex-col rounded-[14px] border border-site-hairline bg-site-surface p-1.5 pb-0 transition-[border-color] duration-150 [container-type:inline-size] hover:border-site-ring">
       <div className={cx("relative h-[230px] overflow-hidden rounded-lg bg-site-preview ring-1 ring-site-hairline ring-inset", options.previewClassName)}>
