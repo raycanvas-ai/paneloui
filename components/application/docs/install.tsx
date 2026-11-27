@@ -4,8 +4,9 @@ import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { RiCheckLine, RiLock2Line, RiTerminalBoxLine } from "@remixicon/react";
 
-import { CodeBlock, ManagerTabs, usePackageManager } from "@/components/application/docs/code";
-import { ADD, installCommand, RUNNER, type Entry } from "@/components/application/docs/components-index";
+import { CodeBlock, ManagerTabs, useEdition, usePackageManager } from "@/components/application/docs/code";
+import { ADD, EDITIONS, hasBase, installCommand, itemName, RUNNER, type Edition, type Entry } from "@/components/application/docs/components-index";
+import { cx } from "@/utils/cx";
 import { pill, SiteTabPanel, SiteTabs } from "@/components/application/site/site-ui";
 import { SITE } from "@/components/application/site/templates";
 import { track } from "@/lib/analytics";
@@ -84,8 +85,9 @@ function Failed({ retry }: { retry: () => void }) {
  *  licence set up first, so theirs jumps to the steps instead of copying a command that would fail. */
 export function CopyInstall({ entry }: { entry: Entry }) {
   const [pm] = usePackageManager();
+  const [edition] = useEdition();
   const [copied, setCopied] = useState(false);
-  const command = installCommand(entry.href, pm);
+  const command = installCommand(entry.href, pm, edition);
   if (entry.tier === "pro")
     return (
       <a href="#installation" className={pill("secondary")}>
@@ -100,7 +102,7 @@ export function CopyInstall({ entry }: { entry: Entry }) {
       aria-label={copied ? "Copied" : `Copy install command: ${command}`}
       onClick={async () => {
         await navigator.clipboard.writeText(command);
-        track("install_command_copied", { command, pm, surface: "component_page" });
+        track("install_command_copied", { command, pm, edition, surface: "component_page" });
         setCopied(true);
         window.setTimeout(() => setCopied(false), 1500);
       }}
@@ -145,6 +147,7 @@ export function Installation({ entry, slug }: { entry: Entry; slug: string }) {
       <h2 id="installation" className="text-site-heading text-site-ink">
         Installation
       </h2>
+      <EditionPicker entry={entry} />
       <SiteTabs
         label="Installation method"
         value={tab}
@@ -157,11 +160,67 @@ export function Installation({ entry, slug }: { entry: Entry; slug: string }) {
         </SiteTabPanel>
         {pro ? null : (
           <SiteTabPanel value="manual" className="pt-5">
-            {tab === "manual" ? <Manual slug={slug} /> : null}
+            {tab === "manual" ? <Manual entry={entry} /> : null}
           </SiteTabPanel>
         )}
       </SiteTabs>
     </section>
+  );
+}
+
+const EDITION_NOTE: Record<Edition, string> = {
+  base: "Built on Base UI, like shadcn's Base UI components. Same look, same files; no UI SDK in your project.",
+  sdk: "Built on Vercel's UI SDK, so AI agents can read and operate every control. Installs next to Base UI or Radix.",
+};
+
+/** Which primitives the item installs on. A radio group: arrow keys move and select, like the platform's own. */
+function EditionPicker({ entry }: { entry: Entry }) {
+  const [edition, setEdition] = useEdition();
+  if (!hasBase(entry.href))
+    return <p className="mt-3 max-w-[620px] text-site-body text-pretty text-site-muted">This page runs on UI SDK&rsquo;s agent engine, so it installs on UI SDK only. Every other Panelo page also comes in Base UI.</p>;
+  const move = (step: number) => {
+    const next = EDITIONS[(EDITIONS.findIndex((e) => e.value === edition) + step + EDITIONS.length) % EDITIONS.length].value;
+    setEdition(next);
+    document.getElementById(`edition-${next}`)?.focus();
+  };
+  return (
+    <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+      <div
+        role="radiogroup"
+        aria-label="Edition"
+        onKeyDown={(event) => {
+          const step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key];
+          if (!step) return;
+          event.preventDefault();
+          // Left and right follow reading direction.
+          move(event.currentTarget.matches(":dir(rtl)") && /Left|Right/.test(event.key) ? -step : step);
+        }}
+        className="flex w-fit shrink-0 rounded-full bg-site-pill p-0.5"
+      >
+        {EDITIONS.map((e) => (
+          <button
+            key={e.value}
+            id={`edition-${e.value}`}
+            type="button"
+            role="radio"
+            aria-checked={edition === e.value}
+            tabIndex={edition === e.value ? 0 : -1}
+            onClick={() => {
+              setEdition(e.value);
+              track("edition_selected", { edition: e.value, slug: entry.href });
+            }}
+            className={cx(
+              "h-7 cursor-pointer rounded-full px-3 text-site-body-medium transition-colors duration-150",
+              edition === e.value ? "bg-site-surface text-site-ink shadow-site-raised" : "text-site-muted hover:text-site-ink",
+              "outline-none focus-visible:ring-2 focus-visible:ring-border-focus-ring",
+            )}
+          >
+            {e.label}
+          </button>
+        ))}
+      </div>
+      <p className="text-site-body text-pretty text-site-muted">{EDITION_NOTE[edition]}</p>
+    </div>
   );
 }
 
@@ -179,7 +238,8 @@ function Step({ title, children, last = false }: { title: ReactNode; children?: 
 
 function Cli({ entry }: { entry: Entry }) {
   const [pm, setPm] = usePackageManager();
-  const command = installCommand(entry.href, pm);
+  const [edition] = useEdition();
+  const command = installCommand(entry.href, pm, edition);
   return (
     <CodeBlock
       code={command}
@@ -187,14 +247,16 @@ function Cli({ entry }: { entry: Entry }) {
       prompt
       fold={0}
       header={<ManagerTabs value={pm} onChange={setPm} />}
-      onCopy={() => track("install_command_copied", { command, pm, surface: "component_page_installation" })}
+      onCopy={() => track("install_command_copied", { command, pm, edition, surface: "component_page_installation" })}
     />
   );
 }
 
 function ProSteps({ entry }: { entry: Entry }) {
   const [pm, setPm] = usePackageManager();
-  const command = installCommand(entry.href, pm);
+  const [edition] = useEdition();
+  const command = installCommand(entry.href, pm, edition);
+  const style = entry.style && (edition === "base" && hasBase(entry.href) ? `${entry.style}-base` : entry.style);
   const registry = `"registries": {\n  "@panelo-pro": {\n    "url": "${SITE}/r/pro/{name}.json",\n    "headers": { "Authorization": "Bearer \${PANELO_LICENSE_KEY}" }\n  }\n}`;
   return (
     <ol className="flex flex-col [counter-reset:step]">
@@ -218,7 +280,7 @@ function ProSteps({ entry }: { entry: Entry }) {
           prompt
           fold={0}
           header={<ManagerTabs value={pm} onChange={setPm} />}
-          onCopy={() => track("install_command_copied", { command, pm, surface: "component_page_installation" })}
+          onCopy={() => track("install_command_copied", { command, pm, edition, surface: "component_page_installation" })}
         />
       </Step>
       {entry.style ? (
@@ -227,12 +289,12 @@ function ProSteps({ entry }: { entry: Entry }) {
             Adds a skill (in <code className="font-mono text-site-ink">.claude/skills</code> and <code className="font-mono text-site-ink">.agents/skills</code>) that teaches Claude Code, Codex or Cursor to build your other pages in this style, from this page&rsquo;s parts.
           </p>
           <CodeBlock
-            code={`${RUNNER[pm]} shadcn@latest add @panelo-pro/${entry.style}`}
+            code={`${RUNNER[pm]} shadcn@latest add @panelo-pro/${style}`}
             lang="bash"
             prompt
             fold={0}
             header={<ManagerTabs value={pm} onChange={setPm} />}
-            onCopy={() => track("install_command_copied", { command: `@panelo-pro/${entry.style}`, pm, surface: "component_page_style" })}
+            onCopy={() => track("install_command_copied", { command: `@panelo-pro/${style}`, pm, edition, surface: "component_page_style" })}
           />
         </Step>
       ) : null}
@@ -242,17 +304,20 @@ function ProSteps({ entry }: { entry: Entry }) {
 
 /** "ui-dropdown-menu" → "Dropdown menu"; the helpers read as what they are. */
 function primitiveName(url: string) {
-  const name = url.split("/r/")[1].replace(/\.json$/, "");
+  const name = url.split("/r/")[1].replace(/\.json$/, "").replace(/-base$/, "");
   if (name === "lib-utils") return "the cn helper";
+  if (name.startsWith("base-")) return `the Base UI ${name.slice(5).replace(/-/g, " ")} adapter`;
   const [, rest] = name.split(/-(.+)/);
   const words = rest.replace(/-/g, " ");
   return name.startsWith("hooks-") ? `the ${words.replace(/^use (\w)/, (_, c: string) => `use${c.toUpperCase()}`)} hook` : words[0].toUpperCase() + words.slice(1);
 }
 const list = (items: string[]) => (items.length < 2 ? items.join("") : `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`);
 
-function Manual({ slug }: { slug: string }) {
+function Manual({ entry }: { entry: Entry }) {
   const [pm, setPm] = usePackageManager();
-  const { item, failed, retry } = useItem(`/r/${slug}.json`);
+  const [edition] = useEdition();
+  const slug = entry.href.replace("/components/", "");
+  const { item, failed, retry } = useItem(`/r/${itemName(entry.href, edition)}.json`);
   if (failed) return <Failed retry={retry} />;
   if (!item) return <Loading heights={[64, 64, 320]} />;
 

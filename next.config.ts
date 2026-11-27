@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import type { NextConfig } from "next";
 
 // Pro blocks are gitignored. `@pro` types against pro-fallback.ts (tsconfig) and bundles the
@@ -14,9 +14,24 @@ const securityHeaders = [
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
 ];
 
+// The Base UI edition, rendered locally to check it: `PANELO_EDITION=base next dev -p 3001` swaps every UI SDK
+// part that has a Base UI adapter in components/panelo/base for that adapter, so /preview/<slug> shows a block
+// exactly as the Base UI registry edition (/r/base) installs it. Parts without an adapter (agent, observe,
+// shortcuts, primitive) stay UI SDK; the registry build refuses to ship those in the Base UI edition.
+const baseEdition =
+  process.env.PANELO_EDITION === "base"
+    ? Object.fromEntries(
+        readdirSync(`${import.meta.dirname}/components/panelo/base`)
+          .filter((f) => f.endsWith(".tsx"))
+          .map((f) => [`@ui-sdk/react/${f.replace(/\.tsx$/, "")}`, `./components/panelo/base/${f}`]),
+      )
+    : {};
+
 const nextConfig: NextConfig = {
   // A self-contained Node server in .next/standalone, which the Docker image runs (see Dockerfile).
   output: "standalone",
+  // The Base UI edition's dev server builds apart, so it can run next to the normal one.
+  ...(process.env.PANELO_EDITION === "base" && { distDir: ".next-base" }),
   // Version skew: each deploy gets its own id (the git commit, passed in by compose), so a tab still running
   // the previous build reloads on its next navigation instead of asking for files that are gone.
   deploymentId: process.env.NEXT_DEPLOYMENT_ID || undefined,
@@ -26,7 +41,7 @@ const nextConfig: NextConfig = {
   // filesystem looking for a lockfile.
   turbopack: {
     root: import.meta.dirname,
-    resolveAlias: hasPro ? { "@pro": "./components/panelo/pro/index.ts" } : {},
+    resolveAlias: { ...(hasPro ? { "@pro": "./components/panelo/pro/index.ts" } : {}), ...baseEdition },
   },
   headers: async () => [{ source: "/:path*", headers: securityHeaders }],
   // People type the plural; the blog lives at /blog.

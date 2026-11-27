@@ -16,6 +16,7 @@
     "@ai-sdk/react": "^4.0.90",
     "@auth/core": "^0.41.2",
     "@auth/drizzle-adapter": "^1.11.2",
+    "@base-ui/react": "^1.9.0",
     "@internationalized/date": "^3.12.1",
     "@keyline-icons/react": "^2.9.0",
     "@radix-ui/react-slot": "^1.5.0",
