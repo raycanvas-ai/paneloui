@@ -6,6 +6,7 @@ import { RiArrowLeftLine, RiArrowRightUpLine, RiCalendarEventLine, RiCheckLine }
 
 import { ArrowLink, CONTAINER, CopyCommand, FOCUS, Heading, SECTION, SiteFooter, SiteHeader, TEXT_LINK } from "@/components/application/landing/landing-page";
 import { Chip, pill, ProTag } from "@/components/application/site/site-ui";
+import { PRO_FROM } from "@/components/application/site/pricing";
 import { downloadCommand, type Template, TEMPLATES, TEMPLATES_LAUNCH, TEMPLATES_UPCOMING } from "@/components/application/site/templates";
 import { cx } from "@/utils/cx";
 
@@ -142,7 +143,7 @@ export function TemplateDetail({ slug }: { slug: string }) {
         <div className="mt-8 flex flex-wrap gap-2">
           {t.tier === "pro" && (
             <Link href="/#pricing" className={pill("primary", "lg")}>
-              Get Pro, from $129
+              Get Pro, from ${PRO_FROM}
             </Link>
           )}
           <a href={t.demo} target="_blank" rel="noreferrer" className={pill(t.tier === "pro" ? "secondary" : "primary", "lg")}>
