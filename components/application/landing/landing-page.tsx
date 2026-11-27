@@ -11,7 +11,8 @@ import { Tabs, TabsIndicator, TabsList, TabsPanel, TabsTab } from "@ui-sdk/react
 import { ALL_ENTRIES, COMPONENT_SECTIONS, installCommand } from "@/components/application/docs/components-index";
 import { AGENT_DEMO } from "@/components/application/docs/docs-shell";
 import { FAQ } from "@/components/application/site/faq";
-import { LAUNCH_OFF, PLANS } from "@/components/application/site/pricing";
+import { WallOfLoveSection } from "@/components/application/landing/wall-of-love";
+import { LAUNCH_OFF, PLANS, PRO_FROM } from "@/components/application/site/pricing";
 import { ScreenFrame } from "@/components/application/docs/preview-frames";
 import { AuthButton } from "@/components/application/site/auth-button";
 import { CONTAINER, FOCUS, SECTION, TEXT_LINK } from "@/components/application/site/layout-classes";
@@ -596,20 +597,20 @@ function Hero() {
           <RiArrowRightLine className="size-4 transition-transform duration-150 group-hover:translate-x-0.5 motion-reduce:transition-none" aria-hidden />
         </Link>
         <h1 className="mt-6 max-w-[920px] text-site-display-sm text-balance sm:text-site-display lg:text-[4.75rem] lg:leading-[1.02] lg:tracking-[-0.045em]">
-          <span className="text-site-ink">Dashboards AI agents can operate.</span> <span className="text-site-muted">Your users click. Agents act.</span>
+          <span className="text-site-ink">Whole dashboard pages for shadcn.</span> <span className="text-site-muted">On Base UI, or ready for AI&nbsp;agents.</span>
         </h1>
         <p className="mt-6 max-w-[720px] text-site-lead text-pretty text-site-muted">
-          React components, charts and full pages on{" "}
-          <span className="whitespace-nowrap text-site-ink">
-            <RiVercelFill aria-hidden className="me-1 inline size-[0.85em] align-[-0.05em]" />
-            Vercel&apos;s UI SDK
-          </span>
-          . One{" "}
+          Analytics, tables, calendars and inboxes, each a complete page with its sidebar. One{" "}
           <span className="whitespace-nowrap text-site-ink">
             <ShadcnMark className="me-1 inline size-[0.9em] align-[-0.1em]" />
             shadcn
           </span>{" "}
-          command into any project, Base UI or Radix.
+          command installs the Base UI edition, or the{" "}
+          <span className="whitespace-nowrap text-site-ink">
+            <RiVercelFill aria-hidden className="me-1 inline size-[0.85em] align-[-0.05em]" />
+            UI SDK
+          </span>{" "}
+          one AI agents can operate.
         </p>
         <div className="mt-9 flex w-full flex-col justify-center gap-2 sm:w-auto sm:flex-row">
           <Link href="/components" className={pill("primary", "lg")}>
@@ -619,6 +620,10 @@ function Hero() {
             Watch an agent run it
           </Link>
         </div>
+        {/* Panelo is new; the makers' track record isn't. Links to the wall, where every quote has its source. */}
+        <Link href="/#love" className={cx(TEXT_LINK, "mt-6 text-site-body")}>
+          From the makers of <span className="text-site-ink">snapcn</span> and <span className="text-site-ink">Ruixen UI</span>
+        </Link>
       </div>
       {/* A whole free page in front of the carousel, from its top edge: the cards drift behind it and past its sides. */}
       <div className="relative">
@@ -888,7 +893,7 @@ function TemplatesSection() {
   const [tab, setTab] = useState(TEMPLATE_TABS[0].value);
   return (
     <section id="pages" className={cx(CONTAINER, SECTION, "scroll-mt-14")}>
-      <Heading title="Complete pages, not just parts." body={`${ALL_ENTRIES.filter((e) => e.href.startsWith("/components/dashboard-pages-")).length} dashboard pages in Pro, from $129 once.`} />
+      <Heading title="Complete pages, not just parts." body={`${ALL_ENTRIES.filter((e) => e.href.startsWith("/components/dashboard-pages-")).length} dashboard pages in Pro, from $${PRO_FROM} once.`} />
       <Tabs value={tab} onValueChange={(next: string | null) => next !== null && setTab(next)} className="mt-10">
         <div className="-mx-6 overflow-x-auto px-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <TabsList aria-label="Templates" className="relative flex w-max rounded-full bg-site-pill p-1">
@@ -1056,7 +1061,7 @@ const FOOTER_GUIDES: FooterLink[] = [
 // Every component and the key guides get one link each: a way in from any page, for people and crawlers.
 const FOOTER_COLUMNS: FooterGroup[][] = [
   [group("analytics", "Analytics"), group("tables", "Tables"), { ...group("workflows", "Workflows"), more: { label: "All components", href: "/components" } }],
-  [group("charts", "Charts"), group("projects", "Projects"), group("inbox", "Inbox"), group("settings", "Settings")],
+  [group("charts", "Charts"), group("projects", "Projects"), group("inbox", "Inbox"), group("chat", "Chat"), group("settings", "Settings")],
   [group("calendars", "Calendars"), group("login-pages", "Logins"), group("profile-pages", "Profiles"), group("sidebars", "Sidebars"), group("elements", "Elements")],
   [{ title: "Guides", href: "/blog", links: FOOTER_GUIDES, more: { label: "All guides", href: "/blog" } }],
   [
@@ -1220,7 +1225,7 @@ function CtaSection() {
           <span className="text-site-ink">Ship the dashboard.</span> <span className="text-site-muted">Let agents run it.</span>
         </h2>
         <p className={cx("relative mt-4 max-w-[520px] text-site-lead text-pretty text-site-muted", TEXT_HALO)}>
-          Start with the free components, or get every Pro page from ${Math.min(...PLANS.flatMap((p) => (p.price === null ? [] : [p.price])))} once, ${LAUNCH_OFF} off while early bird lasts.
+          Start with the free components, or get every Pro page from ${PRO_FROM} once, ${LAUNCH_OFF} off while early bird lasts.
         </p>
         <div className="relative mt-8 flex w-full flex-col justify-center gap-2 sm:w-auto sm:flex-row">
           <Link href="/#pricing" className={pill("primary", "lg")}>
@@ -1292,7 +1297,7 @@ export function SiteFooter() {
             Shadcn Labs
           </a>
         </p>
-        <p>React 19 · Next.js 16 · Tailwind CSS v4 · Vercel UI SDK</p>
+        <p>React 19 · Next.js 16 · Tailwind CSS v4 · Base UI · Vercel UI SDK</p>
       </div>
     </footer>
   );
@@ -1308,6 +1313,7 @@ export function LandingPage() {
         <AgentSection />
         <ComponentsSection />
         <TemplatesSection />
+        <WallOfLoveSection />
         <PricingSection />
         <FaqSection />
         <CtaSection />
